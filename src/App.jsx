@@ -4,7 +4,7 @@ import Navbar from './components/NavBar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Login from './pages/Login';
-import Album from './components/album';
+import Album from './components/Album';
 
 function App() {
   return (
