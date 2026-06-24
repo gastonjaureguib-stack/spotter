@@ -1,0 +1,71 @@
+.spooter-navbar {
+  border-bottom: 3px solid #2f855a;
+  background-color: #ffffff !important;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.spooter-navbar .navbar-brand span {
+  color: #1a365d !important;
+  font-size: 1.4rem;
+}
+
+.spooter-navbar .nav-link {
+  color: #4a5568 !important;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.spooter-navbar .nav-link:hover {
+  color: #2b6cb0 !important;
+  background-color: #ebf8ff;
+}
+
+.spooter-navbar .nav-link.active {
+  color: #2f855a !important;
+  font-weight: 700;
+}
+
+.btn-login-spooter {
+  color: #2f855a !important;
+  border-color: #2f855a !important;
+  font-size: 0.9rem;
+}
+
+.btn-login-spooter:hover {
+  background-color: #2f855a !important;
+  color: #ffffff !important;
+}
+
+/* ==========================================================================
+   RESPONSIVE - OPTIMIZACIÓN MÓVIL EXACTA
+   ========================================================================== */
+@media (max-width: 991.98px) {
+  /* Fuerza a que el bloque del menú ocupe toda la línea de abajo */
+  .w-100-mobile {
+    width: 100% !important;
+  }
+
+  .spooter-navbar .navbar-nav {
+    text-align: center;
+    padding-top: 0.5rem;
+  }
+  
+  /* Formato de lista limpia y cómoda para el dedo */
+  .spooter-navbar .nav-link {
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #edf2f7;
+    border-radius: 0;
+  }
+
+  .spooter-navbar .nav-link:hover {
+    background-color: #edf2f7;
+  }
+
+  /* Ajuste de tamaño del botón login para que no compita en espacio con el logo */
+  .btn-login-spooter {
+    padding: 0.35rem 0.75rem !important;
+    font-size: 0.85rem !important;
+  }
+}
