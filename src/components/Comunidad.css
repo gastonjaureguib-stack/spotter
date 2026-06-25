@@ -1,0 +1,16 @@
+/* Borra todo lo anterior y solo deja esto si necesitas espacio extra */
+.album-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.card-thumb {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.card-thumb:hover {
+  transform: scale(1.05);
+}

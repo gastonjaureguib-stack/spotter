@@ -5,7 +5,8 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Album from './components/Album';
-import HeroCamera from './components/HeroCamera'; // <--- IMPORTA TU COMPONENTE AQUÍ
+import HeroCamera from './components/HeroCamera';
+import Comunidad from './components/comunidad'; 
 
 function App() {
   return (
@@ -26,6 +27,9 @@ function App() {
             
             {/* RUTA PARA VER POR CATEGORÍA */}
             <Route path="/album/:category" element={<Album />} />
+
+            {/* RUTA PARA EL MURO DE LA COMUNIDAD */}
+            <Route path="/comunidad" element={<Comunidad />} />
           </Routes>
         </main>
 

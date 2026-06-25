@@ -62,25 +62,37 @@
 }
 /* --------------------------------- */
 
-/* Botones de acción mejorados */
+/* Botones de acción mejorados - AHORA EN COLUMNA */
 .card-actions {
   display: flex;
-  gap: 15px;
+  flex-direction: column; /* Apilados verticalmente */
+  gap: 10px;
   margin-top: 10px;
+  width: 100%;
+  max-width: 250px;
 }
 
-.btn-edit, .btn-delete {
-  padding: 10px 25px;
+.btn-edit, .btn-delete, .btn-share {
+  padding: 12px;
   border-radius: 5px;
   border: 1px solid rgba(255,255,255,0.1);
   cursor: pointer;
   font-family: 'Michroma', sans-serif;
   font-size: 0.7rem;
   transition: all 0.3s;
+  text-transform: uppercase;
 }
 
 .btn-edit { background: #2980b9; color: white; }
 .btn-delete { background: #c0392b; color: white; }
+.btn-share { 
+  background: #27ae60; /* Verde estilo muro */
+  color: white; 
+}
+
+.btn-share:hover { background: #219150; }
+.btn-edit:hover { background: #3498db; }
+.btn-delete:hover { background: #e74c3c; }
 
 .close-btn {
   background: transparent;
@@ -104,5 +116,6 @@
   }
   .modal-content {
     transform: scale(0.9);
+    width: 90%;
   }
 }

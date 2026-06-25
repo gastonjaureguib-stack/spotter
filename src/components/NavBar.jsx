@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { supabase } from './supabaseClient'; // Asegúrate de la ruta correcta
+import { supabase } from './supabaseClient';
 import './NavBar.css';
 
 function Navbar() {
@@ -8,12 +8,10 @@ function Navbar() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 1. Obtener sesión inicial
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
     });
 
-    // 2. Escuchar cambios de autenticación (Login/Logout)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
@@ -34,7 +32,6 @@ function Navbar() {
           <img src="/logo.png" alt="Spooter Logo" height="36" onError={(e) => { e.target.style.display = 'none'; }} />
         </Link>
 
-        {/* Lógica de Login/Logout Dinámica */}
         <div className="d-flex align-items-center gap-2 order-lg-3">
           {session ? (
             <button className="btn btn-danger btn-sm rounded-pill fw-bold" onClick={handleLogout}>
@@ -54,6 +51,8 @@ function Navbar() {
         <div className="collapse navbar-collapse order-lg-2" id="navbarSupportedContent">
           <ul className="navbar-nav mx-auto mb-2 mb-lg-0 gap-1 pt-2 pt-lg-0">
             <li className="nav-item"><Link className="nav-link" to="/"><i className="bi bi-house-door me-1"></i>Home</Link></li>
+            {/* NUEVO ENLACE A COMUNIDAD */}
+            <li className="nav-item"><Link className="nav-link" to="/comunidad"><i className="bi bi-people me-1"></i>Comunidad</Link></li>
             <li className="nav-item"><Link className="nav-link" to="/album/perros"><i className="bi bi-dog me-1"></i>Perros</Link></li>
             <li className="nav-item"><Link className="nav-link" to="/album/gatos"><i className="bi bi-cat me-1"></i>Gatos</Link></li>
             <li className="nav-item"><Link className="nav-link" to="/album/plantas"><i className="bi bi-tree me-1"></i>Plantas</Link></li>

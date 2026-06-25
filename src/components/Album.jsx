@@ -67,7 +67,35 @@ function Album() {
     }
   };
 
-  // AQUÍ ESTÁ EL CAMBIO: Redirección directa sin confirmación
+  // Lógica para compartir (Actualizada a la columna 'is_public' en 'captures')
+  const handleShareToCommunity = async (card) => {
+    const result = await Swal.fire({
+      title: '¿Compartir en la comunidad?',
+      text: "Tu carta será visible para todos en el muro.",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#28a745',
+      confirmButtonText: '¡Compartir!',
+      cancelButtonText: 'Cancelar'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const { error } = await supabase
+          .from('captures')
+          .update({ is_public: true })
+          .eq('id', card.id);
+
+        if (error) throw error;
+
+        Swal.fire('¡Éxito!', 'Tu carta ya está en la comunidad.', 'success');
+        setSelectedCard(null);
+      } catch (err) {
+        Swal.fire('Error', 'No se pudo compartir: ' + err.message, 'error');
+      }
+    }
+  };
+
   const handleEdit = (card) => {
     setSelectedCard(null);
     navigate(`/camera?edit=${card.id}`);
@@ -104,6 +132,7 @@ function Album() {
             <div className="card-actions">
               <button className="btn-edit" onClick={() => handleEdit(selectedCard)}>Editar</button>
               <button className="btn-delete" onClick={() => handleDelete(selectedCard.id)}>Eliminar</button>
+              <button className="btn-share" onClick={() => handleShareToCommunity(selectedCard)}>Compartir al Muro</button>
             </div>
             
             <button className="close-btn" onClick={() => setSelectedCard(null)}>Cerrar</button>
