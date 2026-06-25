@@ -6,7 +6,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Album from './components/Album';
 import HeroCamera from './components/HeroCamera';
-import Comunidad from './components/comunidad'; 
+import Comunidad from './components/Comunidad'; 
 
 function App() {
   return (
