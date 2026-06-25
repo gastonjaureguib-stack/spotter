@@ -23,14 +23,13 @@
   font-weight: bold;
   display: block;
   margin-bottom: 5px;
-  z-index: 10;
 }
 
 .card-image-box {
   height: 200px;
   background: #0d141a;
   border: 1px solid #27ae60;
-  overflow: hidden; /* Esto asegura que el recorte se mantenga dentro del marco */
+  overflow: hidden;
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -40,8 +39,8 @@
 .card-image-box img {
   width: 100%;
   height: 100%;
-  object-fit: cover;      /* ESTO RECORTA LA IMAGEN PARA QUE LLENE TODO EL ESPACIO */
-  object-position: center; /* Mantiene el centro de la imagen visible */
+  object-fit: cover;
+  object-position: center;
 }
 
 .card-info-section {
@@ -68,4 +67,60 @@
   margin: 0;
   font-size: 0.75rem;
   text-transform: uppercase;
+}
+
+/* --- NUEVO: ESTILOS PARA EL BOTÓN DE LIKE --- */
+.like-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 5px 0;
+}
+
+.btn-like {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ffffff;
+  transition: transform 0.2s ease;
+}
+
+.btn-like:hover {
+  transform: scale(1.1);
+}
+
+.login-warning {
+  font-size: 0.6rem;
+  color: #e74c3c;
+  margin: 0;
+  margin-top: 4px;
+}
+
+/* ... el resto de tus estilos ... */
+
+.like-section {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.btn-like {
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+  transition: transform 0.2s;
+}
+
+.btn-like:hover {
+  transform: scale(1.1);
 }
