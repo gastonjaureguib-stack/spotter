@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');
+
+.card-container {
+  width: 300px;
+  min-height: 450px;
+  background: linear-gradient(180deg, #1b2631, #183329);
+  border: 3px solid #27ae60;
+  padding: 15px;
+  border-radius: 8px;
+  font-family: 'Michroma', sans-serif;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+  box-sizing: border-box;
+}
+
+.card-id-header {
+  font-size: 0.9rem !important; /* Más grande */
+  color: #2ecc71 !important;    /* Verde brillante */
+  text-align: right;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+  z-index: 10;
+}
+
+.card-image-box {
+  height: 200px;
+  background: #0d141a;
+  border: 1px solid #27ae60;
+  overflow: hidden;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background-color: #0d141a;
+}
+
+.card-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-cell {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(39, 174, 96, 0.3);
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.cell-label {
+  display: block;
+  font-size: 0.5rem;
+  color: #2ecc71;
+  margin-bottom: 2px;
+}
+
+.cell-value {
+  margin: 0;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
