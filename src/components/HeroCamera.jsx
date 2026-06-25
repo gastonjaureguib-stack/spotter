@@ -3,21 +3,8 @@ import { supabase } from './supabaseClient';
 import "./HeroCamera.css";
 import Swal from 'sweetalert2';
 import TradingCard from './TradingCard';
-
-const TEMPLATES_POR_CATEGORIA = {
-  perros: [
-    { nombre: "El Firulais del Barrio", raza: "Mestizo", personalidad: "Guardián", funFact: "Le tiene pánico a las escobas." },
-    { nombre: "El Flaco de la Esquina", raza: "Callejero", personalidad: "Amigable", funFact: "Gran robador de panes." }
-  ],
-  gatos: [
-    { nombre: "Michi Inspector", raza: "Común", personalidad: "Antipático", funFact: "Maúlla como si no hubiera comido hace semanas." },
-    { nombre: "Garfield del Cordón", raza: "Naranjoso", personalidad: "Dueño del Sol", funFact: "Engaña a 4 familias para comer." }
-  ],
-  plantas: [
-    { nombre: "La Planta Sobreviviente", raza: "Helecho", personalidad: "Resiliente", funFact: "Sobrevivió a 3 mudanzas." },
-    { nombre: "Clavel del Aire", raza: "Voladora", personalidad: "Okupa", funFact: "No paga alquiler." }
-  ]
-};
+// IMPORTAMOS EL JSON EXTERNO
+import TEMPLATES from '../data/templates.json';
 
 function HeroCamera() {
   const fileInputRef = useRef(null);
@@ -49,10 +36,15 @@ function HeroCamera() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  // FUNCIÓN ACTUALIZADA PARA USAR EL JSON
   const handleRandomize = () => {
-    const lista = TEMPLATES_POR_CATEGORIA[categoriaActiva] || [];
-    const random = lista[Math.floor(Math.random() * lista.length)];
-    if (random) setFormData(random);
+    const lista = TEMPLATES[categoriaActiva] || [];
+    if (lista.length > 0) {
+      const random = lista[Math.floor(Math.random() * lista.length)];
+      setFormData(random);
+    } else {
+      Swal.fire('Info', 'No hay datos cargados para esta categoría.', 'info');
+    }
   };
 
   const handleFormSubmit = (e) => {
@@ -102,7 +94,6 @@ function HeroCamera() {
     <div className="hero-camera-container text-white py-5 px-3 text-center d-flex align-items-center justify-content-center">
       <div className="container" style={{ maxWidth: '650px' }}>
         
-        {/* PASO 1: Selección de categoría */}
         {step === 'camera' && (
           <div className="animate-fade-in">
             <h1 className="display-5 fw-extrabold mb-5">¡Capturá tu Entorno!</h1>
@@ -119,7 +110,6 @@ function HeroCamera() {
           </div>
         )}
 
-        {/* PASO 2: Formulario */}
         {step === 'form' && (
           <div className="animate-fade-in bg-dark-card p-4 rounded-4 shadow-lg">
             <div className="d-flex justify-content-between mb-4">
@@ -139,7 +129,6 @@ function HeroCamera() {
           </div>
         )}
 
-        {/* PASO 3: Visualización de la carta */}
         {step === 'card' && (
           <div className="animate-fade-in">
             <TradingCard 

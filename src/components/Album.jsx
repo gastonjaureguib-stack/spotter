@@ -26,7 +26,7 @@ function Album() {
         .from('captures')
         .select('*')
         .eq('user_id', user.id)
-        .order('id', { ascending: true });
+        .order('numero_figurita', { ascending: true });
 
       if (category) {
         query = query.eq('categoria', category.toLowerCase().trim());
@@ -43,10 +43,7 @@ function Album() {
   };
 
   const handleDelete = async (id) => {
-    // 1. Cerramos el modal primero para liberar la interfaz y evitar conflictos de capas
     setSelectedCard(null);
-
-    // 2. Pedimos confirmación
     const result = await Swal.fire({
       title: '¿Borrar carta?',
       text: "¡Esta acción eliminará la carta de tu colección permanentemente!",
@@ -60,21 +57,16 @@ function Album() {
 
     if (result.isConfirmed) {
       try {
-        // 3. Borrado real en Supabase
         const { error } = await supabase
           .from('captures')
           .delete()
           .eq('id', id);
 
         if (error) throw error;
-
-        // 4. Si el borrado fue exitoso, actualizamos el estado local para quitar la carta de la vista
         setCapturas((prev) => prev.filter((c) => c.id !== id));
-        
         Swal.fire('Borrado', 'La carta ha sido eliminada del álbum.', 'success');
       } catch (err) {
-        console.error("Error al borrar:", err);
-        Swal.fire('Error', 'No se pudo eliminar la carta de la base de datos.', 'error');
+        Swal.fire('Error', 'No se pudo eliminar la carta.', 'error');
       }
     }
   };
@@ -104,6 +96,7 @@ function Album() {
         <div className="album-grid">
           {capturas.map((carta) => (
             <div key={carta.id} className="card-thumb" onClick={() => setSelectedCard(carta)}>
+              {/* Grid limpio: solo la carta */}
               <TradingCard data={carta} />
             </div>
           ))}
@@ -113,6 +106,7 @@ function Album() {
       {selectedCard && (
         <div className="modal-overlay" onClick={() => setSelectedCard(null)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            {/* Modal limpio: solo la carta y acciones */}
             <TradingCard data={selectedCard} />
             
             <div className="card-actions">
