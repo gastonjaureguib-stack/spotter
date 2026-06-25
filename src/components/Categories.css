@@ -1,6 +1,6 @@
 .image-btn {
-  width: 120px; /* Tamaño grande */
-  height: 120px;
+  width: 100px; /* Un poco más compacto para que quepan 4 botones */
+  height: 100px;
   border-radius: 50%;
   border: none;
   /* Gradiente vivo: Azul a Verde */
@@ -21,7 +21,12 @@
 
 /* Ajusta la imagen dentro del botón */
 .btn-icon {
-  width: 60%; /* La imagen ocupa el 60% del espacio del círculo */
+  width: 55%; 
   height: auto;
-  pointer-events: none; /* Evita conflictos al hacer clic */
+  pointer-events: none;
+}
+
+/* Ajuste para que los botones no se peguen en pantallas pequeñas */
+.row {
+  row-gap: 20px;
 }
