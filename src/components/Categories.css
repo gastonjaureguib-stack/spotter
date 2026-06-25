@@ -1,0 +1,27 @@
+.image-btn {
+  width: 120px; /* Tamaño grande */
+  height: 120px;
+  border-radius: 50%;
+  border: none;
+  /* Gradiente vivo: Azul a Verde */
+  background: linear-gradient(135deg, #007bff, #28a745);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  padding: 0;
+}
+
+.image-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Ajusta la imagen dentro del botón */
+.btn-icon {
+  width: 60%; /* La imagen ocupa el 60% del espacio del círculo */
+  height: auto;
+  pointer-events: none; /* Evita conflictos al hacer clic */
+}
