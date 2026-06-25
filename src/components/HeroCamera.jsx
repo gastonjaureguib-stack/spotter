@@ -1,19 +1,67 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from './supabaseClient';
 import "./HeroCamera.css";
 import Swal from 'sweetalert2';
 import TradingCard from './TradingCard';
-// IMPORTAMOS EL JSON EXTERNO
 import TEMPLATES from '../data/templates.json';
 
 function HeroCamera() {
   const fileInputRef = useRef(null);
+  const [searchParams] = useSearchParams();
+  const editId = searchParams.get('edit'); 
+  const navigate = useNavigate();
+
   const [categoriaActiva, setCategoriaActiva] = useState('perros');
   const [imagePreview, setImagePreview] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState('camera');
   const [formData, setFormData] = useState({ nombre: '', raza: '', personalidad: '', funFact: '' });
+
+  // Función para encontrar el primer número libre (1, 2, 3...)
+  const getAvailableNumber = async (userId, categoria) => {
+    const { data, error } = await supabase
+      .from('captures')
+      .select('numero_figurita')
+      .eq('user_id', userId)
+      .eq('categoria', categoria)
+      .order('numero_figurita', { ascending: true });
+
+    if (error) throw error;
+
+    const occupiedNumbers = data.map(item => item.numero_figurita);
+    let nextNum = 1;
+    while (occupiedNumbers.includes(nextNum)) {
+      nextNum++;
+    }
+    return nextNum;
+  };
+
+  useEffect(() => {
+    if (editId) {
+      const cargarCarta = async () => {
+        const { data, error } = await supabase
+          .from('captures')
+          .select('*')
+          .eq('id', editId)
+          .single();
+        
+        if (data) {
+          setFormData(data.metadata || { 
+            nombre: data.nombre, 
+            raza: data.raza || '', 
+            personalidad: data.personalidad || '', 
+            funFact: data.funFact || '' 
+          });
+          setImagePreview(data.image_url);
+          setCategoriaActiva(data.categoria);
+          setStep('card'); 
+        }
+      };
+      cargarCarta();
+    }
+  }, [editId]);
 
   const handleStartSpot = (categoria) => {
     setImagePreview(null);
@@ -36,7 +84,6 @@ function HeroCamera() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // FUNCIÓN ACTUALIZADA PARA USAR EL JSON
   const handleRandomize = () => {
     const lista = TEMPLATES[categoriaActiva] || [];
     if (lista.length > 0) {
@@ -57,32 +104,55 @@ function HeroCamera() {
     setSelectedFile(null);
     setFormData({ nombre: '', raza: '', personalidad: '', funFact: '' });
     setStep('camera');
+    if (editId) navigate('/album'); 
   };
 
   const handleSaveToAlbum = async () => {
-    if (!selectedFile) return;
     setLoading(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Debes iniciar sesión.");
 
-      const fileName = `${user.id}/${Date.now()}.png`;
-      const { error: uploadError } = await supabase.storage.from('Captures').upload(fileName, selectedFile);
-      if (uploadError) throw uploadError;
+      let publicUrl = imagePreview;
 
-      const { data: { publicUrl } } = supabase.storage.from('Captures').getPublicUrl(fileName);
+      if (selectedFile) {
+        const fileName = `${user.id}/${Date.now()}.png`;
+        const { error: uploadError } = await supabase.storage.from('Captures').upload(fileName, selectedFile);
+        if (uploadError) throw uploadError;
+        const { data: { publicUrl: newUrl } } = supabase.storage.from('Captures').getPublicUrl(fileName);
+        publicUrl = newUrl;
+      }
 
-      const { error: dbError } = await supabase.from('captures').insert({
-        user_id: user.id,
-        nombre: formData.nombre,
-        categoria: categoriaActiva,
-        image_url: publicUrl,
-        metadata: formData
-      });
+      if (editId) {
+        const { error: dbError } = await supabase
+          .from('captures')
+          .update({
+            nombre: formData.nombre,
+            categoria: categoriaActiva,
+            image_url: publicUrl,
+            metadata: formData
+          })
+          .eq('id', editId);
+        if (dbError) throw dbError;
+        
+        Swal.fire('¡Carta Actualizada!', 'Tus cambios fueron guardados.', 'success')
+            .then(() => navigate(`/album/${categoriaActiva.toLowerCase()}`));
+      } else {
+        // Cálculo del nuevo número antes del insert
+        const newNumber = await getAvailableNumber(user.id, categoriaActiva);
 
-      if (dbError) throw dbError;
-
-      Swal.fire('¡Carta Guardada!', 'Agregada a tu álbum.', 'success').then(() => handleResetAll());
+        const { error: dbError } = await supabase.from('captures').insert({
+          user_id: user.id,
+          nombre: formData.nombre,
+          categoria: categoriaActiva,
+          numero_figurita: newNumber,
+          image_url: publicUrl,
+          metadata: formData
+        });
+        
+        if (dbError) throw dbError;
+        Swal.fire('¡Carta Guardada!', `Agregada al álbum como #${newNumber}.`, 'success').then(() => handleResetAll());
+      }
     } catch (err) {
       Swal.fire('Error', err.message, 'error');
     } finally {
@@ -93,7 +163,6 @@ function HeroCamera() {
   return (
     <div className="hero-camera-container text-white py-5 px-3 text-center d-flex align-items-center justify-content-center">
       <div className="container" style={{ maxWidth: '650px' }}>
-        
         {step === 'camera' && (
           <div className="animate-fade-in">
             <h1 className="display-5 fw-extrabold mb-5">¡Capturá tu Entorno!</h1>
@@ -131,13 +200,11 @@ function HeroCamera() {
 
         {step === 'card' && (
           <div className="animate-fade-in">
-            <TradingCard 
-              data={{ ...formData, categoria: categoriaActiva, image_url: imagePreview }} 
-            />
+            <TradingCard data={{ ...formData, categoria: categoriaActiva, image_url: imagePreview }} />
             <div className="d-flex gap-2 mt-4 justify-content-center">
               <button onClick={() => setStep('form')} className="btn btn-warning flex-fill">Editar</button>
               <button onClick={handleSaveToAlbum} disabled={loading} className="btn btn-success flex-fill">
-                {loading ? 'Guardando...' : 'Guardar en Álbum'}
+                {loading ? 'Guardando...' : (editId ? 'Guardar Cambios' : 'Guardar en Álbum')}
               </button>
             </div>
           </div>

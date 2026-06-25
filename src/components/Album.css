@@ -10,7 +10,6 @@
 
 .album-grid {
   display: grid;
-  /* Esto asegura que se adapte a cualquier pantalla sin cortarse */
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 40px;
   width: 100%;
@@ -18,7 +17,6 @@
   align-items: center;
 }
 
-/* Contenedor miniatura: Usamos flexbox para centrar dentro del espacio */
 .card-thumb {
   cursor: pointer;
   transition: transform 0.3s ease;
@@ -28,7 +26,7 @@
 }
 
 .card-thumb:hover {
-  transform: translateY(-10px) scale(1.05); /* Mejor efecto que escalar la carta */
+  transform: translateY(-10px) scale(1.05);
 }
 
 /* Modal: Centrado perfecto con Flexbox */
@@ -40,7 +38,7 @@
   justify-content: center;
   align-items: center;
   z-index: 2000;
-  backdrop-filter: blur(5px); /* Efecto cristal */
+  backdrop-filter: blur(5px);
 }
 
 .modal-content {
@@ -50,6 +48,19 @@
   gap: 20px;
   animation: fadeIn 0.3s ease-out;
 }
+
+/* --- SOLUCIÓN PARA SWEETALERT2 --- */
+.swal2-container {
+  z-index: 9999 !important;
+}
+
+.swal2-popup {
+  font-family: 'Michroma', sans-serif !important;
+  border: 2px solid #27ae60 !important;
+  background: #1b2631 !important;
+  color: white !important;
+}
+/* --------------------------------- */
 
 /* Botones de acción mejorados */
 .card-actions {
@@ -89,9 +100,9 @@
 /* Responsive: Ajuste para celulares */
 @media (max-width: 600px) {
   .album-grid {
-    grid-template-columns: 1fr; /* Una sola columna en móvil */
+    grid-template-columns: 1fr;
   }
   .modal-content {
-    transform: scale(0.9); /* Un poco más pequeña en celular */
+    transform: scale(0.9);
   }
 }

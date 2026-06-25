@@ -1,11 +1,11 @@
 import React from 'react';
-// IMPORTANTE: Asegúrate de que esta línea esté tal cual:
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/NavBar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Album from './components/Album';
+import HeroCamera from './components/HeroCamera'; // <--- IMPORTA TU COMPONENTE AQUÍ
 
 function App() {
   return (
@@ -17,6 +17,9 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} /> 
+            
+            {/* RUTA PARA LA CÁMARA (NUEVA Y EDICIÓN) */}
+            <Route path="/camera" element={<HeroCamera />} />
             
             {/* RUTA PARA VER TODO EL ÁLBUM */}
             <Route path="/album" element={<Album />} />

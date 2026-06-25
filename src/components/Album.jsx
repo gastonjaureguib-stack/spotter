@@ -46,7 +46,7 @@ function Album() {
     setSelectedCard(null);
     const result = await Swal.fire({
       title: '¿Borrar carta?',
-      text: "¡Esta acción eliminará la carta de tu colección permanentemente!",
+      text: "¡Esta acción eliminará la carta permanentemente!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -57,26 +57,20 @@ function Album() {
 
     if (result.isConfirmed) {
       try {
-        const { error } = await supabase
-          .from('captures')
-          .delete()
-          .eq('id', id);
-
+        const { error } = await supabase.from('captures').delete().eq('id', id);
         if (error) throw error;
         setCapturas((prev) => prev.filter((c) => c.id !== id));
-        Swal.fire('Borrado', 'La carta ha sido eliminada del álbum.', 'success');
+        Swal.fire('Borrado', 'La carta ha sido eliminada.', 'success');
       } catch (err) {
-        Swal.fire('Error', 'No se pudo eliminar la carta.', 'error');
+        Swal.fire('Error', 'No se pudo eliminar.', 'error');
       }
     }
   };
 
+  // AQUÍ ESTÁ EL CAMBIO: Redirección directa sin confirmación
   const handleEdit = (card) => {
-    Swal.fire({
-      title: 'Editar información',
-      text: 'Funcionalidad de edición en desarrollo.',
-      icon: 'info'
-    });
+    setSelectedCard(null);
+    navigate(`/camera?edit=${card.id}`);
   };
 
   return (
@@ -96,7 +90,6 @@ function Album() {
         <div className="album-grid">
           {capturas.map((carta) => (
             <div key={carta.id} className="card-thumb" onClick={() => setSelectedCard(carta)}>
-              {/* Grid limpio: solo la carta */}
               <TradingCard data={carta} />
             </div>
           ))}
@@ -106,7 +99,6 @@ function Album() {
       {selectedCard && (
         <div className="modal-overlay" onClick={() => setSelectedCard(null)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            {/* Modal limpio: solo la carta y acciones */}
             <TradingCard data={selectedCard} />
             
             <div className="card-actions">
