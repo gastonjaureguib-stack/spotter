@@ -22,44 +22,70 @@
 }
 
 /* =========================================
-   BOTÓN TOGGLE (GALERÍA / LISTA)
+   FILTROS (🔥 NUEVO BLOQUE PRO)
+========================================= */
+
+.filter-bar {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+  padding: 0 10px;
+}
+
+/* BOTONES TIPO CHIPS */
+.filter-btn {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-family: 'Michroma', sans-serif;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(10px);
+}
+
+.filter-btn:hover {
+  background: rgba(255,255,255,0.18);
+  transform: translateY(-2px);
+}
+
+/* BOTÓN ACTIVO */
+.filter-btn.active {
+  background: #27ae60;
+  border-color: #27ae60;
+  color: #fff;
+  box-shadow: 0 6px 15px rgba(39,174,96,0.35);
+}
+
+/* =========================================
+   BOTÓN GRID / LIST
 ========================================= */
 
 .view-toggle {
   display: flex;
   justify-content: center;
-  gap: 12px;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
-.toggle-btn {
-  font-family: 'Michroma', sans-serif;
-  font-size: 0.7rem;
-
-  padding: 10px 16px;
-  border-radius: 999px;
-
+.view-toggle button {
+  background: #27ae60;
+  border: none;
   color: white;
-  background: rgba(39, 174, 96, 0.25);
-
-  border: 1px solid rgba(39, 174, 96, 0.5);
-
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-family: 'Michroma', sans-serif;
+  font-size: 0.75rem;
   cursor: pointer;
-  transition: all 0.25s ease;
-
-  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
 }
 
-.toggle-btn:hover {
-  transform: translateY(-2px);
-  background: rgba(39, 174, 96, 0.4);
-}
-
-.toggle-btn.active {
-  background: linear-gradient(135deg, #27ae60, #2ecc71);
-  color: #ffffff;
-  border: 1px solid #2ecc71;
-  box-shadow: 0 8px 20px rgba(39, 174, 96, 0.35);
+.view-toggle button:hover {
+  background: #2ecc71;
+  transform: scale(1.05);
 }
 
 /* =========================================
@@ -75,13 +101,13 @@
   transition: all 0.4s ease;
 }
 
-/* MODO GALERÍA */
+/* GRID MODE */
 .view-grid {
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   justify-items: center;
 }
 
-/* MODO LISTA */
+/* LIST MODE */
 .view-list {
   grid-template-columns: 1fr;
   justify-items: center;
@@ -95,24 +121,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
   width: 100%;
 }
 
-/* =========================================
-   EFECTO VISUAL
-========================================= */
-
-.card-thumb > * {
-  transition: transform 0.3s ease;
-}
-
-/* hover solo en grid */
+/* SOLO GRID HOVER */
 .view-grid .card-thumb:hover > * {
   transform: translateY(-5px) scale(1.02);
 }
 
-/* sin hover agresivo en lista */
 .view-list .card-thumb:hover > * {
   transform: none;
 }
@@ -125,13 +141,19 @@
 
   .album-grid {
     gap: 15px;
+    padding: 0 10px;
   }
 
   .view-grid {
     grid-template-columns: 1fr 1fr;
   }
 
-  .card-thumb {
-    padding: 5px;
+  .filter-btn {
+    font-size: 0.65rem;
+    padding: 6px 10px;
+  }
+
+  .view-toggle button {
+    width: 100%;
   }
 }

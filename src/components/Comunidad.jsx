@@ -7,7 +7,9 @@ function Comunidad() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+
   const [viewMode, setViewMode] = useState('grid');
+  const [categoryFilter, setCategoryFilter] = useState('all');
 
   useEffect(() => {
     const getSession = async () => {
@@ -41,6 +43,14 @@ function Comunidad() {
     return <div className="text-center mt-5">Cargando spotteds...</div>;
   }
 
+  // 🔥 FILTRO REAL POR CATEGORÍA
+  const filteredPosts =
+    categoryFilter === 'all'
+      ? posts
+      : posts.filter(
+          p => p.categoria?.toLowerCase() === categoryFilter
+        );
+
   return (
     <div className="comunidad-bg">
       <section className="container mt-4">
@@ -49,7 +59,47 @@ function Comunidad() {
           Spotteds de la Comunidad
         </h2>
 
-        {/* BOTÓN GRID / LIST */}
+        {/* 🔥 FILTRO DE CATEGORÍAS */}
+        <div className="d-flex justify-content-center flex-wrap gap-2 mb-3">
+
+          <button
+            className="btn btn-sm btn-outline-light"
+            onClick={() => setCategoryFilter('all')}
+          >
+            Todos 🌎
+          </button>
+
+          <button
+            className="btn btn-sm btn-outline-light"
+            onClick={() => setCategoryFilter('perros')}
+          >
+            Perros 🐶
+          </button>
+
+          <button
+            className="btn btn-sm btn-outline-light"
+            onClick={() => setCategoryFilter('gatos')}
+          >
+            Gatos 🐱
+          </button>
+
+          <button
+            className="btn btn-sm btn-outline-light"
+            onClick={() => setCategoryFilter('plantas')}
+          >
+            Plantas 🌿
+          </button>
+
+          <button
+            className="btn btn-sm btn-outline-light"
+            onClick={() => setCategoryFilter('paisajes')}
+          >
+            Paisajes 🌄
+          </button>
+
+        </div>
+
+        {/* GRID / LIST TOGGLE */}
         <div className="d-flex justify-content-center mb-4">
           <button
             className="btn btn-sm btn-outline-light"
@@ -63,11 +113,10 @@ function Comunidad() {
 
         {/* GRID / LIST */}
         <div className={`album-grid ${viewMode === 'list' ? 'view-list' : 'view-grid'}`}> 
-          {posts.length > 0 ? (
-            posts.map(post => (
+          {filteredPosts.length > 0 ? (
+            filteredPosts.map(post => (
               <div key={post.id} className="card-thumb">
 
-                {/* 🔥 FIX: compact SOLO en grid */}
                 <div className={`trading-card-wrapper ${viewMode === 'grid' ? 'compact' : ''}`}>
                   <TradingCard 
                     data={post} 
@@ -80,7 +129,7 @@ function Comunidad() {
             ))
           ) : (
             <p className="text-center text-white">
-              Aún nadie ha compartido nada. ¡Sé el primero!
+              No hay publicaciones en esta categoría.
             </p>
           )}
         </div>
