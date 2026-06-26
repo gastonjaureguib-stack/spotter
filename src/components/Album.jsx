@@ -12,6 +12,12 @@ function Album() {
   const [selectedCard, setSelectedCard] = useState(null);
   const navigate = useNavigate();
 
+  // Función para determinar la clase de fondo según la categoría
+  const getBackgroundClass = () => {
+    // Si la categoría es 'plantas', usamos bg-plantas, si no, bg-mascotas
+    return category?.toLowerCase() === 'plantas' ? 'bg-plantas' : 'bg-mascotas';
+  };
+
   useEffect(() => {
     fetchCapturas();
   }, [category]);
@@ -67,7 +73,6 @@ function Album() {
     }
   };
 
-  // Lógica para compartir (Actualizada a la columna 'is_public' en 'captures')
   const handleShareToCommunity = async (card) => {
     const result = await Swal.fire({
       title: '¿Compartir en la comunidad?',
@@ -102,43 +107,45 @@ function Album() {
   };
 
   return (
-    <div className="container py-5">
-      <h2 className="album-title text-center mb-5">
-        {category ? `Álbum de ${category}` : 'Mi Colección'}
-      </h2>
+    <div className={getBackgroundClass()}>
+      <div className="container py-5">
+        <h2 className="album-title text-center mb-5 text-white">
+          {category ? `Álbum de ${category.charAt(0).toUpperCase() + category.slice(1)}` : 'Mi Colección'}
+        </h2>
 
-      {loading ? (
-        <div className="text-center">Cargando colección...</div>
-      ) : capturas.length === 0 ? (
-        <div className="text-center">
+        {loading ? (
+          <div className="text-center text-white">Cargando colección...</div>
+        ) : capturas.length === 0 ? (
+          <div className="text-center text-white">
             <p>Aún no hay cartas aquí.</p>
-            <button className="btn btn-success" onClick={() => navigate('/')}>Ir a capturar</button>
-        </div>
-      ) : (
-        <div className="album-grid">
-          {capturas.map((carta) => (
-            <div key={carta.id} className="card-thumb" onClick={() => setSelectedCard(carta)}>
-              <TradingCard data={carta} />
-            </div>
-          ))}
-        </div>
-      )}
-
-      {selectedCard && (
-        <div className="modal-overlay" onClick={() => setSelectedCard(null)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <TradingCard data={selectedCard} />
-            
-            <div className="card-actions">
-              <button className="btn-edit" onClick={() => handleEdit(selectedCard)}>Editar</button>
-              <button className="btn-delete" onClick={() => handleDelete(selectedCard.id)}>Eliminar</button>
-              <button className="btn-share" onClick={() => handleShareToCommunity(selectedCard)}>Compartir al Muro</button>
-            </div>
-            
-            <button className="close-btn" onClick={() => setSelectedCard(null)}>Cerrar</button>
+            <button className="btn btn-success mt-3" onClick={() => navigate('/')}>Ir a capturar</button>
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="album-grid">
+            {capturas.map((carta) => (
+              <div key={carta.id} className="card-thumb" onClick={() => setSelectedCard(carta)}>
+                <TradingCard data={carta} />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {selectedCard && (
+          <div className="modal-overlay" onClick={() => setSelectedCard(null)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <TradingCard data={selectedCard} />
+              
+              <div className="card-actions">
+                <button className="btn-edit" onClick={() => handleEdit(selectedCard)}>Editar</button>
+                <button className="btn-delete" onClick={() => handleDelete(selectedCard.id)}>Eliminar</button>
+                <button className="btn-share" onClick={() => handleShareToCommunity(selectedCard)}>Compartir al Muro</button>
+              </div>
+              
+              <button className="close-btn" onClick={() => setSelectedCard(null)}>Cerrar</button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

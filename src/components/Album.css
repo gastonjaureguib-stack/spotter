@@ -1,4 +1,25 @@
-/* Contenedor principal con centrado total */
+/* --- FONDOS DINÁMICOS (Imagen única estirada) --- */
+.bg-mascotas {
+  background: linear-gradient(135deg, rgba(43, 108, 176, 0.9), rgba(47, 133, 90, 0.9)), url('/fondopatitas.png');
+  background-blend-mode: overlay;
+  background-size: cover;          /* ESTIRA LA IMAGEN */
+  background-position: center;     /* CENTRA LA IMAGEN */
+  background-repeat: no-repeat;    /* QUITA EL MOSAICO */
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+.bg-plantas {
+  background: linear-gradient(135deg, rgba(47, 133, 90, 0.9), rgba(56, 161, 105, 0.9)), url('/fondoplantas.png');
+  background-blend-mode: multiply;
+  background-size: cover;          /* ESTIRA LA IMAGEN */
+  background-position: center;     /* CENTRA LA IMAGEN */
+  background-repeat: no-repeat;    /* QUITA EL MOSAICO */
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* --- CÓDIGO ORIGINAL --- */
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -29,7 +50,6 @@
   transform: translateY(-10px) scale(1.05);
 }
 
-/* Modal: Centrado perfecto con Flexbox */
 .modal-overlay {
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
@@ -49,10 +69,7 @@
   animation: fadeIn 0.3s ease-out;
 }
 
-/* --- SOLUCIÓN PARA SWEETALERT2 --- */
-.swal2-container {
-  z-index: 9999 !important;
-}
+.swal2-container { z-index: 9999 !important; }
 
 .swal2-popup {
   font-family: 'Michroma', sans-serif !important;
@@ -60,12 +77,10 @@
   background: #1b2631 !important;
   color: white !important;
 }
-/* --------------------------------- */
 
-/* Botones de acción mejorados - AHORA EN COLUMNA */
 .card-actions {
   display: flex;
-  flex-direction: column; /* Apilados verticalmente */
+  flex-direction: column; 
   gap: 10px;
   margin-top: 10px;
   width: 100%;
@@ -85,10 +100,7 @@
 
 .btn-edit { background: #2980b9; color: white; }
 .btn-delete { background: #c0392b; color: white; }
-.btn-share { 
-  background: #27ae60; /* Verde estilo muro */
-  color: white; 
-}
+.btn-share { background: #27ae60; color: white; }
 
 .btn-share:hover { background: #219150; }
 .btn-edit:hover { background: #3498db; }
@@ -109,13 +121,7 @@
   to { opacity: 1; transform: scale(1); }
 }
 
-/* Responsive: Ajuste para celulares */
 @media (max-width: 600px) {
-  .album-grid {
-    grid-template-columns: 1fr;
-  }
-  .modal-content {
-    transform: scale(0.9);
-    width: 90%;
-  }
+  .album-grid { grid-template-columns: 1fr; }
+  .modal-content { transform: scale(0.9); width: 90%; }
 }
