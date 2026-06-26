@@ -10,24 +10,16 @@ function Footer() {
       title: '¿Qué es Spotter?',
       html: `
         <div style="text-align:left; font-size:14px; line-height:1.6">
-
           <h3>📸 Step 1</h3>
           <p>Capturás momentos: mascotas, plantas y paisajes.</p>
-
           <hr/>
-
           <h3>🃏 Step 2</h3>
           <p>Cada foto se convierte en una trading card coleccionable.</p>
-
           <hr/>
-
           <h3>🌍 Step 3</h3>
           <p>Podés guardarlas en tu álbum o compartirlas en la comunidad.</p>
-
           <hr/>
-
           <b>Spotter = coleccionar momentos de tu vida.</b>
-
         </div>
       `,
       confirmButtonText: 'Empezar 🚀',
@@ -40,12 +32,8 @@ function Footer() {
   return (
     <footer className="app-footer">
 
-      {/* FILA PRINCIPAL (botones) */}
+      {/* FILA PRINCIPAL (botones reducidos sin el de Inicio) */}
       <div className="footer-main">
-
-        <Link to="/" className="footer-btn home">
-          🏠 Inicio
-        </Link>
 
         <Link to="/album/perros" className="footer-btn dogs">
           🐶 Perros
@@ -65,18 +53,18 @@ function Footer() {
 
       </div>
 
-      {/* FILA INFERIOR (logo + info) */}
+      {/* FILA INFERIOR (Logo ahora es botón de inicio + info) */}
       <div className="footer-bottom">
 
-        <div className="footer-logo">
-          <img src="/logoblanco.png" alt="Spotter" />
-        </div>
+        <Link to="/" className="footer-logo">
+          <img src="/logoblanco.png" alt="Spotter - Inicio" />
+        </Link>
 
         <button
           className="footer-btn info"
           onClick={showSpotterSteps}
         >
-           Qué es Spotter ❓
+            Qué es Spotter ❓
         </button>
 
       </div>
