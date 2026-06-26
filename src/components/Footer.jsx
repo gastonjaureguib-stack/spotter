@@ -7,7 +7,7 @@ function Footer() {
     <footer className="app-footer">
 
       <Link to="/" className="footer-btn home">
-        🏠 Home
+        🏠 Inicio
       </Link>
 
       <Link to="/album/perros" className="footer-btn dogs">

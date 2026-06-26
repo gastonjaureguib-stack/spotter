@@ -57,7 +57,7 @@ function Comunidad() {
               setViewMode(prev => (prev === 'grid' ? 'list' : 'grid'))
             }
           >
-            {viewMode === 'grid' ? 'Ver lista 📋' : 'Ver galería 🖼️'}
+            {viewMode === 'grid' ? 'Ver lista ' : 'Ver galería '}
           </button>
         </div>
 

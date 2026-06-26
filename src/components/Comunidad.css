@@ -22,7 +22,48 @@
 }
 
 /* =========================================
-   GRID GENERAL (REUTILIZA EL DE ALBUM)
+   BOTÓN TOGGLE (GALERÍA / LISTA)
+========================================= */
+
+.view-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.toggle-btn {
+  font-family: 'Michroma', sans-serif;
+  font-size: 0.7rem;
+
+  padding: 10px 16px;
+  border-radius: 999px;
+
+  color: white;
+  background: rgba(39, 174, 96, 0.25);
+
+  border: 1px solid rgba(39, 174, 96, 0.5);
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  backdrop-filter: blur(10px);
+}
+
+.toggle-btn:hover {
+  transform: translateY(-2px);
+  background: rgba(39, 174, 96, 0.4);
+}
+
+.toggle-btn.active {
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  color: #ffffff;
+  border: 1px solid #2ecc71;
+  box-shadow: 0 8px 20px rgba(39, 174, 96, 0.35);
+}
+
+/* =========================================
+   GRID GENERAL
 ========================================= */
 
 .album-grid {
@@ -47,7 +88,7 @@
 }
 
 /* =========================================
-   CARD WRAPPER (IMPORTANTE FIX)
+   CARD WRAPPER
 ========================================= */
 
 .card-thumb {
@@ -55,24 +96,23 @@
   justify-content: center;
   align-items: center;
 
-  /* 🔥 CLAVE: evita montarse */
   width: 100%;
 }
 
 /* =========================================
-   GLASS EFFECT (solo estética)
+   EFECTO VISUAL
 ========================================= */
 
 .card-thumb > * {
   transition: transform 0.3s ease;
 }
 
-/* hover SOLO en grid */
+/* hover solo en grid */
 .view-grid .card-thumb:hover > * {
   transform: translateY(-5px) scale(1.02);
 }
 
-/* en lista no hacemos hover loco */
+/* sin hover agresivo en lista */
 .view-list .card-thumb:hover > * {
   transform: none;
 }
