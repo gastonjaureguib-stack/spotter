@@ -6,10 +6,9 @@ import TradingCard from './TradingCard';
 function Comunidad() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null); // 1. Estado para el usuario
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // 2. Obtener sesión del usuario al cargar
     const getSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user || null);
@@ -17,9 +16,10 @@ function Comunidad() {
 
     const fetchPosts = async () => {
       setLoading(true);
+      // Ajuste clave: pedimos la relación con la tabla 'profiles'
       const { data, error } = await supabase
         .from('captures')
-        .select('*')
+        .select('*, profiles(username)') 
         .eq('is_public', true)
         .order('created_at', { ascending: false });
 
@@ -44,7 +44,7 @@ function Comunidad() {
         {posts.length > 0 ? (
           posts.map(post => (
             <div key={post.id} className="card-thumb">
-              {/* 3. AQUÍ ESTÁ LA CLAVE: le pasamos el id del usuario */}
+              {/* Le pasamos el objeto post completo que ya incluye profiles */}
               <TradingCard data={post} userId={user?.id} />
             </div>
           ))
