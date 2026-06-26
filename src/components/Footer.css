@@ -107,7 +107,7 @@
   }
   
   .footer-logo img {
-    height: 40px; /* Ajuste preciso para que no se corte */
+    height: 60px; /* Ajuste preciso para que no se corte */
     max-width: 80px;
   }
 }
