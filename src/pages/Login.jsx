@@ -8,10 +8,10 @@ function Login() {
   const [isRegistering, setIsRegistering] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [username, setUsername] = useState(''); // Estado para el nombre
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // EFECTO: Si el usuario ya está logueado, no lo dejamos ver el login
   useEffect(() => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -25,10 +25,13 @@ function Login() {
     setLoading(true);
 
     if (isRegistering) {
-      // REGISTRO AUTOMÁTICO (Sin confirmación de email)
+      // REGISTRO con metadatos para que el Trigger de Supabase lo tome
       const { error } = await supabase.auth.signUp({ 
         email, 
-        password 
+        password,
+        options: {
+          data: { username: username.trim() }
+        }
       });
 
       if (error) {
@@ -40,14 +43,12 @@ function Login() {
           title: '¡Bienvenido!',
           text: 'Cuenta creada con éxito.',
           icon: 'success',
-          timer: 1500,
+          timer: 2000,
           showConfirmButton: false
-        }).then(() => {
-          navigate('/');
-        });
+        }).then(() => navigate('/'));
       }
     } else {
-      // INICIO DE SESIÓN
+      // LOGIN
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       
       if (error) {
@@ -69,6 +70,25 @@ function Login() {
         </div>
 
         <form onSubmit={handleSubmit}>
+          {/* Campo Nombre (Solo visible en registro) */}
+          {isRegistering && (
+            <div className="mb-3">
+              <label className="form-label fw-semibold text-secondary">Nombre de usuario</label>
+              <div className="input-group">
+                <span className="input-group-text bg-light text-secondary"><i className="bi bi-person"></i></span>
+                <input 
+                  type="text" 
+                  className="form-control" 
+                  placeholder="Elige tu alias" 
+                  value={username} 
+                  onChange={(e) => setUsername(e.target.value)} 
+                  required 
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Campo Correo */}
           <div className="mb-3">
             <label className="form-label fw-semibold text-secondary">Correo</label>
             <div className="input-group">
@@ -84,6 +104,7 @@ function Login() {
             </div>
           </div>
 
+          {/* Campo Contraseña */}
           <div className="mb-4">
             <label className="form-label fw-semibold text-secondary">Contraseña</label>
             <div className="input-group">
