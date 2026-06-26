@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from './supabaseClient';
 import "./HeroCamera.css";
 import Swal from 'sweetalert2';
@@ -9,8 +9,10 @@ import TEMPLATES from '../data/templates.json';
 function HeroCamera() {
   const fileInputRef = useRef(null);
   const [searchParams] = useSearchParams();
-  const editId = searchParams.get('edit'); 
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  const editId = searchParams.get('edit'); 
 
   const [categoriaActiva, setCategoriaActiva] = useState('perros');
   const [imagePreview, setImagePreview] = useState(null);
@@ -19,41 +21,25 @@ function HeroCamera() {
   const [step, setStep] = useState('camera');
   const [formData, setFormData] = useState({ nombre: '', raza: '', personalidad: '', funFact: '' });
 
-  // Función para encontrar el primer número libre (1, 2, 3...)
-  const getAvailableNumber = async (userId, categoria) => {
-    const { data, error } = await supabase
-      .from('captures')
-      .select('numero_figurita')
-      .eq('user_id', userId)
-      .eq('categoria', categoria)
-      .order('numero_figurita', { ascending: true });
-
-    if (error) throw error;
-
-    const occupiedNumbers = data.map(item => item.numero_figurita);
-    let nextNum = 1;
-    while (occupiedNumbers.includes(nextNum)) {
-      nextNum++;
+  // 1. Lógica para recibir la imagen desde la galería
+  useEffect(() => {
+    if (location.state?.imageFile) {
+      const file = location.state.imageFile;
+      setSelectedFile(file);
+      setImagePreview(URL.createObjectURL(file));
+      setCategoriaActiva(location.state.category || 'perros');
+      setStep('form');
+      window.history.replaceState({}, document.title);
     }
-    return nextNum;
-  };
+  }, [location.state]);
 
+  // 2. Carga si es edición
   useEffect(() => {
     if (editId) {
       const cargarCarta = async () => {
-        const { data, error } = await supabase
-          .from('captures')
-          .select('*')
-          .eq('id', editId)
-          .single();
-        
+        const { data } = await supabase.from('captures').select('*').eq('id', editId).single();
         if (data) {
-          setFormData(data.metadata || { 
-            nombre: data.nombre, 
-            raza: data.raza || '', 
-            personalidad: data.personalidad || '', 
-            funFact: data.funFact || '' 
-          });
+          setFormData(data.metadata || { nombre: data.nombre, raza: data.raza || '', personalidad: data.personalidad || '', funFact: data.funFact || '' });
           setImagePreview(data.image_url);
           setCategoriaActiva(data.categoria);
           setStep('card'); 
@@ -63,9 +49,15 @@ function HeroCamera() {
     }
   }, [editId]);
 
+  const getAvailableNumber = async (userId, categoria) => {
+    const { data } = await supabase.from('captures').select('numero_figurita').eq('user_id', userId).eq('categoria', categoria);
+    const occupiedNumbers = data ? data.map(item => item.numero_figurita) : [];
+    let nextNum = 1;
+    while (occupiedNumbers.includes(nextNum)) nextNum++;
+    return nextNum;
+  };
+
   const handleStartSpot = (categoria) => {
-    setImagePreview(null);
-    setFormData({ nombre: '', raza: '', personalidad: '', funFact: '' });
     setCategoriaActiva(categoria);
     fileInputRef.current.click();
   };
@@ -77,6 +69,7 @@ function HeroCamera() {
       setImagePreview(URL.createObjectURL(file));
       setStep('form');
     }
+    event.target.value = null; 
   };
 
   const handleInputChange = (e) => {
@@ -89,8 +82,6 @@ function HeroCamera() {
     if (lista.length > 0) {
       const random = lista[Math.floor(Math.random() * lista.length)];
       setFormData(random);
-    } else {
-      Swal.fire('Info', 'No hay datos cargados para esta categoría.', 'info');
     }
   };
 
@@ -124,34 +115,16 @@ function HeroCamera() {
       }
 
       if (editId) {
-        const { error: dbError } = await supabase
-          .from('captures')
-          .update({
-            nombre: formData.nombre,
-            categoria: categoriaActiva,
-            image_url: publicUrl,
-            metadata: formData
-          })
-          .eq('id', editId);
-        if (dbError) throw dbError;
-        
-        Swal.fire('¡Carta Actualizada!', 'Tus cambios fueron guardados.', 'success')
+        await supabase.from('captures').update({ nombre: formData.nombre, categoria: categoriaActiva, image_url: publicUrl, metadata: formData }).eq('id', editId);
+        Swal.fire('¡Carta Actualizada!', '', 'success')
             .then(() => navigate(`/album/${categoriaActiva.toLowerCase()}`));
       } else {
-        // Cálculo del nuevo número antes del insert
         const newNumber = await getAvailableNumber(user.id, categoriaActiva);
-
-        const { error: dbError } = await supabase.from('captures').insert({
-          user_id: user.id,
-          nombre: formData.nombre,
-          categoria: categoriaActiva,
-          numero_figurita: newNumber,
-          image_url: publicUrl,
-          metadata: formData
-        });
+        await supabase.from('captures').insert({ user_id: user.id, nombre: formData.nombre, categoria: categoriaActiva, numero_figurita: newNumber, image_url: publicUrl, metadata: formData });
         
-        if (dbError) throw dbError;
-        Swal.fire('¡Carta Guardada!', `Agregada al álbum como #${newNumber}.`, 'success').then(() => handleResetAll());
+        // CORRECCIÓN AQUÍ: Navegamos al álbum en lugar de resetear la cámara
+        Swal.fire('¡Carta Guardada!', `Agregada como #${newNumber}.`, 'success')
+            .then(() => navigate(`/album/${categoriaActiva.toLowerCase()}`));
       }
     } catch (err) {
       Swal.fire('Error', err.message, 'error');
@@ -210,7 +183,13 @@ function HeroCamera() {
           </div>
         )}
 
-        <input type="file" accept="image/*" capture="environment" ref={fileInputRef} onChange={handleImageCapture} style={{ display: 'none' }} />
+        <input 
+          type="file" 
+          accept="image/*" 
+          ref={fileInputRef} 
+          onChange={handleImageCapture} 
+          style={{ display: 'none' }} 
+        />
       </div>
     </div>
   );
