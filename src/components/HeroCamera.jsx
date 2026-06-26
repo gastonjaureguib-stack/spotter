@@ -18,11 +18,8 @@ function HeroCamera() {
   const [imagePreview, setImagePreview] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState(() => localStorage.getItem('step') || 'camera');
-  const [formData, setFormData] = useState(() => {
-    const saved = localStorage.getItem('formData');
-    return saved ? JSON.parse(saved) : { nombre: '', raza: '', personalidad: '', funFact: '' };
-  });
+  const [step, setStep] = useState('camera');
+  const [formData, setFormData] = useState({ nombre: '', raza: '', personalidad: '', funFact: '' });
 
   const getFormLabels = (cat) => {
     const isNature = ['plantas', 'paisajes'].includes(cat);
@@ -36,12 +33,7 @@ function HeroCamera() {
 
   const labels = getFormLabels(categoriaActiva);
 
-  // Persistencia de datos al escribir
-  useEffect(() => {
-    localStorage.setItem('formData', JSON.stringify(formData));
-    localStorage.setItem('step', step);
-  }, [formData, step]);
-
+  // Carga inicial y limpieza de estado corrupto
   useEffect(() => {
     if (location.state?.imageFile) {
       const file = location.state.imageFile;
@@ -52,11 +44,6 @@ function HeroCamera() {
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
-
-  const clearStorage = () => {
-    localStorage.removeItem('formData');
-    localStorage.removeItem('step');
-  };
 
   const handleStartSpot = (categoria) => {
     setCategoriaActiva(categoria);
@@ -76,6 +63,13 @@ function HeroCamera() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleReset = () => {
+    setImagePreview(null);
+    setSelectedFile(null);
+    setStep('camera');
+    if (editId) navigate('/album');
   };
 
   const handleSaveToAlbum = async () => {
@@ -100,7 +94,6 @@ function HeroCamera() {
         const newNumber = (existing?.length || 0) + 1;
         await supabase.from('captures').insert({ user_id: user.id, nombre: formData.nombre, categoria: categoriaActiva, numero_figurita: newNumber, image_url: publicUrl, metadata: formData });
       }
-      clearStorage();
       Swal.fire('¡Éxito!', 'Carta guardada correctamente', 'success').then(() => navigate(`/album/${categoriaActiva}`));
     } catch (err) {
       Swal.fire('Error', err.message, 'error');
@@ -112,6 +105,7 @@ function HeroCamera() {
   return (
     <div className="hero-camera-container text-white py-5 px-3 text-center d-flex align-items-center justify-content-center">
       <div className="container" style={{ maxWidth: '650px' }}>
+        
         {step === 'camera' && (
           <div className="animate-fade-in">
             <h1 className="display-5 fw-extrabold mb-5">¡Capturá tu Entorno!</h1>
@@ -131,14 +125,20 @@ function HeroCamera() {
         {step === 'form' && (
           <div className="animate-fade-in bg-dark-card p-4 rounded-4 shadow-lg">
             {!imagePreview ? (
-              <div className="alert alert-warning">Imagen perdida al refrescar. Vuelve a capturar.</div>
+              <div className="text-center">
+                <p className="mb-3">Se perdió la sesión. Por favor, vuelve a capturar.</p>
+                <button onClick={handleReset} className="btn btn-warning">Volver a la cámara</button>
+              </div>
             ) : (
               <form onSubmit={(e) => { e.preventDefault(); setStep('card'); }}>
                 <input name="nombre" value={formData.nombre} onChange={handleInputChange} className="form-control mb-3" placeholder={labels.nombre} required />
                 <input name="raza" value={formData.raza} onChange={handleInputChange} className="form-control mb-3" placeholder={labels.raza} />
                 <input name="personalidad" value={formData.personalidad} onChange={handleInputChange} className="form-control mb-3" placeholder={labels.personalidad} />
                 <textarea name="funFact" value={formData.funFact} onChange={handleInputChange} className="form-control mb-4" placeholder={labels.funFact}></textarea>
-                <button type="submit" className="btn btn-success w-100">Generar Carta ✨</button>
+                <div className="d-flex gap-2">
+                  <button type="button" onClick={handleReset} className="btn btn-outline-light w-50">Cancelar</button>
+                  <button type="submit" className="btn btn-success w-50">Generar Carta ✨</button>
+                </div>
               </form>
             )}
           </div>
@@ -147,7 +147,12 @@ function HeroCamera() {
         {step === 'card' && (
           <div className="animate-fade-in">
             <TradingCard data={{ ...formData, categoria: categoriaActiva, image_url: imagePreview }} />
-            <button onClick={handleSaveToAlbum} className="btn btn-success w-100 mt-3">Guardar en Álbum</button>
+            <div className="d-flex gap-2 mt-4">
+              <button onClick={() => setStep('form')} className="btn btn-warning w-50">Editar</button>
+              <button onClick={handleSaveToAlbum} className="btn btn-success w-50" disabled={loading}>
+                {loading ? 'Guardando...' : 'Guardar en Álbum'}
+              </button>
+            </div>
           </div>
         )}
 
