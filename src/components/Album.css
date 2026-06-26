@@ -125,3 +125,32 @@
   .album-grid { grid-template-columns: 1fr; }
   .modal-content { transform: scale(0.9); width: 90%; }
 }
+
+/* --- NUEVO BOTÓN GALERÍA --- */
+.upload-container {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 20px;
+  padding: 0 20px;
+}
+
+.btn-gallery-small {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 6px 15px;
+  border-radius: 20px;
+  font-family: 'Michroma', sans-serif;
+  font-size: 0.65rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.btn-gallery-small:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.02);
+}

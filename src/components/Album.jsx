@@ -14,7 +14,6 @@ function Album() {
 
   // Función para determinar la clase de fondo según la categoría
   const getBackgroundClass = () => {
-    // Si la categoría es 'plantas', usamos bg-plantas, si no, bg-mascotas
     return category?.toLowerCase() === 'plantas' ? 'bg-plantas' : 'bg-mascotas';
   };
 
@@ -45,6 +44,19 @@ function Album() {
       Swal.fire('Error', 'No pudimos cargar el álbum.', 'error');
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Lógica para manejar la subida desde galería
+  const handleGalleryUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      navigate(`/camera`, { 
+        state: { 
+          imageFile: file,
+          category: category 
+        } 
+      });
     }
   };
 
@@ -109,9 +121,24 @@ function Album() {
   return (
     <div className={getBackgroundClass()}>
       <div className="container py-5">
+        
         <h2 className="album-title text-center mb-5 text-white">
           {category ? `Álbum de ${category.charAt(0).toUpperCase() + category.slice(1)}` : 'Mi Colección'}
         </h2>
+
+        {/* Botón de subida desde galería (Minimalista, izquierda) */}
+        <div className="upload-container">
+          <input 
+            type="file" 
+            id="gallery-input" 
+            accept="image/*" 
+            onChange={handleGalleryUpload} 
+            style={{ display: 'none' }} 
+          />
+          <label htmlFor="gallery-input" className="btn-gallery-small">
+            + Subir de galería
+          </label>
+        </div>
 
         {loading ? (
           <div className="text-center text-white">Cargando colección...</div>
