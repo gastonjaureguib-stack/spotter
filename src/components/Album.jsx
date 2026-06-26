@@ -148,11 +148,18 @@ function Album() {
         ) : (
           <div className={`album-grid ${viewMode === 'list' ? 'view-list' : 'view-grid'}`}>
             {capturas.map((carta) => (
-              <div key={carta.id} className="card-thumb" onClick={() => setSelectedCard(carta)}>
-                <TradingCard 
-                  data={carta} 
-                  userId={userId} 
-                  onShare={() => handleShareToCommunity(carta)} 
+              <div
+                key={carta.id}
+                className="card-thumb"
+                onClick={() => setSelectedCard(carta)}
+              >
+                <TradingCard
+                  data={{
+                    ...carta,
+                    compact: viewMode === 'grid'   // 🔥 ESTE ES EL FIX
+                  }}
+                  userId={userId}
+                  onShare={() => handleShareToCommunity(carta)}
                 />
               </div>
             ))}
