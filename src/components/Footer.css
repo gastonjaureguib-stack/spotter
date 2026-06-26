@@ -26,9 +26,12 @@
 }
 
 .footer-main .footer-btn {
-  flex: 1;
-  min-width: 0;
+  flex: 1; /* Todos los botones ocupan el mismo espacio */
+  min-width: 0; /* Permite que el botón se encoja si el texto es largo */
   white-space: nowrap;
+  overflow: hidden; /* Oculta si se desborda */
+  text-overflow: ellipsis; /* Pone "..." si no entra el texto */
+  padding: 8px 4px; /* Padding ajustado */
   font-size: 0.75rem;
 }
 
@@ -42,7 +45,7 @@
   width: 100%;
   padding: 0 4px;
   box-sizing: border-box;
-  height: 45px; /* Ligeramente más alto para que el logo respire */
+  height: 45px;
 }
 
 .footer-logo {
@@ -55,9 +58,9 @@
 }
 
 .footer-logo img {
-  height: 150px;      /* Tamaño estándar */
-  width: auto;       
-  max-width: 100px;  
+  height: 150px; 
+  width: auto; 
+  max-width: 100px;
   object-fit: contain;
   display: block;
 }
@@ -70,14 +73,11 @@
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  font-size: 0.7rem;
   font-family: 'Michroma', sans-serif;
   color: white;
-  padding: 8px 10px;
   border-radius: 8px;
   transition: all 0.25s ease;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  white-space: nowrap;
 }
 
 .footer-btn:hover {
@@ -96,18 +96,17 @@
    RESPONSIVE (MOBILE)
 ========================= */
 @media (max-width: 600px) {
-  /* Añadimos padding al body para que el footer no tape el contenido */
   body {
     padding-bottom: 110px; 
   }
 
-  .footer-btn {
-    font-size: 0.6rem;
+  .footer-main .footer-btn {
+    font-size: 0.55rem; /* Fuente más pequeña para que quepa 'Comunidad' */
     padding: 6px 2px;
   }
   
   .footer-logo img {
-    height: 90px; /* Ajuste preciso para que no se corte */
+    height: 90px; /* Mantenemos tu altura de logo original */
     max-width: 80px;
   }
 }
