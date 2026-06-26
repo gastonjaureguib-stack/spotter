@@ -134,7 +134,7 @@ function Album() {
           <input type="file" id="gallery-input" accept="image/*" onChange={handleGalleryUpload} style={{ display: 'none' }} />
           
           <button className="btn btn-sm btn-outline-light" onClick={() => setViewMode(prev => prev === 'grid' ? 'list' : 'grid')}>
-            {viewMode === 'grid' ? 'Ver lista 📋' : 'Ver galería 🖼️'}
+            {viewMode === 'grid' ? 'Ver lista ' : 'Ver galería '}
           </button>
         </div>
 
