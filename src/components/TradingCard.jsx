@@ -23,7 +23,7 @@ const TradingCard = ({ data, userId, showUser = false, onShare }) => {
         .from('likes')
         .select('*', { count: 'exact', head: true })
         .eq('capture_id', data.id);
-      
+
       if (!error) setLikeCount(count || 0);
 
       if (userId) {
@@ -33,7 +33,7 @@ const TradingCard = ({ data, userId, showUser = false, onShare }) => {
           .eq('capture_id', data.id)
           .eq('user_id', userId)
           .maybeSingle();
-        
+
         setIsLiked(!!userLike);
       }
     };
@@ -43,6 +43,7 @@ const TradingCard = ({ data, userId, showUser = false, onShare }) => {
 
   const handleToggleLike = async (e) => {
     e.stopPropagation();
+
     if (!userId) {
       alert("Inicia sesión para dar amor ❤️");
       return;
@@ -56,9 +57,18 @@ const TradingCard = ({ data, userId, showUser = false, onShare }) => {
 
     try {
       if (previousLikeStatus) {
-        await supabase.from('likes').delete().eq('capture_id', data.id).eq('user_id', userId);
+        await supabase
+          .from('likes')
+          .delete()
+          .eq('capture_id', data.id)
+          .eq('user_id', userId);
       } else {
-        await supabase.from('likes').insert({ capture_id: data.id, user_id: userId });
+        await supabase
+          .from('likes')
+          .insert({
+            capture_id: data.id,
+            user_id: userId
+          });
       }
     } catch (err) {
       setIsLiked(previousLikeStatus);
@@ -77,62 +87,105 @@ const TradingCard = ({ data, userId, showUser = false, onShare }) => {
   const spotterName = data.profiles?.username || 'Anónimo';
 
   return (
-    <div className="trading-card-wrapper">
+
+    // ← ÚNICO CAMBIO
+    <div className={`trading-card-wrapper ${data?.compact ? 'compact' : ''}`}>
+
       <div className="card-container">
-        <div className="card-id-header">{displayId}</div>
-        
+
+        <div className="card-id-header">
+          {displayId}
+        </div>
+
         <div className="card-image-box">
-          {data.image_url && <img src={data.image_url} alt={nombre} />}
+          {data.image_url && (
+            <img
+              src={data.image_url}
+              alt={nombre}
+            />
+          )}
         </div>
 
         {showUser && (
           <div className="spotter-badge">
             <i className="bi bi-camera-fill me-2"></i>
-            <span>Spotter: <strong>@{spotterName}</strong></span>
+            <span>
+              Spotter:
+              <strong>@{spotterName}</strong>
+            </span>
           </div>
         )}
 
         <div className="card-info-section">
+
           <div className="like-section">
-            <button onClick={handleToggleLike} className="btn-like">
+            <button
+              onClick={handleToggleLike}
+              className="btn-like"
+            >
               {isLiked ? "❤️" : "🤍"} <span>{likeCount}</span>
             </button>
           </div>
 
           <div className="info-cell">
-            <span className="cell-label">NOMBRE</span>
-            <p className="cell-value">{nombre}</p>
+            <span className="cell-label">
+              NOMBRE
+            </span>
+
+            <p className="cell-value">
+              {nombre}
+            </p>
           </div>
 
           <div className="info-cell">
-            <span className="cell-label">{labels.raza}</span>
-            <p className="cell-value">{raza}</p>
+            <span className="cell-label">
+              {labels.raza}
+            </span>
+
+            <p className="cell-value">
+              {raza}
+            </p>
           </div>
 
           <div className="info-cell">
-            <span className="cell-label">{labels.personalidad}</span>
-            <p className="cell-value">{personalidad}</p>
+            <span className="cell-label">
+              {labels.personalidad}
+            </span>
+
+            <p className="cell-value">
+              {personalidad}
+            </p>
           </div>
 
           <div className="info-cell full-width">
-            <span className="cell-label">{labels.funFact}</span>
-            <p className="cell-value">{funFact}</p>
+            <span className="cell-label">
+              {labels.funFact}
+            </span>
+
+            <p className="cell-value">
+              {funFact}
+            </p>
           </div>
+
         </div>
+
       </div>
 
-      {/* Botón debajo, alineado a la izquierda */}
       {onShare && !data.is_public && (
-        <button 
-          className="btn-share-outside" 
-          onClick={(e) => { 
-            e.stopPropagation(); 
-            onShare(data); 
+
+        <button
+          className="btn-share-outside"
+          onClick={(e) => {
+            e.stopPropagation();
+            onShare(data);
           }}
         >
-          <i className="bi bi-share-fill"></i> COMPARTIR
+          <i className="bi bi-share-fill"></i>
+          COMPARTIR
         </button>
+
       )}
+
     </div>
   );
 };
