@@ -43,10 +43,7 @@ function Navbar() {
           </ul>
 
           <div className="d-flex">
-            {/* Botón Ingresar */}
-            <Link to="/login" className="btn btn-outline-success fw-bold px-4 rounded-pill">
-              <i className="bi bi-box-arrow-in-right me-2"></i>Ingresar
-            </Link>
+            
           </div>
 
         </div>
