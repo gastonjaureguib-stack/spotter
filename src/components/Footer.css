@@ -42,10 +42,9 @@
   width: 100%;
   padding: 0 4px;
   box-sizing: border-box;
-  height: 40px; /* Altura fija para la fila inferior */
+  height: 45px; /* Ligeramente más alto para que el logo respire */
 }
 
-/* El logo ahora es un enlace (Link) */
 .footer-logo {
   display: flex;
   align-items: center;
@@ -56,9 +55,9 @@
 }
 
 .footer-logo img {
-  height: 150px;      /* Altura controlada */
-  width: auto;       /* Mantiene proporción original */
-  max-width: 120px;  /* No se pasará del ancho permitido */
+  height: 150px;      /* Tamaño estándar */
+  width: auto;       
+  max-width: 100px;  
   object-fit: contain;
   display: block;
 }
@@ -97,13 +96,18 @@
    RESPONSIVE (MOBILE)
 ========================= */
 @media (max-width: 600px) {
+  /* Añadimos padding al body para que el footer no tape el contenido */
+  body {
+    padding-bottom: 110px; 
+  }
+
   .footer-btn {
-    font-size: 0.65rem;
-    padding: 6px 4px;
+    font-size: 0.6rem;
+    padding: 6px 2px;
   }
   
-  /* Eliminamos la restricción que cortaba el logo */
   .footer-logo img {
-    height: 50px; 
+    height: 28px; /* Ajuste preciso para que no se corte */
+    max-width: 80px;
   }
 }
