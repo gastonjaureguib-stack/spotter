@@ -16,7 +16,7 @@ function Comunidad() {
 
     const fetchPosts = async () => {
       setLoading(true);
-      // Ajuste clave: pedimos la relación con la tabla 'profiles'
+      // Consulta relacional con la tabla profiles
       const { data, error } = await supabase
         .from('captures')
         .select('*, profiles(username)') 
@@ -38,21 +38,22 @@ function Comunidad() {
   if (loading) return <div className="text-center mt-5">Cargando spotteds...</div>;
 
   return (
-    <section className="container mt-4">
-      <h2 className="text-center mb-4">Spotteds de la Comunidad</h2>
-      <div className="album-grid"> 
-        {posts.length > 0 ? (
-          posts.map(post => (
-            <div key={post.id} className="card-thumb">
-              {/* Le pasamos el objeto post completo que ya incluye profiles */}
-              <TradingCard data={post} userId={user?.id} />
-            </div>
-          ))
-        ) : (
-          <p className="text-center">Aún nadie ha compartido nada. ¡Sé el primero!</p>
-        )}
-      </div>
-    </section>
+    <div className="comunidad-bg">
+      <section className="container mt-4">
+        <h2 className="text-center mb-5 text-white">Spotteds de la Comunidad</h2>
+        <div className="album-grid"> 
+          {posts.length > 0 ? (
+            posts.map(post => (
+              <div key={post.id} className="card-thumb">
+                <TradingCard data={post} userId={user?.id} />
+              </div>
+            ))
+          ) : (
+            <p className="text-center text-white">Aún nadie ha compartido nada. ¡Sé el primero!</p>
+          )}
+        </div>
+      </section>
+    </div>
   );
 }
 
