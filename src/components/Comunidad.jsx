@@ -45,7 +45,12 @@ function Comunidad() {
           {posts.length > 0 ? (
             posts.map(post => (
               <div key={post.id} className="card-thumb">
-                <TradingCard data={post} userId={user?.id} />
+                {/* AÑADIDO: showUser={true} para que se vea el nombre en el muro */}
+                <TradingCard 
+                  data={post} 
+                  userId={user?.id} 
+                  showUser={true} 
+                />
               </div>
             ))
           ) : (

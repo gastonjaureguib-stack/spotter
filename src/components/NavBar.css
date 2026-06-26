@@ -26,7 +26,13 @@
 }
 
 .spooter-navbar .nav-link:hover {
-  color: #2b6cb0 !important;
+  color: #f1c40f  !important;
+}
+
+
+.spooter-navbar .nav-link.active {
+  color: #f1c40f !important;
+  font-weight: 800;
 }
 
 /* Botón Login */
@@ -64,5 +70,10 @@
     color: #ffffff !important;
     text-align: center;
     padding: 10px 0;
+  }
+
+  /* --- CAMBIO: Amarillo también en móvil para mejor visibilidad --- */
+  .navbar-collapse .nav-link.active {
+    color: #f1c40f !important;
   }
 }

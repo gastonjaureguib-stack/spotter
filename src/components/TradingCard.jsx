@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from './supabaseClient';
 import './TradingCard.css';
 
-const TradingCard = ({ data, userId }) => {
+const TradingCard = ({ data, userId, showUser = false }) => {
   const [likeCount, setLikeCount] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
 
@@ -11,11 +11,12 @@ const TradingCard = ({ data, userId }) => {
 
     const fetchLikes = async () => {
       // 1. Contar totales
-      const { count } = await supabase
+      const { count, error } = await supabase
         .from('likes')
         .select('*', { count: 'exact', head: true })
         .eq('capture_id', data.id);
-      setLikeCount(count || 0);
+      
+      if (!error) setLikeCount(count || 0);
 
       // 2. Verificar si el usuario logueado dio like
       if (userId) {
@@ -41,45 +42,52 @@ const TradingCard = ({ data, userId }) => {
       return;
     }
 
-    if (isLiked) {
-      await supabase.from('likes').delete().eq('capture_id', data.id).eq('user_id', userId);
-      setLikeCount((prev) => prev - 1);
-      setIsLiked(false);
-    } else {
-      await supabase.from('likes').insert({ capture_id: data.id, user_id: userId });
-      setLikeCount((prev) => prev + 1);
-      setIsLiked(true);
+    // Optimistic UI update
+    const previousLikeStatus = isLiked;
+    const previousCount = likeCount;
+
+    setIsLiked(!previousLikeStatus);
+    setLikeCount(previousLikeStatus ? previousCount - 1 : previousCount + 1);
+
+    try {
+      if (previousLikeStatus) {
+        await supabase.from('likes').delete().eq('capture_id', data.id).eq('user_id', userId);
+      } else {
+        await supabase.from('likes').insert({ capture_id: data.id, user_id: userId });
+      }
+    } catch (err) {
+      // Revertir en caso de error
+      setIsLiked(previousLikeStatus);
+      setLikeCount(previousCount);
+      console.error("Error al actualizar like:", err);
     }
   };
 
   if (!data) return null;
 
-  // Extraer datos con fallback seguro
+  // Acceso seguro a datos
   const displayId = data.numero_figurita ? `#${data.numero_figurita}` : 'NEW';
   const nombre = data.nombre || data.metadata?.nombre || 'SIN NOMBRE';
   const raza = data.raza || data.metadata?.raza || 'DESCONOCIDA';
   const funFact = data.funFact || data.metadata?.funFact || 'Sin datos curiosos aún...';
-  
-  // Extraer el username del perfil relacionado
   const spotterName = data.profiles?.username || 'Anónimo';
 
   return (
     <div className="card-container">
-      {/* CABECERA: ID de la figurita */}
       <div className="card-id-header">{displayId}</div>
       
-      {/* IMAGEN PRINCIPAL */}
       <div className="card-image-box">
-        <img src={data.image_url} alt={nombre} />
+        {data.image_url && <img src={data.image_url} alt={nombre} />}
       </div>
 
-      {/* BRANDING: Spotter que capturó */}
-      <div className="spotter-badge">
-        <i className="bi bi-camera-fill me-2"></i>
-        <span>Spotter: <strong>@{spotterName}</strong></span>
-      </div>
+      {/* Branding condicional: Solo se muestra si showUser es true */}
+      {showUser && (
+        <div className="spotter-badge">
+          <i className="bi bi-camera-fill me-2"></i>
+          <span>Spotter: <strong>@{spotterName}</strong></span>
+        </div>
+      )}
 
-      {/* INFORMACIÓN DE LA CARTA */}
       <div className="card-info-section">
         <div className="like-section">
           <button onClick={handleToggleLike} className="btn-like">
