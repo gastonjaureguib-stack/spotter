@@ -3,17 +3,13 @@
   bottom: 0;
   left: 0;
   width: 100%;
-
   display: flex;
   flex-direction: column;
-  gap: 6px;
-
+  gap: 8px;
   padding: 10px 8px;
-
   background: linear-gradient(90deg, #0f172a, #0b3d2e);
   border-top: 2px solid rgba(39, 174, 96, 0.4);
   z-index: 999;
-
   backdrop-filter: blur(10px);
   box-sizing: border-box;
 }
@@ -21,11 +17,10 @@
 /* =========================
    FILA 1 (BOTONES SUPERIORES)
 ========================= */
-
 .footer-main {
   display: flex;
-  flex-direction: row; /* Fuerza la línea horizontal */
-  flex-wrap: nowrap;   /* Evita que los botones salten a otra línea */
+  flex-direction: row;
+  flex-wrap: nowrap;
   gap: 4px;
   width: 100%;
 }
@@ -34,59 +29,53 @@
   flex: 1;
   min-width: 0;
   white-space: nowrap;
+  font-size: 0.75rem;
 }
 
 /* =========================
    FILA 2 (LOGO + BOTÓN MODAL)
 ========================= */
-
 .footer-bottom {
   display: flex;
-  justify-content: space-between; /* Logo a la izquierda, botón a la derecha */
-  align-items: center;            /* Centrados verticalmente entre sí */
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
   padding: 0 4px;
   box-sizing: border-box;
+  height: 40px; /* Altura fija para la fila inferior */
 }
-/* =========================
-   FILA 2 (LOGO + BOTÓN MODAL)
-========================= */
 
-/* 1. Le damos un tamaño fijo al CONTENEDOR del logo */
+/* El logo ahora es un enlace (Link) */
 .footer-logo {
-  width: 150px;       /* El ancho máximo que quieres que ocupe */
-  height: 45px;       /* Controla la altura real de la fila (ajústalo a tu gusto) */
-  overflow: hidden;   /* ¡La magia! Corta todo lo que se salga de estos límites */
   display: flex;
   align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+  cursor: pointer;
+  text-decoration: none;
 }
 
-/* 2. Forzamos a la IMAGEN a expandirse y centrarse para ocultar los bordes vacíos */
 .footer-logo img {
-  width: 100%;
-  height: 140px;      /* Escalamos la imagen hacia arriba (los 150px que querías) */
-  object-fit: cover;  /* Hace que la imagen llene el espacio recortando los excesos */
-  object-position: center; /* Centra el logo real para que no se corte lo importante */
+  height: 150px;      /* Altura controlada */
+  width: auto;       /* Mantiene proporción original */
+  max-width: 120px;  /* No se pasará del ancho permitido */
+  object-fit: contain;
   display: block;
-  opacity: 0.95;
 }
+
 /* =========================
    BOTONES BASE
 ========================= */
-
 .footer-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-
   text-decoration: none;
   font-size: 0.7rem;
   font-family: 'Michroma', sans-serif;
   color: white;
-
   padding: 8px 10px;
-  border-radius: 12px;
-
+  border-radius: 8px;
   transition: all 0.25s ease;
   border: 1px solid rgba(255, 255, 255, 0.08);
   white-space: nowrap;
@@ -97,31 +86,24 @@
   filter: brightness(1.2);
 }
 
-/* =========================
-   COLORES DE LOS BOTONES
-========================= */
-
-.footer-btn.home { background: rgba(100, 116, 139, 0.3); }
+/* COLORES */
 .footer-btn.dogs { background: rgba(59, 130, 246, 0.35); }
 .footer-btn.cats { background: rgba(245, 158, 11, 0.35); }
 .footer-btn.plants { background: rgba(34, 197, 94, 0.35); }
 .footer-btn.community { background: rgba(168, 85, 247, 0.35); }
-
-.footer-btn.info {
-  background: linear-gradient(135deg, #27ae60, #2ecc71);
-}
+.footer-btn.info { background: linear-gradient(135deg, #27ae60, #2ecc71); }
 
 /* =========================
    RESPONSIVE (MOBILE)
 ========================= */
-
 @media (max-width: 600px) {
   .footer-btn {
-    font-size: 0.6rem;
-    padding: 6px 6px;
+    font-size: 0.65rem;
+    padding: 6px 4px;
   }
-
+  
+  /* Eliminamos la restricción que cortaba el logo */
   .footer-logo img {
-    height: 16px;
+    height: 50px; 
   }
 }
