@@ -2,15 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from './supabaseClient';
 import './TradingCard.css';
 
-const TradingCard = ({ data, userId, showUser = false }) => {
+const TradingCard = ({ data, userId, showUser = false, onShare }) => {
   const [likeCount, setLikeCount] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
 
-  // Lógica para detectar si es una categoría de "Naturaleza"
   const categoria = data.categoria || 'perros';
   const isNature = ['plantas', 'paisajes'].includes(categoria.toLowerCase());
 
-  // Definimos las etiquetas dinámicas
   const labels = {
     raza: isNature ? 'TIPO / ESPECIE' : 'RAZA',
     personalidad: isNature ? 'CARACTERÍSTICAS' : 'PERSONALIDAD',
@@ -71,7 +69,6 @@ const TradingCard = ({ data, userId, showUser = false }) => {
 
   if (!data) return null;
 
-  // Acceso a datos
   const displayId = data.numero_figurita ? `#${data.numero_figurita}` : 'NEW';
   const nombre = data.nombre || data.metadata?.nombre || 'SIN NOMBRE';
   const raza = data.raza || data.metadata?.raza || 'DESCONOCIDA';
@@ -80,47 +77,62 @@ const TradingCard = ({ data, userId, showUser = false }) => {
   const spotterName = data.profiles?.username || 'Anónimo';
 
   return (
-    <div className="card-container">
-      <div className="card-id-header">{displayId}</div>
-      
-      <div className="card-image-box">
-        {data.image_url && <img src={data.image_url} alt={nombre} />}
+    <div className="trading-card-wrapper">
+      <div className="card-container">
+        <div className="card-id-header">{displayId}</div>
+        
+        <div className="card-image-box">
+          {data.image_url && <img src={data.image_url} alt={nombre} />}
+        </div>
+
+        {showUser && (
+          <div className="spotter-badge">
+            <i className="bi bi-camera-fill me-2"></i>
+            <span>Spotter: <strong>@{spotterName}</strong></span>
+          </div>
+        )}
+
+        <div className="card-info-section">
+          <div className="like-section">
+            <button onClick={handleToggleLike} className="btn-like">
+              {isLiked ? "❤️" : "🤍"} <span>{likeCount}</span>
+            </button>
+          </div>
+
+          <div className="info-cell">
+            <span className="cell-label">NOMBRE</span>
+            <p className="cell-value">{nombre}</p>
+          </div>
+
+          <div className="info-cell">
+            <span className="cell-label">{labels.raza}</span>
+            <p className="cell-value">{raza}</p>
+          </div>
+
+          <div className="info-cell">
+            <span className="cell-label">{labels.personalidad}</span>
+            <p className="cell-value">{personalidad}</p>
+          </div>
+
+          <div className="info-cell full-width">
+            <span className="cell-label">{labels.funFact}</span>
+            <p className="cell-value">{funFact}</p>
+          </div>
+        </div>
       </div>
 
-      {showUser && (
-        <div className="spotter-badge">
-          <i className="bi bi-camera-fill me-2"></i>
-          <span>Spotter: <strong>@{spotterName}</strong></span>
-        </div>
+      {/* Botón debajo, alineado a la izquierda */}
+      {onShare && !data.is_public && (
+        <button 
+          className="btn-share-outside" 
+          onClick={(e) => { 
+            e.stopPropagation(); 
+            onShare(data); 
+          }}
+        >
+          <i className="bi bi-share-fill"></i> COMPARTIR
+        </button>
       )}
-
-      <div className="card-info-section">
-        <div className="like-section">
-          <button onClick={handleToggleLike} className="btn-like">
-            {isLiked ? "❤️" : "🤍"} <span>{likeCount}</span>
-          </button>
-        </div>
-
-        <div className="info-cell">
-          <span className="cell-label">NOMBRE</span>
-          <p className="cell-value">{nombre}</p>
-        </div>
-
-        <div className="info-cell">
-          <span className="cell-label">{labels.raza}</span>
-          <p className="cell-value">{raza}</p>
-        </div>
-
-        <div className="info-cell">
-          <span className="cell-label">{labels.personalidad}</span>
-          <p className="cell-value">{personalidad}</p>
-        </div>
-
-        <div className="info-cell full-width">
-          <span className="cell-label">{labels.funFact}</span>
-          <p className="cell-value">{funFact}</p>
-        </div>
-      </div>
     </div>
   );
 };

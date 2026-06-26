@@ -1,50 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { supabase } from './supabaseClient';
-import Swal from 'sweetalert2';
 import './NavBar.css';
 
 function Navbar() {
   const [session, setSession] = useState(null);
   const [username, setUsername] = useState(null);
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [isIos, setIsIos] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Detectar si es iOS para mostrar el botón siempre (instrucciones)
-    const isIosDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    setIsIos(isIosDevice);
-
-    // Escuchar el evento de instalación para Android/Desktop
-    const handler = (e) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-    };
-
-    window.addEventListener('beforeinstallprompt', handler);
-    return () => window.removeEventListener('beforeinstallprompt', handler);
-  }, []);
-
-  const handleInstall = async () => {
-    if (isIos) {
-      Swal.fire({
-        title: 'Instalar Spotter',
-        text: 'En iPhone, toca el botón "Compartir" de Safari y selecciona "Añadir a pantalla de inicio".',
-        icon: 'info',
-        confirmButtonText: '¡Entendido!'
-      });
-    } else if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') {
-        setDeferredPrompt(null);
-      }
-    } else {
-      // Si el botón aparece pero no hay prompt, es que ya está instalada o el navegador no lo permite
-      Swal.fire('Info', 'La app ya está instalada o tu navegador no permite la instalación directa.', 'info');
-    }
-  };
 
   const fetchUsername = async (userId) => {
     const { data } = await supabase.from('profiles').select('username').eq('id', userId).single();
@@ -56,11 +18,13 @@ function Navbar() {
       setSession(session);
       if (session) fetchUsername(session.user.id);
     });
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       if (session) fetchUsername(session.user.id);
       else setUsername(null);
     });
+
     return () => subscription.unsubscribe();
   }, []);
 
@@ -81,13 +45,7 @@ function Navbar() {
     <nav className="navbar navbar-expand-lg spooter-navbar">
       <div className="container-fluid px-4">
         
-        {/* Botón de instalación: Visible en iOS siempre, o en Android si hay un prompt */}
-        {(deferredPrompt || isIos) && (
-          <button className="btn btn-sm btn-outline-warning me-3" onClick={handleInstall}>
-            <i className="bi bi-download"></i> <span className="d-none d-sm-inline">Instalar</span>
-          </button>
-        )}
-
+        {/* Logo a la izquierda, botón de instalación eliminado */}
         <NavLink className="navbar-brand" to="/">
           <img src="/logo.png" alt="Spooter" height="40" onError={(e) => { e.target.style.display = 'none'; }} />
         </NavLink>
@@ -112,7 +70,7 @@ function Navbar() {
 
           <div className="d-flex align-items-center">
             {session ? (
-              <button className="btn btn-danger rounded-pill px-4" onClick={handleLogout}>Salir</button>
+              <button className="btn btn-danger rounded-pill px-4" onClick={handleLogout}>Cerrar sesión</button>
             ) : (
               <NavLink className="btn btn-login-spooter rounded-pill px-4" to="/login" onClick={closeNavbar}>Ingresar</NavLink>
             )}

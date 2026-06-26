@@ -154,3 +154,35 @@
   background: rgba(255, 255, 255, 0.25);
   transform: scale(1.02);
 }
+/* --- LÓGICA DE VISTAS (Grid vs List) --- */
+
+/* Base del contenedor: mantenemos grid para flexibilidad */
+.album-grid {
+  display: grid;
+  gap: 30px;
+  width: 100%;
+  transition: all 0.4s ease;
+}
+
+/* VISTA GALERÍA (Grid) */
+.view-grid {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  justify-items: center;
+}
+
+/* VISTA LISTA (List) */
+.view-list {
+  grid-template-columns: 1fr; /* Una sola columna */
+  justify-items: center;
+}
+
+/* Ajuste específico para que las cartas no se estiren demasiado en modo lista */
+.view-list .card-thumb {
+  width: 100%;
+  max-width: 350px; /* Tamaño máximo de la card en lista */
+}
+
+/* Asegurar que el TradingCard Wrapper dentro de la lista se alinee bien */
+.view-list .trading-card-wrapper {
+  margin: 0 auto;
+}

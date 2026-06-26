@@ -6,7 +6,7 @@
   background: linear-gradient(180deg, #1b2631, #183329);
   border: 3px solid #27ae60;
   padding: 15px;
-  border-radius: 8px;
+  border-radius: 8px 8px 0 0; /* Bordes redondeados solo arriba */
   font-family: 'Michroma', sans-serif;
   color: #ffffff;
   display: flex;
@@ -43,7 +43,6 @@
   object-position: center;
 }
 
-/* --- ESTILO PARA EL SPOTTER BADGE --- */
 .spotter-badge {
   background: rgba(39, 174, 96, 0.15);
   color: #ffffff;
@@ -69,7 +68,6 @@
   margin-left: 5px;
 }
 
-/* --- SECCIONES DE INFO --- */
 .card-info-section {
   display: flex;
   flex-direction: column;
@@ -98,7 +96,6 @@
   word-wrap: break-word;
 }
 
-/* --- BOTÓN LIKE (Integrado) --- */
 .like-section {
   display: flex;
   justify-content: flex-end;
@@ -124,9 +121,27 @@
   transform: scale(1.1);
 }
 
-.login-warning {
-  font-size: 0.6rem;
-  color: #e74c3c;
-  margin: 0;
-  margin-top: 4px;
+/* --- BOTÓN COMPARTIR AZUL (Debajo de la carta) --- */
+.btn-share-outside {
+  width: 300px;
+  margin-top: -10px; /* Acopla el botón a la card */
+  padding: 12px;
+  background: #2980b9; /* Azul profesional */
+  color: #ffffff;
+  border: none;
+  border-radius: 0 0 8px 8px; /* Bordes redondeados solo abajo */
+  cursor: pointer;
+  font-family: 'Michroma', sans-serif;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.3s ease, transform 0.2s;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.btn-share-outside:hover {
+  background: #3498db;
+  transform: translateY(2px);
 }

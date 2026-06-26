@@ -8,7 +8,7 @@ function Login() {
   const [isRegistering, setIsRegistering] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [username, setUsername] = useState(''); // Estado para el nombre
+  const [username, setUsername] = useState(''); 
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 

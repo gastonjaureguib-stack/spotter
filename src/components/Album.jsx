@@ -10,27 +10,34 @@ function Album() {
   const [capturas, setCapturas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCard, setSelectedCard] = useState(null);
+  const [viewMode, setViewMode] = useState('grid');
+  const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
 
-  // Función para determinar la clase de fondo según la categoría
   const getBackgroundClass = () => {
     return category?.toLowerCase() === 'plantas' ? 'bg-plantas' : 'bg-mascotas';
   };
 
   useEffect(() => {
-    fetchCapturas();
+    const init = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setUserId(user.id);
+        fetchCapturas(user.id);
+      } else {
+        setLoading(false);
+      }
+    };
+    init();
   }, [category]);
 
-  const fetchCapturas = async () => {
+  const fetchCapturas = async (uid) => {
     try {
       setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
       let query = supabase
         .from('captures')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', uid)
         .order('numero_figurita', { ascending: true });
 
       if (category) {
@@ -47,15 +54,11 @@ function Album() {
     }
   };
 
-  // Lógica para manejar la subida desde galería
   const handleGalleryUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
       navigate(`/camera`, { 
-        state: { 
-          imageFile: file,
-          category: category 
-        } 
+        state: { imageFile: file, category: category } 
       });
     }
   };
@@ -104,9 +107,8 @@ function Album() {
           .eq('id', card.id);
 
         if (error) throw error;
-
         Swal.fire('¡Éxito!', 'Tu carta ya está en la comunidad.', 'success');
-        setSelectedCard(null);
+        fetchCapturas(userId);
       } catch (err) {
         Swal.fire('Error', 'No se pudo compartir: ' + err.message, 'error');
       }
@@ -121,23 +123,19 @@ function Album() {
   return (
     <div className={getBackgroundClass()}>
       <div className="container py-5">
-        
-        <h2 className="album-title text-center mb-5 text-white">
+        <h2 className="album-title text-center mb-4 text-white">
           {category ? `Álbum de ${category.charAt(0).toUpperCase() + category.slice(1)}` : 'Mi Colección'}
         </h2>
 
-        {/* Botón de subida desde galería (Minimalista, izquierda) */}
-        <div className="upload-container">
-          <input 
-            type="file" 
-            id="gallery-input" 
-            accept="image/*" 
-            onChange={handleGalleryUpload} 
-            style={{ display: 'none' }} 
-          />
-          <label htmlFor="gallery-input" className="btn-gallery-small">
+        <div className="d-flex justify-content-between align-items-center mb-4 px-3">
+          <label htmlFor="gallery-input" className="btn btn-outline-light btn-sm">
             + Subir de galería
           </label>
+          <input type="file" id="gallery-input" accept="image/*" onChange={handleGalleryUpload} style={{ display: 'none' }} />
+          
+          <button className="btn btn-sm btn-outline-light" onClick={() => setViewMode(prev => prev === 'grid' ? 'list' : 'grid')}>
+            {viewMode === 'grid' ? 'Ver lista 📋' : 'Ver galería 🖼️'}
+          </button>
         </div>
 
         {loading ? (
@@ -145,13 +143,17 @@ function Album() {
         ) : capturas.length === 0 ? (
           <div className="text-center text-white">
             <p>Aún no hay cartas aquí.</p>
-            <button className="btn btn-success mt-3" onClick={() => navigate('/')}>Ir a capturar</button>
+            <button className="btn btn-success" onClick={() => navigate('/')}>Ir a capturar</button>
           </div>
         ) : (
-          <div className="album-grid">
+          <div className={`album-grid ${viewMode === 'list' ? 'view-list' : 'view-grid'}`}>
             {capturas.map((carta) => (
               <div key={carta.id} className="card-thumb" onClick={() => setSelectedCard(carta)}>
-                <TradingCard data={carta} />
+                <TradingCard 
+                  data={carta} 
+                  userId={userId} 
+                  onShare={() => handleShareToCommunity(carta)} 
+                />
               </div>
             ))}
           </div>
@@ -161,13 +163,10 @@ function Album() {
           <div className="modal-overlay" onClick={() => setSelectedCard(null)}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
               <TradingCard data={selectedCard} />
-              
               <div className="card-actions">
                 <button className="btn-edit" onClick={() => handleEdit(selectedCard)}>Editar</button>
                 <button className="btn-delete" onClick={() => handleDelete(selectedCard.id)}>Eliminar</button>
-                <button className="btn-share" onClick={() => handleShareToCommunity(selectedCard)}>Compartir en comunidad</button>
               </div>
-              
               <button className="close-btn" onClick={() => setSelectedCard(null)}>Cerrar</button>
             </div>
           </div>
