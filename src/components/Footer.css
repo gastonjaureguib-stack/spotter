@@ -5,7 +5,7 @@
   width: 100%;
 
   display: flex;
-  flex-direction: column; /* 🔥 CLAVE: ahora sí es vertical */
+  flex-direction: column;
   gap: 6px;
 
   padding: 10px 8px;
@@ -18,7 +18,7 @@
 }
 
 /* =========================================
-   FILA PRINCIPAL (5 BOTONES)
+   FILA PRINCIPAL (BOTONES)
 ========================================= */
 
 .footer-main {
@@ -29,7 +29,6 @@
   gap: 4px;
 }
 
-/* evita que se rompan */
 .footer-main .footer-btn {
   flex: 1;
   min-width: 0;
@@ -37,7 +36,7 @@
 }
 
 /* =========================================
-   FILA SPOTTER
+   FILA SECUNDARIA (SPOTTER)
 ========================================= */
 
 .footer-secondary {
@@ -67,6 +66,9 @@
   transition: all 0.25s ease;
 
   border: 1px solid rgba(255,255,255,0.08);
+
+  position: relative; /* 🔥 IMPORTANTE para el glow */
+  overflow: hidden;
 }
 
 .footer-btn:hover {
@@ -93,10 +95,9 @@
   border: 1px solid rgba(255,255,255,0.15);
   box-shadow: 0 0 15px rgba(39,174,96,0.35);
   font-weight: bold;
-  width: auto;
 }
 
-/* glow */
+/* glow correcto */
 .footer-btn.info::after {
   content: '';
   position: absolute;
@@ -104,6 +105,7 @@
   background: radial-gradient(circle, rgba(255,255,255,0.2), transparent 60%);
   opacity: 0;
   transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
 .footer-btn.info:hover::after {

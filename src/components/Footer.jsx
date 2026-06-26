@@ -11,29 +11,53 @@ function Footer() {
       html: `
         <div style="text-align:left; font-size:14px; line-height:1.6">
 
-          <h3>📸 Step 1</h3>
-          <p>Capturás momentos: mascotas, plantas y paisajes.</p>
+          <p><b>Spotter</b> es una app donde capturás momentos de tu vida — mascotas, paisajes y todo lo que te gusta — y los transformás en cartas coleccionables digitales.</p>
 
           <hr/>
 
-          <h3>🃏 Step 2</h3>
-          <p>Cada foto se convierte en una trading card coleccionable.</p>
+          <h3>⚙️ ¿Cómo funciona?</h3>
+
+          <p><b>1. Creás tu cuenta</b><br/>
+          Te registrás e iniciás sesión para acceder a tu colección personal.</p>
+
+          <p><b>2. Capturás momentos</b><br/>
+          Elegís una categoría (perros, gatos, plantas o paisajes) y:</p>
+
+          <ul>
+            <li>Sacás una foto</li>
+            <li>o la subís desde tu galería</li>
+          </ul>
+
+          <p>Se convierte automáticamente en una trading card.</p>
+
+          <p><b>3. Tu álbum</b><br/>
+          Tus cards se guardan en tu colección privada organizada por categoría.</p>
 
           <hr/>
 
-          <h3>🌍 Step 3</h3>
-          <p>Podés guardarlas en tu álbum o compartirlas en la comunidad.</p>
+          <h3>🌍 Comunidad</h3>
+
+          <ul>
+            <li>Compartís cartas que querés mostrar</li>
+            <li>Ves publicaciones de otros usuarios</li>
+            <li>Dás “me gusta” ❤️</li>
+            <li>Descubrís nuevas cards</li>
+          </ul>
 
           <hr/>
 
-          <b>Spotter = coleccionar momentos de tu vida.</b>
+          <h3>💡 En resumen</h3>
+
+          <p><b>Spotter convierte momentos reales en coleccionables digitales.</b></p>
+          <p>No es solo una galería de fotos, es una forma de coleccionar lo que vivís.</p>
 
         </div>
       `,
       confirmButtonText: 'Empezar 🚀',
       confirmButtonColor: '#27ae60',
       background: '#1b2631',
-      color: '#ffffff'
+      color: '#ffffff',
+      width: '600px'
     });
   };
 
@@ -65,7 +89,7 @@ function Footer() {
 
       </div>
 
-      {/* FILA SECUNDARIA (IMPORTANTE PARA MOBILE) */}
+      {/* FILA SECUNDARIA */}
       <div className="footer-secondary">
 
         <button
