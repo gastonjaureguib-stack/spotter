@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { supabase } from './supabaseClient';
 import './NavBar.css';
 
@@ -37,13 +37,24 @@ function Navbar() {
     navigate('/login');
   };
 
+  // Función para cerrar el menú en móviles tras seleccionar una opción
+  const closeNavbar = () => {
+    const navbarCollapse = document.querySelector('.navbar-collapse');
+    const navbarToggler = document.querySelector('.navbar-toggler');
+    
+    // Si el menú está abierto, forzamos el cierre
+    if (navbarCollapse?.classList.contains('show')) {
+      navbarToggler.click();
+    }
+  };
+
   return (
     <nav className="navbar navbar-expand-lg spooter-navbar">
       <div className="container-fluid px-4">
         
-        <Link className="navbar-brand" to="/">
+        <NavLink className="navbar-brand" to="/">
           <img src="/logo.png" alt="Spooter" height="40" onError={(e) => { e.target.style.display = 'none'; }} />
-        </Link>
+        </NavLink>
 
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
           <span className="navbar-toggler-icon"></span>
@@ -56,18 +67,20 @@ function Navbar() {
                 <span className="user-greeting">Hola, {username || 'Usuario'}</span>
               </li>
             )}
-            <li className="nav-item"><Link className="nav-link" to="/">Home</Link></li>
-            <li className="nav-item"><Link className="nav-link" to="/comunidad">Comunidad</Link></li>
-            <li className="nav-item"><Link className="nav-link" to="/album/perros">Perros</Link></li>
-            <li className="nav-item"><Link className="nav-link" to="/album/gatos">Gatos</Link></li>
-            <li className="nav-item"><Link className="nav-link" to="/album/plantas">Plantas</Link></li>
+            
+            {/* Usamos NavLink para que el CSS detecte la clase 'active' */}
+            <li className="nav-item"><NavLink className="nav-link" to="/" end onClick={closeNavbar}>Home</NavLink></li>
+            <li className="nav-item"><NavLink className="nav-link" to="/comunidad" onClick={closeNavbar}>Comunidad</NavLink></li>
+            <li className="nav-item"><NavLink className="nav-link" to="/album/perros" onClick={closeNavbar}>Perros</NavLink></li>
+            <li className="nav-item"><NavLink className="nav-link" to="/album/gatos" onClick={closeNavbar}>Gatos</NavLink></li>
+            <li className="nav-item"><NavLink className="nav-link" to="/album/plantas" onClick={closeNavbar}>Plantas</NavLink></li>
           </ul>
 
           <div className="d-flex align-items-center">
             {session ? (
               <button className="btn btn-danger rounded-pill px-4" onClick={handleLogout}>Salir</button>
             ) : (
-              <Link className="btn btn-login-spooter rounded-pill px-4" to="/login">Ingresar</Link>
+              <NavLink className="btn btn-login-spooter rounded-pill px-4" to="/login" onClick={closeNavbar}>Ingresar</NavLink>
             )}
           </div>
         </div>
