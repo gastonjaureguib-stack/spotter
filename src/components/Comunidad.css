@@ -1,15 +1,19 @@
-/* Gradiente inmersivo: Fondo que "respira" */
+/* =========================================
+   FONDO PRINCIPAL
+========================================= */
+
 .comunidad-bg {
-  /* Gradiente angular más marcado */
   background: linear-gradient(160deg, #1e3a8a 0%, #064e3b 100%);
   min-height: 100vh;
   width: 100%;
   padding: 3rem 0;
-  /* Fondo fijo para que al hacer scroll se sienta sólido */
   background-attachment: fixed;
 }
 
-/* Título con estilo */
+/* =========================================
+   TÍTULO
+========================================= */
+
 .comunidad-title {
   color: #ffffff;
   font-weight: 800;
@@ -17,18 +21,77 @@
   text-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
-/* Tarjetas Glassmorphism mejoradas */
-.card-thumb {
-  background: rgba(255, 255, 255, 0.1); /* Más sutil */
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 24px;
-  padding: 15px; /* Espacio interno extra */
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+/* =========================================
+   GRID GENERAL (REUTILIZA EL DE ALBUM)
+========================================= */
+
+.album-grid {
+  display: grid;
+  gap: 25px;
+  width: 100%;
+  margin-top: 20px;
+  padding: 0 20px;
+  transition: all 0.4s ease;
 }
 
-.card-thumb:hover {
-  transform: scale(1.05);
-  background: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+/* MODO GALERÍA */
+.view-grid {
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  justify-items: center;
+}
+
+/* MODO LISTA */
+.view-list {
+  grid-template-columns: 1fr;
+  justify-items: center;
+}
+
+/* =========================================
+   CARD WRAPPER (IMPORTANTE FIX)
+========================================= */
+
+.card-thumb {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* 🔥 CLAVE: evita montarse */
+  width: 100%;
+}
+
+/* =========================================
+   GLASS EFFECT (solo estética)
+========================================= */
+
+.card-thumb > * {
+  transition: transform 0.3s ease;
+}
+
+/* hover SOLO en grid */
+.view-grid .card-thumb:hover > * {
+  transform: translateY(-5px) scale(1.02);
+}
+
+/* en lista no hacemos hover loco */
+.view-list .card-thumb:hover > * {
+  transform: none;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .album-grid {
+    gap: 15px;
+  }
+
+  .view-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .card-thumb {
+    padding: 5px;
+  }
 }

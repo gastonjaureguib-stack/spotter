@@ -7,6 +7,7 @@ function Comunidad() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [viewMode, setViewMode] = useState('grid');
 
   useEffect(() => {
     const getSession = async () => {
@@ -16,7 +17,7 @@ function Comunidad() {
 
     const fetchPosts = async () => {
       setLoading(true);
-      // Consulta relacional con la tabla profiles
+
       const { data, error } = await supabase
         .from('captures')
         .select('*, profiles(username)') 
@@ -28,6 +29,7 @@ function Comunidad() {
       } else {
         setPosts(data || []);
       }
+
       setLoading(false);
     };
 
@@ -35,28 +37,54 @@ function Comunidad() {
     fetchPosts();
   }, []);
 
-  if (loading) return <div className="text-center mt-5">Cargando spotteds...</div>;
+  if (loading) {
+    return <div className="text-center mt-5">Cargando spotteds...</div>;
+  }
 
   return (
     <div className="comunidad-bg">
       <section className="container mt-4">
-        <h2 className="text-center mb-5 text-white">Spotteds de la Comunidad</h2>
-        <div className="album-grid"> 
+
+        <h2 className="text-center mb-4 text-white">
+          Spotteds de la Comunidad
+        </h2>
+
+        {/* BOTÓN GRID / LIST */}
+        <div className="d-flex justify-content-center mb-4">
+          <button
+            className="btn btn-sm btn-outline-light"
+            onClick={() =>
+              setViewMode(prev => (prev === 'grid' ? 'list' : 'grid'))
+            }
+          >
+            {viewMode === 'grid' ? 'Ver lista 📋' : 'Ver galería 🖼️'}
+          </button>
+        </div>
+
+        {/* GRID / LIST */}
+        <div className={`album-grid ${viewMode === 'list' ? 'view-list' : 'view-grid'}`}> 
           {posts.length > 0 ? (
             posts.map(post => (
               <div key={post.id} className="card-thumb">
-                {/* AÑADIDO: showUser={true} para que se vea el nombre en el muro */}
-                <TradingCard 
-                  data={post} 
-                  userId={user?.id} 
-                  showUser={true} 
-                />
+
+                {/* 🔥 FIX: compact SOLO en grid */}
+                <div className={`trading-card-wrapper ${viewMode === 'grid' ? 'compact' : ''}`}>
+                  <TradingCard 
+                    data={post} 
+                    userId={user?.id} 
+                    showUser={true} 
+                  />
+                </div>
+
               </div>
             ))
           ) : (
-            <p className="text-center text-white">Aún nadie ha compartido nada. ¡Sé el primero!</p>
+            <p className="text-center text-white">
+              Aún nadie ha compartido nada. ¡Sé el primero!
+            </p>
           )}
         </div>
+
       </section>
     </div>
   );
