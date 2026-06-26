@@ -33,7 +33,38 @@ function HeroCamera() {
 
   const labels = getFormLabels(categoriaActiva);
 
-  // Función para cargar datos aleatorios desde TEMPLATES
+  // --- NUEVA LÓGICA DE EDICIÓN ---
+  useEffect(() => {
+    if (editId) {
+      const fetchCardForEdit = async () => {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from('captures')
+          .select('*')
+          .eq('id', editId)
+          .single();
+
+        if (data) {
+          setFormData(data.metadata || { 
+            nombre: data.nombre, 
+            raza: data.raza, 
+            personalidad: data.personalidad, 
+            funFact: data.funFact 
+          });
+          setImagePreview(data.image_url);
+          setCategoriaActiva(data.categoria);
+          setStep('form'); // Forzamos el paso al formulario
+        } else {
+          Swal.fire('Error', 'No se pudo cargar la carta para editar.', 'error');
+          navigate('/album');
+        }
+        setLoading(false);
+      };
+      fetchCardForEdit();
+    }
+  }, [editId, navigate]);
+  // --- FIN DE LÓGICA DE EDICIÓN ---
+
   const handleRandomize = () => {
     const lista = TEMPLATES[categoriaActiva] || [];
     if (lista.length > 0) {
@@ -84,7 +115,8 @@ function HeroCamera() {
     setImagePreview(null);
     setSelectedFile(null);
     setStep('camera');
-    if (editId) navigate('/album');
+    if (editId) navigate(`/album/${categoriaActiva}`);
+    else navigate('/album');
   };
 
   const handleSaveToAlbum = async () => {
