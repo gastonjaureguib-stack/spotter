@@ -1,23 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from './supabaseClient';
-import TradingCard from './TradingCard'; // Importamos tu componente
+import TradingCard from './TradingCard'; 
 
 function LatestCaptures() {
   const [captures, setCaptures] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null); // Necesitamos al usuario para el corazón
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Obtener sesión para los likes
     const getSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user || null);
     };
 
     const fetchLatest = async () => {
+      setLoading(true);
+      // CAMBIO: Incluimos profiles(username) para que el nombre aparezca
       const { data, error } = await supabase
         .from('captures')
-        .select('*')
+        .select(`
+          *,
+          profiles (username)
+        `)
         .eq('is_public', true)
         .order('created_at', { ascending: false })
         .limit(5);
@@ -49,7 +53,6 @@ function LatestCaptures() {
           <div className="row row-cols-1 row-cols-md-3 g-4">
             {captures.map((cap) => (
               <div key={cap.id} className="col d-flex justify-content-center">
-                {/* Usamos TU TradingCard con sus estilos y su lógica de corazón */}
                 <TradingCard data={cap} userId={user?.id} />
               </div>
             ))}
