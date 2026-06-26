@@ -54,6 +54,41 @@ function Album() {
     }
   };
 
+  // --- NUEVA FUNCIÓN PARA CAMBIAR CATEGORÍA ---
+  const handleChangeCategory = async (card) => {
+    const { value: nuevaCategoria } = await Swal.fire({
+      title: 'Cambiar categoría',
+      input: 'select',
+      inputOptions: {
+        'perros': 'Perros',
+        'gatos': 'Gatos',
+        'plantas': 'Plantas',
+        'paisajes': 'Paisajes'
+      },
+      inputPlaceholder: 'Selecciona una categoría',
+      showCancelButton: true,
+      confirmButtonText: 'Mover',
+      cancelButtonText: 'Cancelar'
+    });
+
+    if (nuevaCategoria) {
+      try {
+        const { error } = await supabase
+          .from('captures')
+          .update({ categoria: nuevaCategoria })
+          .eq('id', card.id);
+
+        if (error) throw error;
+
+        Swal.fire('¡Éxito!', 'La carta se ha movido correctamente.', 'success');
+        setSelectedCard(null); // Cerramos el modal
+        fetchCapturas(userId); // Recargamos para que desaparezca/aparezca donde debe
+      } catch (err) {
+        Swal.fire('Error', 'No se pudo actualizar la categoría.', 'error');
+      }
+    }
+  };
+
   const handleGalleryUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -156,7 +191,7 @@ function Album() {
                 <TradingCard
                   data={{
                     ...carta,
-                    compact: viewMode === 'grid'   // 🔥 ESTE ES EL FIX
+                    compact: viewMode === 'grid'
                   }}
                   userId={userId}
                   onShare={() => handleShareToCommunity(carta)}
@@ -172,6 +207,7 @@ function Album() {
               <TradingCard data={selectedCard} />
               <div className="card-actions">
                 <button className="btn-edit" onClick={() => handleEdit(selectedCard)}>Editar</button>
+                <button className="btn-secondary" onClick={() => handleChangeCategory(selectedCard)}>Mover de categoría<area shape="" coords="" href="" alt="" /></button>
                 <button className="btn-delete" onClick={() => handleDelete(selectedCard.id)}>Eliminar</button>
               </div>
               <button className="close-btn" onClick={() => setSelectedCard(null)}>Cerrar</button>

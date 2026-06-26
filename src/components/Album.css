@@ -20,16 +20,14 @@
 }
 
 /* --- CONTENEDOR --- */
-
-.container{
+.container {
     max-width:1200px;
     margin:auto;
     padding:20px;
 }
 
 /* --- BOTONES --- */
-
-.actions-bar{
+.actions-bar {
     display:flex;
     justify-content:center;
     gap:20px;
@@ -37,7 +35,7 @@
 }
 
 .btn-gallery-small,
-.btn-view-toggle{
+.btn-view-toggle {
     background:rgba(255,255,255,.12);
     border:1px solid rgba(255,255,255,.3);
     color:#fff;
@@ -49,90 +47,53 @@
 }
 
 .btn-gallery-small:hover,
-.btn-view-toggle:hover{
+.btn-view-toggle:hover {
     background:rgba(255,255,255,.22);
 }
 
-/* ------------------------- */
-/* GRID */
-/* ------------------------- */
-
-.album-grid{
+/* --- GRID --- */
+.album-grid {
     display:grid;
     gap:24px;
     margin-top:20px;
     width:100%;
 }
 
-/* LISTA */
-
-.view-list{
+.view-list {
     grid-template-columns:1fr;
     justify-items:center;
 }
 
-.view-list .card-thumb{
+.view-list .card-thumb {
     width:100%;
     display:flex;
     justify-content:center;
 }
 
-/* GALERÍA DESKTOP */
-
-.view-grid{
+.view-grid {
     grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
     justify-items:center;
     align-items:start;
 }
 
-.view-grid .card-thumb{
+.view-grid .card-thumb {
     width:190px;
     display:flex;
     justify-content:center;
     align-items:flex-start;
 }
 
-/* ------------------------- */
-
-.card-thumb{
+.card-thumb {
     cursor:pointer;
     transition:.25s;
 }
 
-.card-thumb:hover{
+.card-thumb:hover {
     transform:translateY(-6px);
 }
 
-/* ------------------------- */
-/* MOBILE */
-/* ------------------------- */
-
-@media(max-width:768px){
-
-    .view-grid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:14px;
-    }
-
-    .view-grid .card-thumb{
-        width:100%;
-    }
-
-}
-
-@media(max-width:500px){
-
-    .view-grid{
-        gap:10px;
-    }
-
-}
-
-/* ------------------------- */
-/* MODAL */
-/* ------------------------- */
-
-.modal-overlay{
+/* --- MODAL --- */
+.modal-overlay {
     position:fixed;
     inset:0;
     background:rgba(10,15,20,.95);
@@ -143,14 +104,14 @@
     backdrop-filter:blur(5px);
 }
 
-.modal-content{
+.modal-content {
     display:flex;
     flex-direction:column;
     align-items:center;
     gap:20px;
 }
 
-.card-actions{
+.card-actions {
     display:flex;
     flex-direction:column;
     gap:10px;
@@ -160,7 +121,8 @@
 
 .btn-edit,
 .btn-delete,
-.btn-share{
+.btn-share,
+.btn-secondary {
     padding:12px;
     border-radius:5px;
     border:1px solid rgba(255,255,255,.15);
@@ -170,22 +132,13 @@
     text-transform:uppercase;
 }
 
-.btn-edit{
-    background:#2980b9;
-    color:#fff;
-}
+.btn-edit { background:#2980b9; color:#fff; }
+.btn-delete { background:#c0392b; color:#fff; }
+.btn-share { background:#27ae60; color:#fff; }
+.btn-secondary { background:#f39c12; color:#fff; transition:0.3s; }
+.btn-secondary:hover { background:#d68910; }
 
-.btn-delete{
-    background:#c0392b;
-    color:#fff;
-}
-
-.btn-share{
-    background:#27ae60;
-    color:#fff;
-}
-
-.close-btn{
+.close-btn {
     background:transparent;
     border:1px solid #7f8c8d;
     color:#7f8c8d;
@@ -195,13 +148,37 @@
     cursor:pointer;
 }
 
-.swal2-container{
-    z-index:9999 !important;
-}
+/* --- SWEET ALERT PERSONALIZADO --- */
+.swal2-container { z-index:9999 !important; }
 
-.swal2-popup{
+.swal2-popup {
     font-family:'Michroma',sans-serif !important;
     border:2px solid #27ae60 !important;
     background:#1b2631 !important;
     color:#fff !important;
+}
+
+.swal2-select {
+    background: linear-gradient(135deg, #2b6cb0, #2f855a) !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 10px !important;
+    border-radius: 8px !important;
+    font-family: 'Michroma', sans-serif !important;
+    cursor: pointer;
+}
+
+.swal2-select option {
+    background: #1b2631;
+    color: white;
+}
+
+/* --- RESPONSIVE --- */
+@media(max-width:768px){
+    .view-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+    .view-grid .card-thumb { width:100%; }
+}
+
+@media(max-width:500px){
+    .view-grid { gap:10px; }
 }
