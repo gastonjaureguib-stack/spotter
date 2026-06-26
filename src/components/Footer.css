@@ -3,9 +3,11 @@
   bottom: 0;
   left: 0;
   width: 100%;
+
   display: flex;
-  justify-content: space-around;
-  align-items: center;
+  flex-direction: column; /* 🔥 CLAVE: ahora sí es vertical */
+  gap: 6px;
+
   padding: 10px 8px;
 
   background: linear-gradient(90deg, #0f172a, #0b3d2e);
@@ -13,6 +15,35 @@
   z-index: 999;
 
   backdrop-filter: blur(10px);
+}
+
+/* =========================================
+   FILA PRINCIPAL (5 BOTONES)
+========================================= */
+
+.footer-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 4px;
+}
+
+/* evita que se rompan */
+.footer-main .footer-btn {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+/* =========================================
+   FILA SPOTTER
+========================================= */
+
+.footer-secondary {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 /* =========================================
@@ -34,7 +65,7 @@
   border-radius: 12px;
 
   transition: all 0.25s ease;
-  min-width: 70px;
+
   border: 1px solid rgba(255,255,255,0.08);
 }
 
@@ -44,7 +75,7 @@
 }
 
 /* =========================================
-   COLORES CATEGORÍAS
+   COLORES
 ========================================= */
 
 .footer-btn.home { background: rgba(100, 116, 139, 0.3); }
@@ -54,25 +85,22 @@
 .footer-btn.community { background: rgba(168, 85, 247, 0.35); }
 
 /* =========================================
-   🔥 BOTÓN SPOTTER (NUEVO)
+   SPOTTER BUTTON
 ========================================= */
 
 .footer-btn.info {
   background: linear-gradient(135deg, #27ae60, #2ecc71);
   border: 1px solid rgba(255,255,255,0.15);
   box-shadow: 0 0 15px rgba(39,174,96,0.35);
-  position: relative;
-  overflow: hidden;
+  font-weight: bold;
+  width: auto;
 }
 
-/* efecto glow suave */
+/* glow */
 .footer-btn.info::after {
   content: '';
   position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
+  inset: 0;
   background: radial-gradient(circle, rgba(255,255,255,0.2), transparent 60%);
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -82,7 +110,7 @@
   opacity: 1;
 }
 
-/* hover más vivo */
+/* hover */
 .footer-btn.info:hover {
   transform: translateY(-3px) scale(1.05);
 }
@@ -94,7 +122,10 @@
 @media (max-width: 600px) {
   .footer-btn {
     font-size: 0.6rem;
-    min-width: 60px;
     padding: 6px 8px;
+  }
+
+  .footer-main {
+    gap: 2px;
   }
 }

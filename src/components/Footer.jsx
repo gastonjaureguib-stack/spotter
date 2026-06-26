@@ -40,33 +40,42 @@ function Footer() {
   return (
     <footer className="app-footer">
 
-      <Link to="/" className="footer-btn home">
-        🏠 Inicio
-      </Link>
+      {/* FILA PRINCIPAL */}
+      <div className="footer-main">
 
-      <Link to="/album/perros" className="footer-btn dogs">
-        🐶 Perros
-      </Link>
+        <Link to="/" className="footer-btn home">
+          🏠 Inicio
+        </Link>
 
-      <Link to="/album/gatos" className="footer-btn cats">
-        🐱 Gatos
-      </Link>
+        <Link to="/album/perros" className="footer-btn dogs">
+          🐶 Perros
+        </Link>
 
-      <Link to="/album/plantas" className="footer-btn plants">
-        🌿 Plantas
-      </Link>
+        <Link to="/album/gatos" className="footer-btn cats">
+          🐱 Gatos
+        </Link>
 
-      <Link to="/comunidad" className="footer-btn community">
-        🌎 Comunidad
-      </Link>
+        <Link to="/album/plantas" className="footer-btn plants">
+          🌿 Plantas
+        </Link>
 
-      {/* 🔥 NUEVO BOTÓN */}
-      <button
-        className="footer-btn info"
-        onClick={showSpotterSteps}
-      >
-         Qué es Spotter ❓
-      </button>
+        <Link to="/comunidad" className="footer-btn community">
+          🌎 Comunidad
+        </Link>
+
+      </div>
+
+      {/* FILA SECUNDARIA (IMPORTANTE PARA MOBILE) */}
+      <div className="footer-secondary">
+
+        <button
+          className="footer-btn info"
+          onClick={showSpotterSteps}
+        >
+          ❓ Qué es Spotter
+        </button>
+
+      </div>
 
     </footer>
   );
