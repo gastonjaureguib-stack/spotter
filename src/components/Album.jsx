@@ -14,8 +14,12 @@ function Album() {
   const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
 
+  // Lógica clara para los fondos según la categoría
   const getBackgroundClass = () => {
-    return category?.toLowerCase() === 'plantas' ? 'bg-plantas' : 'bg-mascotas';
+    const cat = category?.toLowerCase().trim();
+    if (cat === 'plantas') return 'bg-plantas';
+    if (cat === 'paisajes') return 'bg-paisajes';
+    return 'bg-mascotas'; // Perros, gatos o cualquier otra categoría
   };
 
   useEffect(() => {
@@ -54,7 +58,6 @@ function Album() {
     }
   };
 
-  // --- NUEVA FUNCIÓN PARA CAMBIAR CATEGORÍA ---
   const handleChangeCategory = async (card) => {
     const { value: nuevaCategoria } = await Swal.fire({
       title: 'Cambiar categoría',
@@ -68,7 +71,10 @@ function Album() {
       inputPlaceholder: 'Selecciona una categoría',
       showCancelButton: true,
       confirmButtonText: 'Mover',
-      cancelButtonText: 'Cancelar'
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#27ae60',
+      background: '#1b2631',
+      color: '#ffffff'
     });
 
     if (nuevaCategoria) {
@@ -81,8 +87,8 @@ function Album() {
         if (error) throw error;
 
         Swal.fire('¡Éxito!', 'La carta se ha movido correctamente.', 'success');
-        setSelectedCard(null); // Cerramos el modal
-        fetchCapturas(userId); // Recargamos para que desaparezca/aparezca donde debe
+        setSelectedCard(null);
+        fetchCapturas(userId);
       } catch (err) {
         Swal.fire('Error', 'No se pudo actualizar la categoría.', 'error');
       }
@@ -207,7 +213,7 @@ function Album() {
               <TradingCard data={selectedCard} />
               <div className="card-actions">
                 <button className="btn-edit" onClick={() => handleEdit(selectedCard)}>Editar</button>
-                <button className="btn-secondary" onClick={() => handleChangeCategory(selectedCard)}>Mover de categoría<area shape="" coords="" href="" alt="" /></button>
+                <button className="btn-secondary" onClick={() => handleChangeCategory(selectedCard)}>Mover de categoría</button>
                 <button className="btn-delete" onClick={() => handleDelete(selectedCard.id)}>Eliminar</button>
               </div>
               <button className="close-btn" onClick={() => setSelectedCard(null)}>Cerrar</button>

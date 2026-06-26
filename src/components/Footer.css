@@ -21,18 +21,18 @@
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  gap: 4px;
+  gap: 2px; /* Reducimos el espacio entre botones para ganar sitio */
   width: 100%;
 }
 
 .footer-main .footer-btn {
   flex: 1;
-  min-width: 0;
+  min-width: 0; /* Vital para que el texto elipsado funcione */
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 8px 4px;
-  font-size: 0.75rem;
+  text-overflow: ellipsis; /* Pone "Comun..." si el texto es demasiado largo */
+  padding: 8px 2px;
+  font-size: 0.7rem;
 }
 
 /* =========================
@@ -89,13 +89,12 @@
 .footer-btn.dogs { background: rgba(59, 130, 246, 0.35); }
 .footer-btn.cats { background: rgba(245, 158, 11, 0.35); }
 .footer-btn.plants { background: rgba(34, 197, 94, 0.35); }
+.footer-btn.landscapes { background: rgba(52, 211, 153, 0.35); }
 .footer-btn.community { background: rgba(168, 85, 247, 0.35); }
-
-/* ESTILO ESPECÍFICO PARA "QUÉ ES SPOTTER" */
 .footer-btn.info {
   background: linear-gradient(135deg, #27ae60, #2ecc71);
-  padding: 8px 16px; /* Más aire a los lados */
-  font-size: 0.65rem; /* Letra un poco más pequeña */
+  padding: 8px 16px;
+  font-size: 0.65rem;
   text-align: center;
 }
 
@@ -108,8 +107,9 @@
   }
 
   .footer-main .footer-btn {
-    font-size: 0.55rem;
-    padding: 6px 2px;
+    font-size: 0.45rem; /* Reducido drásticamente para asegurar que 'Comunidad' entre */
+    padding: 4px 1px;
+    letter-spacing: -0.2px; /* Comprime el texto levemente */
   }
   
   .footer-logo img {
@@ -117,9 +117,8 @@
     max-width: 80px;
   }
 
-  /* Ajuste para que en el celular no se vea apretado */
   .footer-btn.info {
-    font-size: 0.55rem;
-    padding: 6px 8px;
+    font-size: 0.5rem;
+    padding: 4px 6px;
   }
 }

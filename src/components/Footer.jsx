@@ -32,7 +32,7 @@ function Footer() {
   return (
     <footer className="app-footer">
 
-      {/* FILA PRINCIPAL (botones reducidos sin el de Inicio) */}
+      {/* FILA PRINCIPAL */}
       <div className="footer-main">
 
         <Link to="/album/perros" className="footer-btn dogs">
@@ -47,13 +47,18 @@ function Footer() {
           🌿 Plantas
         </Link>
 
+        {/* NUEVO BOTÓN DE PAISAJES */}
+        <Link to="/album/paisajes" className="footer-btn landscapes">
+          ⛰️ Paisajes
+        </Link>
+
         <Link to="/comunidad" className="footer-btn community">
           🌎 Comunidad
         </Link>
 
       </div>
 
-      {/* FILA INFERIOR (Logo ahora es botón de inicio + info) */}
+      {/* FILA INFERIOR */}
       <div className="footer-bottom">
 
         <Link to="/" className="footer-logo">
@@ -64,7 +69,7 @@ function Footer() {
           className="footer-btn info"
           onClick={showSpotterSteps}
         >
-            Qué es Spotter ❓
+          Qué es Spotter ❓
         </button>
 
       </div>
