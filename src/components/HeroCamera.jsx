@@ -33,7 +33,22 @@ function HeroCamera() {
 
   const labels = getFormLabels(categoriaActiva);
 
-  // Carga inicial y limpieza de estado corrupto
+  // Función para cargar datos aleatorios desde TEMPLATES
+  const handleRandomize = () => {
+    const lista = TEMPLATES[categoriaActiva] || [];
+    if (lista.length > 0) {
+      const random = lista[Math.floor(Math.random() * lista.length)];
+      setFormData({
+        nombre: random.nombre || '',
+        raza: random.raza || '',
+        personalidad: random.personalidad || '',
+        funFact: random.funFact || ''
+      });
+    } else {
+      Swal.fire('Info', 'No hay datos disponibles para esta categoría.', 'info');
+    }
+  };
+
   useEffect(() => {
     if (location.state?.imageFile) {
       const file = location.state.imageFile;
@@ -130,16 +145,22 @@ function HeroCamera() {
                 <button onClick={handleReset} className="btn btn-warning">Volver a la cámara</button>
               </div>
             ) : (
-              <form onSubmit={(e) => { e.preventDefault(); setStep('card'); }}>
-                <input name="nombre" value={formData.nombre} onChange={handleInputChange} className="form-control mb-3" placeholder={labels.nombre} required />
-                <input name="raza" value={formData.raza} onChange={handleInputChange} className="form-control mb-3" placeholder={labels.raza} />
-                <input name="personalidad" value={formData.personalidad} onChange={handleInputChange} className="form-control mb-3" placeholder={labels.personalidad} />
-                <textarea name="funFact" value={formData.funFact} onChange={handleInputChange} className="form-control mb-4" placeholder={labels.funFact}></textarea>
-                <div className="d-flex gap-2">
-                  <button type="button" onClick={handleReset} className="btn btn-outline-light w-50">Cancelar</button>
-                  <button type="submit" className="btn btn-success w-50">Generar Carta ✨</button>
+              <>
+                <div className="d-flex justify-content-between mb-3">
+                  <h4 className="m-0">Ficha: {categoriaActiva.toUpperCase()}</h4>
+                  <button onClick={handleRandomize} className="btn btn-warning btn-sm">🎲 Random</button>
                 </div>
-              </form>
+                <form onSubmit={(e) => { e.preventDefault(); setStep('card'); }}>
+                  <input name="nombre" value={formData.nombre} onChange={handleInputChange} className="form-control mb-3" placeholder={labels.nombre} required />
+                  <input name="raza" value={formData.raza} onChange={handleInputChange} className="form-control mb-3" placeholder={labels.raza} />
+                  <input name="personalidad" value={formData.personalidad} onChange={handleInputChange} className="form-control mb-3" placeholder={labels.personalidad} />
+                  <textarea name="funFact" value={formData.funFact} onChange={handleInputChange} className="form-control mb-4" placeholder={labels.funFact}></textarea>
+                  <div className="d-flex gap-2">
+                    <button type="button" onClick={handleReset} className="btn btn-outline-light w-50">Cancelar</button>
+                    <button type="submit" className="btn btn-success w-50">Generar Carta ✨</button>
+                  </div>
+                </form>
+              </>
             )}
           </div>
         )}
