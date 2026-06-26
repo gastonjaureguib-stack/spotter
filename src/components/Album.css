@@ -1,10 +1,10 @@
-/* --- FONDOS DINÁMICOS (Imagen única estirada) --- */
+/* --- FONDOS DINÁMICOS --- */
 .bg-mascotas {
   background: linear-gradient(135deg, rgba(43, 108, 176, 0.9), rgba(47, 133, 90, 0.9)), url('/fondopatitas.png');
   background-blend-mode: overlay;
-  background-size: cover;          /* ESTIRA LA IMAGEN */
-  background-position: center;     /* CENTRA LA IMAGEN */
-  background-repeat: no-repeat;    /* QUITA EL MOSAICO */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   background-attachment: fixed;
   min-height: 100vh;
 }
@@ -12,151 +12,49 @@
 .bg-plantas {
   background: linear-gradient(135deg, rgba(47, 133, 90, 0.9), rgba(56, 161, 105, 0.9)), url('/fondoplantas.png');
   background-blend-mode: multiply;
-  background-size: cover;          /* ESTIRA LA IMAGEN */
-  background-position: center;     /* CENTRA LA IMAGEN */
-  background-repeat: no-repeat;    /* QUITA EL MOSAICO */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   background-attachment: fixed;
   min-height: 100vh;
 }
 
-/* --- CÓDIGO ORIGINAL --- */
+/* --- ESTRUCTURA GENERAL --- */
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+}
+
+/* --- BARRA DE ACCIONES (Botones juntos pero separados) --- */
+.actions-bar {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.album-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 40px;
-  width: 100%;
-  justify-items: center;
-  align-items: center;
-}
-
-.card-thumb {
-  cursor: pointer;
-  transition: transform 0.3s ease;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.card-thumb:hover {
-  transform: translateY(-10px) scale(1.05);
-}
-
-.modal-overlay {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(10, 15, 20, 0.95);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-  backdrop-filter: blur(5px);
-}
-
-.modal-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  animation: fadeIn 0.3s ease-out;
-}
-
-.swal2-container { z-index: 9999 !important; }
-
-.swal2-popup {
-  font-family: 'Michroma', sans-serif !important;
-  border: 2px solid #27ae60 !important;
-  background: #1b2631 !important;
-  color: white !important;
-}
-
-.card-actions {
-  display: flex;
-  flex-direction: column; 
-  gap: 10px;
-  margin-top: 10px;
-  width: 100%;
-  max-width: 250px;
-}
-
-.btn-edit, .btn-delete, .btn-share {
-  padding: 12px;
-  border-radius: 5px;
-  border: 1px solid rgba(255,255,255,0.1);
-  cursor: pointer;
-  font-family: 'Michroma', sans-serif;
-  font-size: 0.7rem;
-  transition: all 0.3s;
-  text-transform: uppercase;
-}
-
-.btn-edit { background: #2980b9; color: white; }
-.btn-delete { background: #c0392b; color: white; }
-.btn-share { background: #27ae60; color: white; }
-
-.btn-share:hover { background: #219150; }
-.btn-edit:hover { background: #3498db; }
-.btn-delete:hover { background: #e74c3c; }
-
-.close-btn {
-  background: transparent;
-  border: 1px solid #7f8c8d;
-  color: #7f8c8d;
-  padding: 5px 15px;
-  margin-top: 10px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-@media (max-width: 600px) {
-  .album-grid { grid-template-columns: 1fr; }
-  .modal-content { transform: scale(0.9); width: 90%; }
-}
-
-/* --- NUEVO BOTÓN GALERÍA --- */
-.upload-container {
-  display: flex;
-  justify-content: flex-start;
-  width: 100%;
-  max-width: 1200px;
-  margin-bottom: 20px;
+  justify-content: center; /* Centrado para mejor look */
+  gap: 20px;               /* ESPACIO EXTRA entre los botones */
+  margin-bottom: 30px;
   padding: 0 20px;
 }
 
-.btn-gallery-small {
-  background: rgba(255, 255, 255, 0.15);
+/* Estilos de botones de la barra superior */
+.btn-gallery-small, .btn-view-toggle {
+  background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
-  padding: 6px 15px;
+  padding: 8px 20px;
   border-radius: 20px;
   font-family: 'Michroma', sans-serif;
   font-size: 0.65rem;
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
-  display: inline-block;
 }
 
-.btn-gallery-small:hover {
+.btn-gallery-small:hover, .btn-view-toggle:hover {
   background: rgba(255, 255, 255, 0.25);
-  transform: scale(1.02);
+  transform: scale(1.05);
 }
-/* --- LÓGICA DE VISTAS (Grid vs List) --- */
 
-/* Base del contenedor: mantenemos grid para flexibilidad */
+/* --- LÓGICA DE VISTAS (Grid vs List) --- */
 .album-grid {
   display: grid;
   gap: 30px;
@@ -164,25 +62,47 @@
   transition: all 0.4s ease;
 }
 
-/* VISTA GALERÍA (Grid) */
+/* Vista Grid */
 .view-grid {
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   justify-items: center;
 }
 
-/* VISTA LISTA (List) */
+/* Vista Lista */
 .view-list {
-  grid-template-columns: 1fr; /* Una sola columna */
+  grid-template-columns: 1fr;
   justify-items: center;
 }
 
-/* Ajuste específico para que las cartas no se estiren demasiado en modo lista */
 .view-list .card-thumb {
   width: 100%;
-  max-width: 350px; /* Tamaño máximo de la card en lista */
+  max-width: 350px;
 }
 
-/* Asegurar que el TradingCard Wrapper dentro de la lista se alinee bien */
-.view-list .trading-card-wrapper {
-  margin: 0 auto;
+/* --- CARTAS --- */
+.card-thumb {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.card-thumb:hover {
+  transform: translateY(-5px);
+}
+
+/* --- MODAL Y OTROS --- */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(10, 15, 20, 0.95);
+  display: flex; justify-content: center; align-items: center;
+  z-index: 2000; backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  display: flex; flex-direction: column; align-items: center; gap: 20px;
+}
+
+/* Media Query para móvil */
+@media (max-width: 600px) {
+  .actions-bar { flex-direction: column; gap: 10px; }
+  .btn-gallery-small, .btn-view-toggle { width: 100%; }
 }
