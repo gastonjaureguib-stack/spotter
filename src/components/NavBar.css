@@ -4,6 +4,32 @@
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
+/* =========================================================
+   NUEVO: AQUÍ CONTROLAS EL TAMAÑO DE TU LOGO (MÁSCARA DE RECORTE)
+   ========================================================= */
+
+/* 1. Esta es la casilla que protege el Header para que NO se deforme */
+.spooter-navbar .navbar-brand {
+  width: 140px;        /* Ancho máximo que va a ocupar tu logo en la barra */
+  height: 45px;        /* Altura fija de la casilla (mantiene el header estilizado) */
+  overflow: hidden;    /* ¡Corta todo el margen transparente invisible! */
+  display: flex;
+  align-items: center;
+}
+
+/* 2. AQUÍ AGRANDAS EL LOGO REAL (Efecto Zoom) */
+.spooter-navbar .navbar-brand img {
+  width: 100%;
+  
+  /* CAMBIA ESTE VALOR PARA HACER MÁS O MENOS GRANDE EL LOGO */
+  height: 130px;       /* Si lo quieres más grande, sube a 140px o 150px. Si se corta mucho, baja a 110px */
+  
+  object-fit: cover;   /* Estira el logo haciendo zoom para ignorar el fondo transparente */
+  object-position: center; /* Asegura que el centro del logo siempre se vea perfecto */
+}
+
+/* ========================================================= */
+
 .navbar-nav {
   gap: 1.5rem;
   align-items: center;
@@ -28,7 +54,6 @@
 .spooter-navbar .nav-link:hover {
   color: #f1c40f  !important;
 }
-
 
 .spooter-navbar .nav-link.active {
   color: #f1c40f !important;

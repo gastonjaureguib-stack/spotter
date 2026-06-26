@@ -45,7 +45,7 @@ function Navbar() {
     <nav className="navbar navbar-expand-lg spooter-navbar">
       <div className="container-fluid px-4">
         
-        {/* Logo a la izquierda, botón de instalación eliminado */}
+        {}
         <NavLink className="navbar-brand" to="/">
           <img src="/logo.png" alt="Spooter" height="40" onError={(e) => { e.target.style.display = 'none'; }} />
         </NavLink>
