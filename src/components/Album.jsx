@@ -165,7 +165,7 @@ function Album() {
               <div className="card-actions">
                 <button className="btn-edit" onClick={() => handleEdit(selectedCard)}>Editar</button>
                 <button className="btn-delete" onClick={() => handleDelete(selectedCard.id)}>Eliminar</button>
-                <button className="btn-share" onClick={() => handleShareToCommunity(selectedCard)}>Compartir al Muro</button>
+                <button className="btn-share" onClick={() => handleShareToCommunity(selectedCard)}>Compartir en comunidad</button>
               </div>
               
               <button className="close-btn" onClick={() => setSelectedCard(null)}>Cerrar</button>
