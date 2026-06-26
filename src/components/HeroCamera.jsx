@@ -21,7 +21,19 @@ function HeroCamera() {
   const [step, setStep] = useState('camera');
   const [formData, setFormData] = useState({ nombre: '', raza: '', personalidad: '', funFact: '' });
 
-  // 1. Lógica para recibir la imagen desde la galería
+  // Función para obtener los textos dinámicos según categoría
+  const getFormLabels = (cat) => {
+    const isNature = ['plantas', 'paisajes'].includes(cat);
+    return {
+      nombre: isNature ? 'Nombre del lugar o especie' : 'Nombre',
+      raza: isNature ? 'Tipo / Especie' : 'Raza',
+      personalidad: isNature ? 'Características' : 'Personalidad',
+      funFact: isNature ? 'Encontrado en' : 'Dato curioso'
+    };
+  };
+
+  const labels = getFormLabels(categoriaActiva);
+
   useEffect(() => {
     if (location.state?.imageFile) {
       const file = location.state.imageFile;
@@ -33,7 +45,6 @@ function HeroCamera() {
     }
   }, [location.state]);
 
-  // 2. Carga si es edición
   useEffect(() => {
     if (editId) {
       const cargarCarta = async () => {
@@ -116,15 +127,11 @@ function HeroCamera() {
 
       if (editId) {
         await supabase.from('captures').update({ nombre: formData.nombre, categoria: categoriaActiva, image_url: publicUrl, metadata: formData }).eq('id', editId);
-        Swal.fire('¡Carta Actualizada!', '', 'success')
-            .then(() => navigate(`/album/${categoriaActiva.toLowerCase()}`));
+        Swal.fire('¡Carta Actualizada!', '', 'success').then(() => navigate(`/album/${categoriaActiva.toLowerCase()}`));
       } else {
         const newNumber = await getAvailableNumber(user.id, categoriaActiva);
         await supabase.from('captures').insert({ user_id: user.id, nombre: formData.nombre, categoria: categoriaActiva, numero_figurita: newNumber, image_url: publicUrl, metadata: formData });
-        
-        // CORRECCIÓN AQUÍ: Navegamos al álbum en lugar de resetear la cámara
-        Swal.fire('¡Carta Guardada!', `Agregada como #${newNumber}.`, 'success')
-            .then(() => navigate(`/album/${categoriaActiva.toLowerCase()}`));
+        Swal.fire('¡Carta Guardada!', `Agregada como #${newNumber}.`, 'success').then(() => navigate(`/album/${categoriaActiva.toLowerCase()}`));
       }
     } catch (err) {
       Swal.fire('Error', err.message, 'error');
@@ -140,7 +147,7 @@ function HeroCamera() {
           <div className="animate-fade-in">
             <h1 className="display-5 fw-extrabold mb-5">¡Capturá tu Entorno!</h1>
             <div className="d-flex justify-content-center gap-4 flex-wrap my-4">
-              {['perros', 'gatos', 'plantas'].map((cat) => (
+              {['perros', 'gatos', 'plantas', 'paisajes'].map((cat) => (
                 <div key={cat}>
                   <button onClick={() => handleStartSpot(cat)} className={`btn btn-disparador-multi disp-${cat}`}>
                     <i className="bi bi-camera-fill fs-2"></i>
@@ -155,14 +162,14 @@ function HeroCamera() {
         {step === 'form' && (
           <div className="animate-fade-in bg-dark-card p-4 rounded-4 shadow-lg">
             <div className="d-flex justify-content-between mb-4">
-              <h4>Ficha: {categoriaActiva}</h4>
+              <h4>Ficha: {categoriaActiva.toUpperCase()}</h4>
               <button onClick={handleRandomize} className="btn btn-warning btn-sm">🎲 Random</button>
             </div>
             <form onSubmit={handleFormSubmit}>
-              <input type="text" name="nombre" value={formData.nombre} onChange={handleInputChange} className="form-control mb-3" placeholder="Nombre" required />
-              <input type="text" name="raza" value={formData.raza} onChange={handleInputChange} className="form-control mb-3" placeholder="Raza" />
-              <input type="text" name="personalidad" value={formData.personalidad} onChange={handleInputChange} className="form-control mb-3" placeholder="Personalidad" />
-              <textarea name="funFact" value={formData.funFact} onChange={handleInputChange} className="form-control mb-4" placeholder="Dato curioso"></textarea>
+              <input type="text" name="nombre" value={formData.nombre} onChange={handleInputChange} className="form-control mb-3" placeholder={labels.nombre} required />
+              <input type="text" name="raza" value={formData.raza} onChange={handleInputChange} className="form-control mb-3" placeholder={labels.raza} />
+              <input type="text" name="personalidad" value={formData.personalidad} onChange={handleInputChange} className="form-control mb-3" placeholder={labels.personalidad} />
+              <textarea name="funFact" value={formData.funFact} onChange={handleInputChange} className="form-control mb-4" placeholder={labels.funFact}></textarea>
               <div className="d-flex gap-2">
                 <button type="button" onClick={handleResetAll} className="btn btn-outline-light flex-fill">Cancelar</button>
                 <button type="submit" className="btn btn-success flex-fill">Generar Carta ✨</button>
@@ -183,13 +190,7 @@ function HeroCamera() {
           </div>
         )}
 
-        <input 
-          type="file" 
-          accept="image/*" 
-          ref={fileInputRef} 
-          onChange={handleImageCapture} 
-          style={{ display: 'none' }} 
-        />
+        <input type="file" accept="image/*" ref={fileInputRef} onChange={handleImageCapture} style={{ display: 'none' }} />
       </div>
     </div>
   );

@@ -6,11 +6,21 @@ const TradingCard = ({ data, userId, showUser = false }) => {
   const [likeCount, setLikeCount] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
 
+  // Lógica para detectar si es una categoría de "Naturaleza"
+  const categoria = data.categoria || 'perros';
+  const isNature = ['plantas', 'paisajes'].includes(categoria.toLowerCase());
+
+  // Definimos las etiquetas dinámicas
+  const labels = {
+    raza: isNature ? 'TIPO / ESPECIE' : 'RAZA',
+    personalidad: isNature ? 'CARACTERÍSTICAS' : 'PERSONALIDAD',
+    funFact: isNature ? 'ENCONTRADO EN' : 'DATO CURIOSO'
+  };
+
   useEffect(() => {
     if (!data?.id) return;
 
     const fetchLikes = async () => {
-      // 1. Contar totales
       const { count, error } = await supabase
         .from('likes')
         .select('*', { count: 'exact', head: true })
@@ -18,7 +28,6 @@ const TradingCard = ({ data, userId, showUser = false }) => {
       
       if (!error) setLikeCount(count || 0);
 
-      // 2. Verificar si el usuario logueado dio like
       if (userId) {
         const { data: userLike } = await supabase
           .from('likes')
@@ -36,13 +45,11 @@ const TradingCard = ({ data, userId, showUser = false }) => {
 
   const handleToggleLike = async (e) => {
     e.stopPropagation();
-    
     if (!userId) {
       alert("Inicia sesión para dar amor ❤️");
       return;
     }
 
-    // Optimistic UI update
     const previousLikeStatus = isLiked;
     const previousCount = likeCount;
 
@@ -56,7 +63,6 @@ const TradingCard = ({ data, userId, showUser = false }) => {
         await supabase.from('likes').insert({ capture_id: data.id, user_id: userId });
       }
     } catch (err) {
-      // Revertir en caso de error
       setIsLiked(previousLikeStatus);
       setLikeCount(previousCount);
       console.error("Error al actualizar like:", err);
@@ -65,11 +71,12 @@ const TradingCard = ({ data, userId, showUser = false }) => {
 
   if (!data) return null;
 
-  // Acceso seguro a datos
+  // Acceso a datos
   const displayId = data.numero_figurita ? `#${data.numero_figurita}` : 'NEW';
   const nombre = data.nombre || data.metadata?.nombre || 'SIN NOMBRE';
   const raza = data.raza || data.metadata?.raza || 'DESCONOCIDA';
-  const funFact = data.funFact || data.metadata?.funFact || 'Sin datos curiosos aún...';
+  const personalidad = data.personalidad || data.metadata?.personalidad || '---';
+  const funFact = data.funFact || data.metadata?.funFact || 'Sin datos aún...';
   const spotterName = data.profiles?.username || 'Anónimo';
 
   return (
@@ -80,7 +87,6 @@ const TradingCard = ({ data, userId, showUser = false }) => {
         {data.image_url && <img src={data.image_url} alt={nombre} />}
       </div>
 
-      {/* Branding condicional: Solo se muestra si showUser es true */}
       {showUser && (
         <div className="spotter-badge">
           <i className="bi bi-camera-fill me-2"></i>
@@ -101,12 +107,17 @@ const TradingCard = ({ data, userId, showUser = false }) => {
         </div>
 
         <div className="info-cell">
-          <span className="cell-label">RAZA</span>
+          <span className="cell-label">{labels.raza}</span>
           <p className="cell-value">{raza}</p>
         </div>
 
+        <div className="info-cell">
+          <span className="cell-label">{labels.personalidad}</span>
+          <p className="cell-value">{personalidad}</p>
+        </div>
+
         <div className="info-cell full-width">
-          <span className="cell-label">FUN FACT</span>
+          <span className="cell-label">{labels.funFact}</span>
           <p className="cell-value">{funFact}</p>
         </div>
       </div>

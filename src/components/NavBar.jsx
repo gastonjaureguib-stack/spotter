@@ -37,16 +37,16 @@ function Navbar() {
     navigate('/login');
   };
 
-  // Función para cerrar el menú en móviles tras seleccionar una opción
   const closeNavbar = () => {
     const navbarCollapse = document.querySelector('.navbar-collapse');
     const navbarToggler = document.querySelector('.navbar-toggler');
-    
-    // Si el menú está abierto, forzamos el cierre
     if (navbarCollapse?.classList.contains('show')) {
       navbarToggler.click();
     }
   };
+
+  // Lista de categorías para simplificar el renderizado
+  const albumCategorias = ['perros', 'gatos', 'plantas', 'paisajes'];
 
   return (
     <nav className="navbar navbar-expand-lg spooter-navbar">
@@ -68,12 +68,17 @@ function Navbar() {
               </li>
             )}
             
-            {/* Usamos NavLink para que el CSS detecte la clase 'active' */}
             <li className="nav-item"><NavLink className="nav-link" to="/" end onClick={closeNavbar}>Home</NavLink></li>
             <li className="nav-item"><NavLink className="nav-link" to="/comunidad" onClick={closeNavbar}>Comunidad</NavLink></li>
-            <li className="nav-item"><NavLink className="nav-link" to="/album/perros" onClick={closeNavbar}>Perros</NavLink></li>
-            <li className="nav-item"><NavLink className="nav-link" to="/album/gatos" onClick={closeNavbar}>Gatos</NavLink></li>
-            <li className="nav-item"><NavLink className="nav-link" to="/album/plantas" onClick={closeNavbar}>Plantas</NavLink></li>
+            
+            {/* Mapeo dinámico de álbumes */}
+            {albumCategorias.map((cat) => (
+              <li className="nav-item" key={cat}>
+                <NavLink className="nav-link text-capitalize" to={`/album/${cat}`} onClick={closeNavbar}>
+                  {cat}
+                </NavLink>
+              </li>
+            ))}
           </ul>
 
           <div className="d-flex align-items-center">

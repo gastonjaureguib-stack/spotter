@@ -6,10 +6,11 @@ function Categories() {
   const navigate = useNavigate();
 
   const categories = [
-    { name: 'Perros', img: '/buttomdog.png', route: 'perros' },
-    { name: 'Gatos', img: '/buttomcat.png', route: 'gatos' },
-    { name: 'Plantas', img: '/buttomplant.png', route: 'plantas' },
-    { name: 'Comunidad', img: '/buttomcomunidad.png', route: 'comunidad' } // <-- Agregado
+    { name: 'Perros', img: '/buttomdog.png', route: '/album/perros' },
+    { name: 'Gatos', img: '/buttomcat.png', route: '/album/gatos' },
+    { name: 'Plantas', img: '/buttomplant.png', route: '/album/plantas' },
+    { name: 'Paisajes', img: '/buttompaisajes.png', route: '/album/paisajes' }, // <-- Nueva categoría
+    { name: 'Comunidad', img: '/buttomcomunidad.png', route: '/comunidad' }
   ];
 
   return (
@@ -18,9 +19,9 @@ function Categories() {
 
       <div className="row justify-content-center g-4">
         {categories.map((cat) => (
-          <div key={cat.route} className="col-6 col-md-3 d-flex flex-column align-items-center">
+          <div key={cat.name} className="col-6 col-md-3 d-flex flex-column align-items-center">
             <button 
-              onClick={() => navigate(cat.route === 'comunidad' ? '/comunidad' : `/album/${cat.route}`)} 
+              onClick={() => navigate(cat.route)} 
               className="image-btn"
               aria-label={cat.name}
             >
