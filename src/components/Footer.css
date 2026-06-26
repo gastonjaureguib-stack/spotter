@@ -26,12 +26,12 @@
 }
 
 .footer-main .footer-btn {
-  flex: 1; /* Todos los botones ocupan el mismo espacio */
-  min-width: 0; /* Permite que el botón se encoja si el texto es largo */
+  flex: 1;
+  min-width: 0;
   white-space: nowrap;
-  overflow: hidden; /* Oculta si se desborda */
-  text-overflow: ellipsis; /* Pone "..." si no entra el texto */
-  padding: 8px 4px; /* Padding ajustado */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 8px 4px;
   font-size: 0.75rem;
 }
 
@@ -90,7 +90,14 @@
 .footer-btn.cats { background: rgba(245, 158, 11, 0.35); }
 .footer-btn.plants { background: rgba(34, 197, 94, 0.35); }
 .footer-btn.community { background: rgba(168, 85, 247, 0.35); }
-.footer-btn.info { background: linear-gradient(135deg, #27ae60, #2ecc71); }
+
+/* ESTILO ESPECÍFICO PARA "QUÉ ES SPOTTER" */
+.footer-btn.info {
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  padding: 8px 16px; /* Más aire a los lados */
+  font-size: 0.65rem; /* Letra un poco más pequeña */
+  text-align: center;
+}
 
 /* =========================
    RESPONSIVE (MOBILE)
@@ -101,12 +108,18 @@
   }
 
   .footer-main .footer-btn {
-    font-size: 0.55rem; /* Fuente más pequeña para que quepa 'Comunidad' */
+    font-size: 0.55rem;
     padding: 6px 2px;
   }
   
   .footer-logo img {
-    height: 90px; /* Mantenemos tu altura de logo original */
+    height: 90px;
     max-width: 80px;
+  }
+
+  /* Ajuste para que en el celular no se vea apretado */
+  .footer-btn.info {
+    font-size: 0.55rem;
+    padding: 6px 8px;
   }
 }
