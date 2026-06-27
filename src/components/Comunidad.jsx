@@ -59,12 +59,12 @@ function Comunidad() {
         <h2 className="text-center mb-4 text-white">Spotteds de la Comunidad</h2>
 
         {/* FILTRO DE CATEGORÍAS */}
-        <div className="d-flex justify-content-center flex-wrap gap-2 mb-3">
-          <button className="btn btn-sm btn-outline-light" onClick={() => setCategoryFilter('all')}>Todos 🌎</button>
-          <button className="btn btn-sm btn-outline-light" onClick={() => setCategoryFilter('perros')}>Perros 🐶</button>
-          <button className="btn btn-sm btn-outline-light" onClick={() => setCategoryFilter('gatos')}>Gatos 🐱</button>
-          <button className="btn btn-sm btn-outline-light" onClick={() => setCategoryFilter('plantas')}>Plantas 🌿</button>
-          <button className="btn btn-sm btn-outline-light" onClick={() => setCategoryFilter('paisajes')}>Paisajes 🌄</button>
+        <div className="filter-bar">
+          <button className={`filter-btn ${categoryFilter === 'all' ? 'active' : ''}`} onClick={() => setCategoryFilter('all')}>Todos 🌎</button>
+          <button className={`filter-btn ${categoryFilter === 'perros' ? 'active' : ''}`} onClick={() => setCategoryFilter('perros')}>Perros 🐶</button>
+          <button className={`filter-btn ${categoryFilter === 'gatos' ? 'active' : ''}`} onClick={() => setCategoryFilter('gatos')}>Gatos 🐱</button>
+          <button className={`filter-btn ${categoryFilter === 'plantas' ? 'active' : ''}`} onClick={() => setCategoryFilter('plantas')}>Plantas 🌿</button>
+          <button className={`filter-btn ${categoryFilter === 'paisajes' ? 'active' : ''}`} onClick={() => setCategoryFilter('paisajes')}>Paisajes 🌄</button>
         </div>
 
         {/* CARRUSEL DE DESTACADOS */}
@@ -72,14 +72,16 @@ function Comunidad() {
           <div className="swiper-cards-container my-5">
             <h5 className="text-white text-center mb-4">Lo más reciente</h5>
             <Swiper
+              key={categoryFilter} // Esto asegura que el loop se reinicie al cambiar de categoría
               effect={'cards'}
               grabCursor={true}
+              loop={true} // <-- EFECTO GIRATORIO ACTIVADO
               modules={[EffectCards]}
               className="mySwiper"
             >
               {filteredPosts.slice(0, 5).map(post => (
                 <SwiperSlide key={post.id} onClick={() => setSelectedCard(post)}>
-                  <TradingCard data={post} userId={user?.id} showUser={true} />
+                  <TradingCard data={{...post, compact: false}} userId={user?.id} showUser={true} />
                 </SwiperSlide>
               ))}
             </Swiper>
@@ -87,8 +89,8 @@ function Comunidad() {
         )}
 
         {/* TOGGLE VISTA */}
-        <div className="d-flex justify-content-center mb-4">
-          <button className="btn btn-sm btn-outline-light" onClick={() => setViewMode(prev => prev === 'grid' ? 'list' : 'grid')}>
+        <div className="view-toggle">
+          <button onClick={() => setViewMode(prev => prev === 'grid' ? 'list' : 'grid')}>
             {viewMode === 'grid' ? 'Ver lista ' : 'Ver galería '}
           </button>
         </div>
