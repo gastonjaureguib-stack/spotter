@@ -1,64 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');
 
 /* ===========================================
-   WRAPPER (AJUSTADO PARA EL GRID)
+   WRAPPER
 =========================================== */
 .trading-card-wrapper {
-  display: inline-flex; /* Cambiado a inline-flex para no estirarse en el grid */
+  display: inline-flex;
   flex-direction: column;
   align-items: center;
-  width: fit-content; /* Se ajusta exactamente al contenido */
+  width: fit-content;
   transition: transform .25s ease;
-}
-
-/* ==================================================
-   MODO GALERÍA (COMPACTO)
-================================================== */
-.trading-card-wrapper.compact {
-  width: 170px;
-}
-
-.trading-card-wrapper.compact .card-container {
-  width: 170px;
-  min-height: auto;
-  padding: 8px;
-  gap: 6px;
-}
-
-.trading-card-wrapper.compact .card-image-box {
-  height: auto;
-  min-height: 100px;
-}
-
-.trading-card-wrapper.compact .card-id-header {
-  font-size: .65rem !important;
-}
-
-.trading-card-wrapper.compact .spotter-badge {
-  display: none;
-}
-
-.trading-card-wrapper.compact .info-cell {
-  padding: 4px;
-}
-
-.trading-card-wrapper.compact .cell-label {
-  font-size: .35rem;
-}
-
-.trading-card-wrapper.compact .cell-value {
-  font-size: .48rem;
-  line-height: 1.1;
-}
-
-.trading-card-wrapper.compact .btn-like {
-  font-size: .6rem;
-}
-
-.trading-card-wrapper.compact .btn-share-outside {
-  width: 170px;
-  padding: 8px;
-  font-size: .5rem;
 }
 
 /* ===========================================
@@ -68,7 +18,7 @@
   width: 300px;
   min-height: auto;
   background: linear-gradient(180deg, #1b2631, #183329);
-  border: 3px solid #27ae60;
+  /* El borde se controlará desde el componente vía style */
   padding: 15px;
   border-radius: 8px 8px 0 0;
   font-family: 'Michroma', sans-serif;
@@ -82,7 +32,6 @@
 
 .card-id-header {
   font-size: .9rem !important;
-  color: #2ecc71 !important;
   text-align: right;
   font-weight: bold;
   display: block;
@@ -93,7 +42,7 @@
   width: 100%;
   height: auto;
   background: transparent;
-  border: 1px solid #27ae60;
+  border: 1px solid rgba(255,255,255,0.2); /* Borde sutil neutro */
   overflow: hidden;
   border-radius: 4px;
   display: flex;
@@ -106,22 +55,17 @@
 }
 
 .spotter-badge {
-  background: rgba(39,174,96,.15);
+  background: rgba(255,255,255,0.05);
   color: #fff;
   padding: 8px 12px;
   margin: 5px 0;
-  border-left: 4px solid #27ae60;
+  border-left: 4px solid #fff;
   font-size: .65rem;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
   text-transform: uppercase;
-  letter-spacing: .05rem;
   border-radius: 2px;
 }
-
-.spotter-badge i { color: #2ecc71; font-size: .8rem; }
-.spotter-badge strong { color: #2ecc71; margin-left: 5px; }
 
 .card-info-section {
   display: flex;
@@ -131,20 +75,23 @@
 }
 
 .info-cell {
-  background: rgba(0,0,0,.2);
-  border: 1px solid rgba(39,174,96,.3);
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.1);
   padding: 8px;
   border-radius: 4px;
 }
 
-.cell-label { display: block; font-size: .5rem; color: #2ecc71; margin-bottom: 2px; }
-.cell-value { margin: 0; font-size: .75rem; text-transform: uppercase; word-wrap: break-word; }
+.cell-label { 
+  display: block; 
+  font-size: .5rem; 
+  margin-bottom: 2px; 
+}
 
-.like-section {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 5px;
-  margin-bottom: 5px;
+.cell-value { 
+  margin: 0; 
+  font-size: .75rem; 
+  text-transform: uppercase; 
+  word-wrap: break-word; 
 }
 
 .btn-like {
@@ -161,15 +108,12 @@
   font-family: inherit;
 }
 
-.btn-like:hover { transform: scale(1.1); }
-
 /* ===========================================
    BOTÓN COMPARTIR
 =========================================== */
 .btn-share-outside {
   width: 300px;
   padding: 12px;
-  background: #2980b9;
   color: #fff;
   border: none;
   border-radius: 0 0 8px 8px;
@@ -184,40 +128,8 @@
   box-shadow: 0 4px 6px rgba(0,0,0,.3);
 }
 
-.btn-share-outside:hover { background: #3498db; transform: translateY(2px); }
-
 /* ===========================================
-   MOBILE
+   MODAL OVERRIDE (Sin cambios)
 =========================================== */
-@media(max-width: 600px) {
-  .trading-card-wrapper.compact { width: 145px; }
-  .trading-card-wrapper.compact .card-container { width: 145px; min-height: auto; }
-  .trading-card-wrapper.compact .card-image-box { height: auto; }
-  .trading-card-wrapper.compact .btn-share-outside { width: 145px; font-size: .45rem; padding: 6px; }
-}
-/* ===========================================
-   ESTILO ESPECIAL PARA MODALES
-   Forzamos un tamaño fijo solo cuando está dentro de un modal
-=========================================== */
-.modal-content .trading-card-wrapper {
-  display: flex !important; /* Sobrescribe el inline-flex del grid */
-  width: 100% !important;
-}
-
-.modal-content .card-container {
-  width: 300px !important;      /* Tamaño fijo en modal */
-  min-height: 400px !important; /* Altura mínima para que luzca bien */
-  max-height: 80vh !important;  /* No más grande que la pantalla */
-  overflow-y: auto;             /* Scroll interno si la foto es gigante */
-}
-
-.modal-content .card-image-box {
-  height: 180px !important;    /* Altura fija para la imagen en el modal */
-  background: #000 !important; /* Fondo negro para evitar estiramientos */
-}
-
-.modal-content .card-image-box img {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: contain !important; /* La foto entra completa sin recortar */
-}
+.modal-content .card-container { width: 300px !important; min-height: 400px !important; max-height: 80vh !important; overflow-y: auto; }
+.modal-content .card-image-box { height: 180px !important; background: #000 !important; }

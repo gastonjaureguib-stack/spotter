@@ -6,8 +6,18 @@ const TradingCard = ({ data, userId, showUser = false, onShare }) => {
   const [likeCount, setLikeCount] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
 
-  const categoria = data.categoria || 'perros';
-  const isNature = ['plantas', 'paisajes'].includes(categoria.toLowerCase());
+  const categoria = data.categoria?.toLowerCase() || 'perros';
+  const isNature = ['plantas', 'paisajes'].includes(categoria);
+
+  // Mapa de colores por categoría
+  const categoryColors = {
+    perros: '#f39c12',    // Naranja
+    gatos: '#8e44ad',     // Violeta
+    plantas: '#27ae60',   // Verde
+    paisajes: '#3498db'   // Azul
+  };
+
+  const borderColor = categoryColors[categoria] || '#27ae60';
 
   const labels = {
     raza: isNature ? 'TIPO / ESPECIE' : 'RAZA',
@@ -43,7 +53,6 @@ const TradingCard = ({ data, userId, showUser = false, onShare }) => {
 
   const handleToggleLike = async (e) => {
     e.stopPropagation();
-
     if (!userId) {
       alert("Inicia sesión para dar amor ❤️");
       return;
@@ -57,18 +66,9 @@ const TradingCard = ({ data, userId, showUser = false, onShare }) => {
 
     try {
       if (previousLikeStatus) {
-        await supabase
-          .from('likes')
-          .delete()
-          .eq('capture_id', data.id)
-          .eq('user_id', userId);
+        await supabase.from('likes').delete().eq('capture_id', data.id).eq('user_id', userId);
       } else {
-        await supabase
-          .from('likes')
-          .insert({
-            capture_id: data.id,
-            user_id: userId
-          });
+        await supabase.from('likes').insert({ capture_id: data.id, user_id: userId });
       }
     } catch (err) {
       setIsLiked(previousLikeStatus);
@@ -87,105 +87,63 @@ const TradingCard = ({ data, userId, showUser = false, onShare }) => {
   const spotterName = data.profiles?.username || 'Anónimo';
 
   return (
-
-    // ← ÚNICO CAMBIO
     <div className={`trading-card-wrapper ${data?.compact ? 'compact' : ''}`}>
+      {/* Aplicamos el color de borde dinámico aquí */}
+      <div className="card-container" style={{ border: `3px solid ${borderColor}` }}>
 
-      <div className="card-container">
-
-        <div className="card-id-header">
+        <div className="card-id-header" style={{ color: borderColor }}>
           {displayId}
         </div>
 
-        <div className="card-image-box">
+        <div className="card-image-box" style={{ borderColor: borderColor }}>
           {data.image_url && (
-            <img
-              src={data.image_url}
-              alt={nombre}
-            />
+            <img src={data.image_url} alt={nombre} />
           )}
         </div>
 
         {showUser && (
-          <div className="spotter-badge">
-            <i className="bi bi-camera-fill me-2"></i>
+          <div className="spotter-badge" style={{ borderLeft: `4px solid ${borderColor}`, backgroundColor: `${borderColor}20` }}>
+            <i className="bi bi-camera-fill me-2" style={{ color: borderColor }}></i>
             <span>
-              Spotter:
-              <strong>@{spotterName}</strong>
+              Spotter: <strong style={{ color: borderColor }}>@{spotterName}</strong>
             </span>
           </div>
         )}
 
         <div className="card-info-section">
-
           <div className="like-section">
-            <button
-              onClick={handleToggleLike}
-              className="btn-like"
-            >
+            <button onClick={handleToggleLike} className="btn-like">
               {isLiked ? "❤️" : "🤍"} <span>{likeCount}</span>
             </button>
           </div>
 
-          <div className="info-cell">
-            <span className="cell-label">
-              NOMBRE
-            </span>
-
-            <p className="cell-value">
-              {nombre}
-            </p>
+          <div className="info-cell" style={{ border: `1px solid ${borderColor}50` }}>
+            <span className="cell-label" style={{ color: borderColor }}>NOMBRE</span>
+            <p className="cell-value">{nombre}</p>
           </div>
 
-          <div className="info-cell">
-            <span className="cell-label">
-              {labels.raza}
-            </span>
-
-            <p className="cell-value">
-              {raza}
-            </p>
+          <div className="info-cell" style={{ border: `1px solid ${borderColor}50` }}>
+            <span className="cell-label" style={{ color: borderColor }}>{labels.raza}</span>
+            <p className="cell-value">{raza}</p>
           </div>
 
-          <div className="info-cell">
-            <span className="cell-label">
-              {labels.personalidad}
-            </span>
-
-            <p className="cell-value">
-              {personalidad}
-            </p>
+          <div className="info-cell" style={{ border: `1px solid ${borderColor}50` }}>
+            <span className="cell-label" style={{ color: borderColor }}>{labels.personalidad}</span>
+            <p className="cell-value">{personalidad}</p>
           </div>
 
-          <div className="info-cell full-width">
-            <span className="cell-label">
-              {labels.funFact}
-            </span>
-
-            <p className="cell-value">
-              {funFact}
-            </p>
+          <div className="info-cell full-width" style={{ border: `1px solid ${borderColor}50` }}>
+            <span className="cell-label" style={{ color: borderColor }}>{labels.funFact}</span>
+            <p className="cell-value">{funFact}</p>
           </div>
-
         </div>
-
       </div>
 
       {onShare && !data.is_public && (
-
-        <button
-          className="btn-share-outside"
-          onClick={(e) => {
-            e.stopPropagation();
-            onShare(data);
-          }}
-        >
-          <i className="bi bi-share-fill"></i>
-          COMPARTIR
+        <button className="btn-share-outside" onClick={(e) => { e.stopPropagation(); onShare(data); }} style={{ backgroundColor: borderColor }}>
+          <i className="bi bi-share-fill"></i> COMPARTIR
         </button>
-
       )}
-
     </div>
   );
 };
