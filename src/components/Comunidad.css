@@ -1,18 +1,19 @@
 /* =========================================
    FONDO PRINCIPAL
 ========================================= */
+
 .comunidad-bg {
   background: linear-gradient(160deg, #1e3a8a 0%, #064e3b 100%);
   min-height: 100vh;
   width: 100%;
   padding: 3rem 0;
   background-attachment: fixed;
-  overflow-x: hidden; /* Evita que los elementos internos creen scroll horizontal */
 }
 
 /* =========================================
    TÍTULO
 ========================================= */
+
 .comunidad-title {
   color: #ffffff;
   font-weight: 800;
@@ -25,6 +26,7 @@
 /* =========================================
    FILTROS (CHIPS)
 ========================================= */
+
 .filter-bar {
   display: flex;
   justify-content: center;
@@ -47,6 +49,11 @@
   backdrop-filter: blur(10px);
 }
 
+.filter-btn:hover {
+  background: rgba(255,255,255,0.18);
+  transform: translateY(-2px);
+}
+
 .filter-btn.active {
   background: #27ae60;
   border-color: #27ae60;
@@ -55,24 +62,22 @@
 }
 
 /* =========================================
-   CARRUSEL (SWIPER) - AISLADO Y ESTABLE
+   CARRUSEL (SWIPER) - MODO "VER TODO"
 ========================================= */
+
 .swiper-cards-container {
-  width: 100%;
+  max-width: 100%;
   padding: 20px 0;
   margin-bottom: 40px;
-  display: flex;
-  justify-content: center;
-  overflow: hidden; /* Corta el desborde del efecto 3D */
 }
 
 .mySwiper {
-  width: 260px;
-  height: 420px;
+  width: 260px; /* Ancho base */
+  height: 420px; /* Altura suficiente para que no se corte verticalmente */
   padding-bottom: 30px;
-  touch-action: pan-y; /* Permite scroll vertical de la página mientras tocas el Swiper */
 }
 
+/* Esta clase es la que mantiene la carta completa dentro del slide */
 .mySwiper .swiper-slide {
   display: flex;
   justify-content: center;
@@ -86,12 +91,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  /* Transformamos para que la carta se "encoja" y quepa entera */
   transform: scale(0.85); 
+}
+
+/* Asegurar que la imagen sea "contain" y no se recorte */
+.card-image-box img {
+  object-fit: contain !important;
+  max-height: 100%;
 }
 
 /* =========================================
    BOTÓN GRID / LIST
 ========================================= */
+
 .view-toggle {
   display: flex;
   justify-content: center;
@@ -107,23 +120,29 @@
   font-family: 'Michroma', sans-serif;
   font-size: 0.75rem;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.view-toggle button:hover {
+  background: #2ecc71;
+  transform: scale(1.05);
 }
 
 /* =========================================
-   GRID GENERAL (FLUÍDO)
+   GRID GENERAL
 ========================================= */
+
 .album-grid {
   display: grid;
-  gap: 15px; /* Reducido para móviles */
+  gap: 25px;
   width: 100%;
   margin-top: 20px;
-  padding: 0 10px;
-  box-sizing: border-box; /* Asegura que el padding no rompa el ancho */
+  padding: 0 20px;
+  transition: all 0.4s ease;
 }
 
 .view-grid {
-  /* Cambio clave: usa minmax para adaptarse solo */
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   justify-items: center;
 }
 
@@ -139,11 +158,24 @@
   width: 100%;
 }
 
+.view-grid .card-thumb:hover > * {
+  transform: translateY(-5px) scale(1.02);
+}
+
 /* =========================================
    RESPONSIVE
 ========================================= */
+
 @media (max-width: 600px) {
+  .album-grid {
+    gap: 15px;
+    padding: 0 10px;
+  }
   .view-grid {
-    grid-template-columns: 1fr 1fr; /* Mantiene 2 columnas en móvil */
+    grid-template-columns: 1fr 1fr;
+  }
+  .filter-btn {
+    font-size: 0.65rem;
+    padding: 6px 10px;
   }
 }
