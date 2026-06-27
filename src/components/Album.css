@@ -1,4 +1,4 @@
-/* --- FONDOS DINÁMICOS --- */
+ /* --- FONDOS DINÁMICOS --- */
 
 .bg-mascotas {
   background: linear-gradient(135deg, rgba(43,108,176,.9), rgba(47,133,90,.9)), url('/fondopatitas.png');
@@ -115,27 +115,31 @@
   backdrop-filter: blur(5px);
 }
 
+/* 🔥 MODAL FIX REAL */
 .modal-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px; /* más compacto */
+  gap: 6px;
 }
 
-/* ✅ CARD DENTRO DEL MODAL MÁS CHICA */
+/* CARD */
 .modal-content .trading-card-wrapper {
-  transform: scale(0.82);
-  transform-origin: top center;
+  width: 280px;   /* antes era scale (mal) */
+  max-width: 90vw;
 }
 
+/* BOTONES */
 .card-actions {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
-  max-width: 250px;
+  max-width: 280px;
+  margin-top: 0;
 }
 
+/* BOTONES ESTILO */
 .btn-edit,
 .btn-delete,
 .btn-share,
@@ -165,7 +169,7 @@
   cursor: pointer;
 }
 
-/* --- SWEET ALERT PERSONALIZADO --- */
+/* --- SWEET ALERT --- */
 .swal2-container { z-index: 9999 !important; }
 
 .swal2-popup {
@@ -182,16 +186,11 @@
   padding: 10px !important;
   border-radius: 8px !important;
   font-family: 'Michroma', sans-serif !important;
-  cursor: pointer;
-}
-
-.swal2-select option {
-  background: #1b2631;
-  color: white;
 }
 
 /* --- RESPONSIVE --- */
 @media(max-width: 768px){
+
   .view-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
@@ -200,15 +199,6 @@
   .view-grid .card-thumb {
     width: 100%;
   }
-}
-
-@media(max-width: 500px){
-  .view-grid {
-    gap: 10px;
-  }
-}
-/* --- MODAL MOBILE FIX --- */
-@media (max-width: 768px) {
 
   .modal-overlay {
     align-items: flex-start;
@@ -220,16 +210,13 @@
     width: 100%;
     max-width: 100%;
     margin-top: 10px;
-    gap: 10px;
+    gap: 6px;
   }
 
-  /* Card más controlada en móvil */
   .modal-content .trading-card-wrapper {
-    transform: scale(0.72);
-    transform-origin: top center;
+    width: 240px;
   }
 
-  /* Botones más compactos */
   .card-actions {
     width: 100%;
     max-width: 320px;
@@ -245,5 +232,11 @@
   .close-btn {
     font-size: 0.7rem;
     padding: 6px 12px;
+  }
+}
+
+@media(max-width: 500px){
+  .view-grid {
+    gap: 10px;
   }
 }
