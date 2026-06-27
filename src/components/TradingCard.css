@@ -1,223 +1,254 @@
 @import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');
 
 /* ===========================================
-   WRAPPER (AJUSTADO PARA EL GRID)
+   WRAPPER
 =========================================== */
-.trading-card-wrapper {
-  display: inline-flex; /* Cambiado a inline-flex para no estirarse en el grid */
-  flex-direction: column;
-  align-items: center;
-  width: fit-content; /* Se ajusta exactamente al contenido */
-  transition: transform .25s ease;
-}
 
-/* ==================================================
-   MODO GALERÍA (COMPACTO)
-================================================== */
-.trading-card-wrapper.compact {
-  width: 170px;
-}
-
-.trading-card-wrapper.compact .card-container {
-  width: 170px;
-  min-height: auto;
-  padding: 8px;
-  gap: 6px;
-}
-
-.trading-card-wrapper.compact .card-image-box {
-  height: auto;
-  min-height: 100px;
-}
-
-.trading-card-wrapper.compact .card-id-header {
-  font-size: .65rem !important;
-}
-
-.trading-card-wrapper.compact .spotter-badge {
-  display: none;
-}
-
-.trading-card-wrapper.compact .info-cell {
-  padding: 4px;
-}
-
-.trading-card-wrapper.compact .cell-label {
-  font-size: .35rem;
-}
-
-.trading-card-wrapper.compact .cell-value {
-  font-size: .48rem;
-  line-height: 1.1;
-}
-
-.trading-card-wrapper.compact .btn-like {
-  font-size: .6rem;
-}
-
-.trading-card-wrapper.compact .btn-share-outside {
-  width: 170px;
-  padding: 8px;
-  font-size: .5rem;
+.trading-card-wrapper{
+    display:inline-flex;
+    flex-direction:column;
+    align-items:center;
+    width:fit-content;
+    transition:.25s;
 }
 
 /* ===========================================
-   CARD NORMAL
+   CARD
 =========================================== */
-.card-container {
-  width: 300px;
-  min-height: auto;
-  background: linear-gradient(180deg, #1b2631, #183329);
-  border: 3px solid #27ae60;
-  padding: 15px;
-  border-radius: 8px 8px 0 0;
-  font-family: 'Michroma', sans-serif;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  box-shadow: 0 5px 15px rgba(0,0,0,.5);
-  box-sizing: border-box;
+
+.card-container{
+    width:300px;
+    height:730px;
+
+    background:linear-gradient(180deg,#1b2631,#183329);
+
+    border:3px solid #27ae60;
+
+    border-radius:8px 8px 0 0;
+
+    padding:12px;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:6px;
+
+    box-sizing:border-box;
+
+    color:#fff;
+
+    font-family:'Michroma',sans-serif;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.45);
 }
 
-.card-id-header {
-  font-size: .9rem !important;
-  color: #2ecc71 !important;
-  text-align: right;
-  font-weight: bold;
-  display: block;
-  margin-bottom: 5px;
+.card-id-header{
+    text-align:right;
+    font-size:.8rem;
+    font-weight:bold;
+    margin-bottom:2px;
 }
-
-.card-image-box {
-  width: 100%;
-  height: auto;
-  background: transparent;
-  border: 1px solid #27ae60;
-  overflow: hidden;
-  border-radius: 4px;
-  display: flex;
-}
-
-.card-image-box img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.spotter-badge {
-  background: rgba(39,174,96,.15);
-  color: #fff;
-  padding: 8px 12px;
-  margin: 5px 0;
-  border-left: 4px solid #27ae60;
-  font-size: .65rem;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  text-transform: uppercase;
-  letter-spacing: .05rem;
-  border-radius: 2px;
-}
-
-.spotter-badge i { color: #2ecc71; font-size: .8rem; }
-.spotter-badge strong { color: #2ecc71; margin-left: 5px; }
-
-.card-info-section {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex-grow: 1;
-}
-
-.info-cell {
-  background: rgba(0,0,0,.2);
-  border: 1px solid rgba(39,174,96,.3);
-  padding: 8px;
-  border-radius: 4px;
-}
-
-.cell-label { display: block; font-size: .5rem; color: #2ecc71; margin-bottom: 2px; }
-.cell-value { margin: 0; font-size: .75rem; text-transform: uppercase; word-wrap: break-word; }
-
-.like-section {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-
-.btn-like {
-  background: transparent !important;
-  border: none !important;
-  cursor: pointer;
-  padding: 5px;
-  font-size: .85rem;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #fff;
-  transition: transform .2s ease;
-  font-family: inherit;
-}
-
-.btn-like:hover { transform: scale(1.1); }
 
 /* ===========================================
-   BOTÓN COMPARTIR
+   FOTO
 =========================================== */
-.btn-share-outside {
-  width: 300px;
-  padding: 12px;
-  background: #2980b9;
-  color: #fff;
-  border: none;
-  border-radius: 0 0 8px 8px;
-  cursor: pointer;
-  font-family: 'Michroma', sans-serif;
-  font-size: .75rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: .3s;
-  box-shadow: 0 4px 6px rgba(0,0,0,.3);
+
+.card-image-box{
+    width:100%;
+    aspect-ratio:4/5;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:#111;
+
+    overflow:hidden;
+
+    border-radius:5px;
+
+    flex-shrink:0;
 }
 
-.btn-share-outside:hover { background: #3498db; transform: translateY(2px); }
+.card-image-box img{
+    max-width:100%;
+    max-height:100%;
+    width:auto;
+    height:auto;
+    object-fit:contain;
+    display:block;
+}
 
 /* ===========================================
-   MOBILE
+   BADGE
 =========================================== */
-@media(max-width: 600px) {
-  .trading-card-wrapper.compact { width: 145px; }
-  .trading-card-wrapper.compact .card-container { width: 145px; min-height: auto; }
-  .trading-card-wrapper.compact .card-image-box { height: auto; }
-  .trading-card-wrapper.compact .btn-share-outside { width: 145px; font-size: .45rem; padding: 6px; }
+
+.spotter-badge{
+    padding:6px 8px;
+    font-size:.55rem;
+
+    border-left:4px solid #27ae60;
+
+    background:rgba(39,174,96,.15);
+
+    border-radius:4px;
 }
+
 /* ===========================================
-   ESTILO ESPECIAL PARA MODALES
-   Forzamos un tamaño fijo solo cuando está dentro de un modal
+   INFO
 =========================================== */
-.modal-content .trading-card-wrapper {
-  display: flex !important; /* Sobrescribe el inline-flex del grid */
-  width: 100% !important;
+
+.card-info-section{
+    flex:1;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:5px;
 }
 
-.modal-content .card-container {
-  width: 300px !important;      /* Tamaño fijo en modal */
-  min-height: 400px !important; /* Altura mínima para que luzca bien */
-  max-height: 80vh !important;  /* No más grande que la pantalla */
-  overflow-y: auto;             /* Scroll interno si la foto es gigante */
+.like-section{
+    display:flex;
+    justify-content:flex-end;
+    margin:0;
 }
 
-.modal-content .card-image-box {
-  height: 180px !important;    /* Altura fija para la imagen en el modal */
-  background: #000 !important; /* Fondo negro para evitar estiramientos */
+.btn-like{
+    background:none;
+    border:none;
+    color:white;
+    cursor:pointer;
+    font-family:inherit;
+    display:flex;
+    gap:5px;
+    align-items:center;
+    font-size:.75rem;
 }
 
-.modal-content .card-image-box img {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: contain !important; /* La foto entra completa sin recortar */
+.info-cell{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+
+    min-height:48px;
+
+    padding:6px;
+
+    border-radius:4px;
+
+    background:rgba(0,0,0,.20);
+
+    box-sizing:border-box;
+}
+
+.info-cell.full-width{
+    min-height:78px;
+}
+
+.cell-label{
+    font-size:.45rem;
+    margin-bottom:2px;
+    letter-spacing:.04rem;
+}
+
+.cell-value{
+    margin:0;
+
+    font-size:.68rem;
+
+    line-height:1.2;
+
+    text-transform:uppercase;
+
+    overflow:hidden;
+
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+}
+
+.full-width .cell-value{
+    -webkit-line-clamp:4;
+}
+
+/* ===========================================
+   BOTON
+=========================================== */
+
+.btn-share-outside{
+    width:300px;
+
+    padding:10px;
+
+    border:none;
+
+    color:#fff;
+
+    cursor:pointer;
+
+    font-family:'Michroma',sans-serif;
+
+    border-radius:0 0 8px 8px;
+}
+
+/* ===========================================
+   COMPACT
+=========================================== */
+
+.trading-card-wrapper.compact{
+    width:170px;
+}
+
+.trading-card-wrapper.compact .card-container{
+    width:170px;
+    height:500px;
+
+    padding:8px;
+
+    gap:4px;
+}
+
+.trading-card-wrapper.compact .card-image-box{
+    aspect-ratio:4/5;
+}
+
+.trading-card-wrapper.compact .spotter-badge{
+    display:none;
+}
+
+.trading-card-wrapper.compact .cell-label{
+    font-size:.32rem;
+}
+
+.trading-card-wrapper.compact .cell-value{
+    font-size:.48rem;
+}
+
+.trading-card-wrapper.compact .info-cell{
+    min-height:35px;
+    padding:4px;
+}
+
+.trading-card-wrapper.compact .info-cell.full-width{
+    min-height:60px;
+}
+
+.trading-card-wrapper.compact .btn-share-outside{
+    width:170px;
+    font-size:.5rem;
+    padding:8px;
+}
+
+/* ===========================================
+   MODAL
+=========================================== */
+
+.modal-content .trading-card-wrapper{
+    width:100%;
+    display:flex;
+}
+
+.modal-content .card-container{
+    width:300px;
+    height:730px;
 }
