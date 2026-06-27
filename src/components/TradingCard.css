@@ -195,3 +195,29 @@
   .trading-card-wrapper.compact .card-image-box { height: auto; }
   .trading-card-wrapper.compact .btn-share-outside { width: 145px; font-size: .45rem; padding: 6px; }
 }
+/* ===========================================
+   ESTILO ESPECIAL PARA MODALES
+   Forzamos un tamaño fijo solo cuando está dentro de un modal
+=========================================== */
+.modal-content .trading-card-wrapper {
+  display: flex !important; /* Sobrescribe el inline-flex del grid */
+  width: 100% !important;
+}
+
+.modal-content .card-container {
+  width: 300px !important;      /* Tamaño fijo en modal */
+  min-height: 400px !important; /* Altura mínima para que luzca bien */
+  max-height: 80vh !important;  /* No más grande que la pantalla */
+  overflow-y: auto;             /* Scroll interno si la foto es gigante */
+}
+
+.modal-content .card-image-box {
+  height: 180px !important;    /* Altura fija para la imagen en el modal */
+  background: #000 !important; /* Fondo negro para evitar estiramientos */
+}
+
+.modal-content .card-image-box img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important; /* La foto entra completa sin recortar */
+}
