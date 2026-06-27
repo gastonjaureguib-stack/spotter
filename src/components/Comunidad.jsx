@@ -3,12 +3,17 @@ import { supabase } from './supabaseClient';
 import './Comunidad.css'; 
 import TradingCard from './TradingCard';
 
+// Importaciones de Swiper
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { EffectCards } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/effect-cards';
+
 function Comunidad() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   
-  // Estado para el modal de previsualización
   const [selectedCard, setSelectedCard] = useState(null);
   const [viewMode, setViewMode] = useState('grid');
   const [categoryFilter, setCategoryFilter] = useState('all');
@@ -62,6 +67,25 @@ function Comunidad() {
           <button className="btn btn-sm btn-outline-light" onClick={() => setCategoryFilter('paisajes')}>Paisajes 🌄</button>
         </div>
 
+        {/* CARRUSEL DE DESTACADOS */}
+        {filteredPosts.length > 0 && (
+          <div className="swiper-cards-container my-5">
+            <h5 className="text-white text-center mb-4">Lo más reciente</h5>
+            <Swiper
+              effect={'cards'}
+              grabCursor={true}
+              modules={[EffectCards]}
+              className="mySwiper"
+            >
+              {filteredPosts.slice(0, 5).map(post => (
+                <SwiperSlide key={post.id} onClick={() => setSelectedCard(post)}>
+                  <TradingCard data={post} userId={user?.id} showUser={true} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+        )}
+
         {/* TOGGLE VISTA */}
         <div className="d-flex justify-content-center mb-4">
           <button className="btn btn-sm btn-outline-light" onClick={() => setViewMode(prev => prev === 'grid' ? 'list' : 'grid')}>
@@ -88,7 +112,7 @@ function Comunidad() {
           )}
         </div>
 
-        {/* MODAL DE PREVISUALIZACIÓN */}
+        {/* MODAL */}
         {selectedCard && (
           <div className="modal-overlay" onClick={() => setSelectedCard(null)}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -101,7 +125,6 @@ function Comunidad() {
             </div>
           </div>
         )}
-
       </section>
     </div>
   );

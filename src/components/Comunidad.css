@@ -19,10 +19,12 @@
   font-weight: 800;
   letter-spacing: -1px;
   text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
 /* =========================================
-   FILTROS (🔥 NUEVO BLOQUE PRO)
+   FILTROS (CHIPS)
 ========================================= */
 
 .filter-bar {
@@ -30,11 +32,10 @@
   justify-content: center;
   flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 30px;
   padding: 0 10px;
 }
 
-/* BOTONES TIPO CHIPS */
 .filter-btn {
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.25);
@@ -53,12 +54,51 @@
   transform: translateY(-2px);
 }
 
-/* BOTÓN ACTIVO */
 .filter-btn.active {
   background: #27ae60;
   border-color: #27ae60;
   color: #fff;
   box-shadow: 0 6px 15px rgba(39,174,96,0.35);
+}
+
+/* =========================================
+   CARRUSEL (SWIPER) - MODO "VER TODO"
+========================================= */
+
+.swiper-cards-container {
+  max-width: 100%;
+  padding: 20px 0;
+  margin-bottom: 40px;
+}
+
+.mySwiper {
+  width: 260px; /* Ancho base */
+  height: 420px; /* Altura suficiente para que no se corte verticalmente */
+  padding-bottom: 30px;
+}
+
+/* Esta clase es la que mantiene la carta completa dentro del slide */
+.mySwiper .swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+}
+
+.mySwiper .trading-card-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Transformamos para que la carta se "encoja" y quepa entera */
+  transform: scale(0.85); 
+}
+
+/* Asegurar que la imagen sea "contain" y no se recorte */
+.card-image-box img {
+  object-fit: contain !important;
+  max-height: 100%;
 }
 
 /* =========================================
@@ -101,21 +141,15 @@
   transition: all 0.4s ease;
 }
 
-/* GRID MODE */
 .view-grid {
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   justify-items: center;
 }
 
-/* LIST MODE */
 .view-list {
   grid-template-columns: 1fr;
   justify-items: center;
 }
-
-/* =========================================
-   CARD WRAPPER
-========================================= */
 
 .card-thumb {
   display: flex;
@@ -124,13 +158,8 @@
   width: 100%;
 }
 
-/* SOLO GRID HOVER */
 .view-grid .card-thumb:hover > * {
   transform: translateY(-5px) scale(1.02);
-}
-
-.view-list .card-thumb:hover > * {
-  transform: none;
 }
 
 /* =========================================
@@ -138,22 +167,15 @@
 ========================================= */
 
 @media (max-width: 600px) {
-
   .album-grid {
     gap: 15px;
     padding: 0 10px;
   }
-
   .view-grid {
     grid-template-columns: 1fr 1fr;
   }
-
   .filter-btn {
     font-size: 0.65rem;
     padding: 6px 10px;
-  }
-
-  .view-toggle button {
-    width: 100%;
   }
 }

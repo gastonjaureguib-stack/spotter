@@ -6,15 +6,13 @@ const TradingCard = ({ data, userId, showUser = false, onShare }) => {
   const [likeCount, setLikeCount] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
 
-  // Función para limitar caracteres
   const getLimitedText = (text, limit) => {
     if (!text) return '---';
     return text.length > limit ? text.substring(0, limit) + '...' : text;
   };
 
   const categoria = data.categoria?.toLowerCase() || 'perros';
-  const isNature = ['plantas', 'paisajes'].includes(categoria);
-
+  
   const categoryColors = {
     perros: '#f39c12',
     gatos: '#8e44ad',
@@ -24,13 +22,15 @@ const TradingCard = ({ data, userId, showUser = false, onShare }) => {
 
   const borderColor = categoryColors[categoria] || '#27ae60';
 
-  const labels = {
-    raza: isNature ? 'TIPO / ESPECIE' : 'RAZA',
-    personalidad: isNature ? 'CARACTERÍSTICAS' : 'PERSONALIDAD',
-    funFact: isNature ? 'ENCONTRADO EN' : 'DATO CURIOSO'
+  const categoryConfig = {
+    perros: { labelRaza: 'RAZA', labelPers: 'PERSONALIDAD', labelFact: 'DATO CURIOSO', icon: 'bi-paw-fill' },
+    gatos: { labelRaza: 'RAZA', labelPers: 'PERSONALIDAD', labelFact: 'DATO CURIOSO', icon: 'bi-paw-fill' },
+    plantas: { labelRaza: 'TIPO / ESPECIE', labelPers: 'CARACTERÍSTICAS', labelFact: 'ENCONTRADO EN', icon: 'bi-leaf-fill' },
+    paisajes: { labelRaza: 'TIPO / ESPECIE', labelPers: 'CARACTERÍSTICAS', labelFact: 'ENCONTRADO EN', icon: 'bi-mountain-fill' }
   };
 
-  // ... (tu useEffect y handleToggleLike se mantienen igual) ...
+  const config = categoryConfig[categoria] || categoryConfig['perros'];
+
   useEffect(() => {
     if (!data?.id) return;
     const fetchLikes = async () => {
@@ -59,7 +59,7 @@ const TradingCard = ({ data, userId, showUser = false, onShare }) => {
 
   if (!data) return null;
 
-  const displayId = data.numero_figurita ? `#${data.numero_figurita}` : 'NEW';
+  const displayId = data.numero_figurita ? `#${String(data.numero_figurita).padStart(3, '0')}` : '#NEW';
   const nombre = getLimitedText(data.nombre || data.metadata?.nombre || 'SIN NOMBRE', 20);
   const raza = getLimitedText(data.raza || data.metadata?.raza || 'DESCONOCIDA', 20);
   const personalidad = getLimitedText(data.personalidad || data.metadata?.personalidad || '---', 40);
@@ -68,47 +68,97 @@ const TradingCard = ({ data, userId, showUser = false, onShare }) => {
 
   return (
     <div className={`trading-card-wrapper ${data?.compact ? 'compact' : ''}`}>
-      <div className="card-container" style={{ border: `3px solid ${borderColor}` }}>
-        <div className="card-id-header" style={{ color: borderColor }}>{displayId}</div>
-        <div className="card-image-box" style={{ borderColor: borderColor }}>
-          {data.image_url && <img src={data.image_url} alt={nombre} />}
+      <div className="card-container" style={{ '--accent': borderColor }}>
+        
+        {/* ÍCONO SUPERIOR DINÁMICO */}
+        <div className="card-top-icon">
+          <i className={`bi ${config.icon}`} style={{ color: borderColor }}></i>
+        </div>
+
+        {/* NÚMERO DE FIGURITA */}
+        <div className="card-id-header">
+          {displayId} <span className="star-sparkle">✦</span>
+        </div>
+
+        {/* CONTENEDOR CON HOJITAS DECORATIVAS PARA LA FOTO */}
+        <div className="card-image-container-wrapper">
+          <div className="photo-leaves leaf-top-left"></div>
+          <div className="photo-leaves leaf-bottom-right"></div>
+          <div className="card-image-box">
+            {data.image_url && <img src={data.image_url} alt={nombre} />}
+          </div>
         </div>
         
-        {/* ... (resto del JSX igual, usando las variables truncadas arriba) ... */}
-        {showUser && (
-          <div className="spotter-badge" style={{ borderLeft: `4px solid ${borderColor}`, backgroundColor: `${borderColor}20` }}>
-            <i className="bi bi-camera-fill me-2" style={{ color: borderColor }}></i>
-            <span>Spotter: <strong style={{ color: borderColor }}>@{spotterName}</strong></span>
-          </div>
-        )}
-
-        <div className="card-info-section">
-          <div className="like-section">
-            <button onClick={handleToggleLike} className="btn-like">{isLiked ? "❤️" : "🤍"} <span>{likeCount}</span></button>
-          </div>
-          <div className="info-cell" style={{ border: `1px solid ${borderColor}50` }}>
-            <span className="cell-label" style={{ color: borderColor }}>NOMBRE</span>
-            <p className="cell-value">{nombre}</p>
-          </div>
-          <div className="info-cell" style={{ border: `1px solid ${borderColor}50` }}>
-            <span className="cell-label" style={{ color: borderColor }}>{labels.raza}</span>
-            <p className="cell-value">{raza}</p>
-          </div>
-          <div className="info-cell" style={{ border: `1px solid ${borderColor}50` }}>
-            <span className="cell-label" style={{ color: borderColor }}>{labels.personalidad}</span>
-            <p className="cell-value">{personalidad}</p>
-          </div>
-          <div className="info-cell full-width" style={{ border: `1px solid ${borderColor}50` }}>
-            <span className="cell-label" style={{ color: borderColor }}>{labels.funFact}</span>
-            <p className="cell-value">{funFact}</p>
-          </div>
+        {/* FILA DE SPOTTER + LIKES (PILL STYLE) */}
+        <div className="card-meta-row">
+          {showUser ? (
+            <div className="spotter-badge">
+              <i className="bi bi-camera-fill"></i>
+              <span>Spotter: <strong>@{spotterName}</strong></span>
+            </div>
+          ) : <div />}
+          
+          <button onClick={handleToggleLike} className={`btn-like ${isLiked ? 'liked' : ''}`}>
+            <i className={`bi ${isLiked ? 'bi-heart-fill' : 'bi-heart'}`}></i>
+            <span>{likeCount}</span>
+          </button>
         </div>
+
+        {/* CONTENEDOR CON LA DECORACIÓN INFERIOR DE PASTO */}
+        <div className="card-bottom-wrapper">
+          <div className="bottom-grass-decor"></div>
+          
+          <div className="card-info-section">
+            <div className="info-cell">
+              <div className="cell-icon-box">
+                <i className={`bi ${config.icon}`} style={{ color: borderColor }}></i>
+              </div>
+              <div className="cell-text-content">
+                <span className="cell-label">NOMBRE</span>
+                <p className="cell-value">{nombre}</p>
+              </div>
+            </div>
+
+            <div className="info-cell">
+              <div className="cell-icon-box">
+                <i className="bi bi-shield-shaded" style={{ color: borderColor }}></i>
+              </div>
+              <div className="cell-text-content">
+                <span className="cell-label">{config.labelRaza}</span>
+                <p className="cell-value">{raza}</p>
+              </div>
+            </div>
+
+            <div className="info-cell">
+              <div className="cell-icon-box">
+                <i className="bi bi-star-fill" style={{ color: borderColor }}></i>
+              </div>
+              <div className="cell-text-content">
+                <span className="cell-label">{config.labelPers}</span>
+                <p className="cell-value">{personalidad}</p>
+              </div>
+            </div>
+
+            <div className="info-cell full-width">
+              <div className="cell-icon-box">
+                <i className="bi bi-lightbulb-fill" style={{ color: borderColor }}></i>
+              </div>
+              <div className="cell-text-content">
+                <span className="cell-label-highlight">{config.labelFact}</span>
+                <p className="cell-value-highlight">{funFact}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* BOTÓN INTERNO CON TEXTURA DE HOJAS */}
+          {onShare && !data.is_public && (
+            <button className="btn-share-modern" onClick={(e) => { e.stopPropagation(); onShare(data); }}>
+              <i className="bi bi-share-fill"></i> COMPARTIR
+            </button>
+          )}
+        </div>
+
       </div>
-      {onShare && !data.is_public && (
-        <button className="btn-share-outside" onClick={(e) => { e.stopPropagation(); onShare(data); }} style={{ backgroundColor: borderColor }}>
-          <i className="bi bi-share-fill"></i> COMPARTIR
-        </button>
-      )}
     </div>
   );
 };
