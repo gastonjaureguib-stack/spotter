@@ -7,7 +7,9 @@ function Comunidad() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
-
+  
+  // Estado para el modal de previsualización
+  const [selectedCard, setSelectedCard] = useState(null);
   const [viewMode, setViewMode] = useState('grid');
   const [categoryFilter, setCategoryFilter] = useState('all');
 
@@ -19,7 +21,6 @@ function Comunidad() {
 
     const fetchPosts = async () => {
       setLoading(true);
-
       const { data, error } = await supabase
         .from('captures')
         .select('*, profiles(username)') 
@@ -31,7 +32,6 @@ function Comunidad() {
       } else {
         setPosts(data || []);
       }
-
       setLoading(false);
     };
 
@@ -40,73 +40,31 @@ function Comunidad() {
   }, []);
 
   if (loading) {
-    return <div className="text-center mt-5">Cargando spotteds...</div>;
+    return <div className="text-center mt-5 text-white">Cargando spotteds...</div>;
   }
 
-  // 🔥 FILTRO REAL POR CATEGORÍA
   const filteredPosts =
     categoryFilter === 'all'
       ? posts
-      : posts.filter(
-          p => p.categoria?.toLowerCase() === categoryFilter
-        );
+      : posts.filter(p => p.categoria?.toLowerCase() === categoryFilter);
 
   return (
     <div className="comunidad-bg">
       <section className="container mt-4">
+        <h2 className="text-center mb-4 text-white">Spotteds de la Comunidad</h2>
 
-        <h2 className="text-center mb-4 text-white">
-          Spotteds de la Comunidad
-        </h2>
-
-        {/* 🔥 FILTRO DE CATEGORÍAS */}
+        {/* FILTRO DE CATEGORÍAS */}
         <div className="d-flex justify-content-center flex-wrap gap-2 mb-3">
-
-          <button
-            className="btn btn-sm btn-outline-light"
-            onClick={() => setCategoryFilter('all')}
-          >
-            Todos 🌎
-          </button>
-
-          <button
-            className="btn btn-sm btn-outline-light"
-            onClick={() => setCategoryFilter('perros')}
-          >
-            Perros 🐶
-          </button>
-
-          <button
-            className="btn btn-sm btn-outline-light"
-            onClick={() => setCategoryFilter('gatos')}
-          >
-            Gatos 🐱
-          </button>
-
-          <button
-            className="btn btn-sm btn-outline-light"
-            onClick={() => setCategoryFilter('plantas')}
-          >
-            Plantas 🌿
-          </button>
-
-          <button
-            className="btn btn-sm btn-outline-light"
-            onClick={() => setCategoryFilter('paisajes')}
-          >
-            Paisajes 🌄
-          </button>
-
+          <button className="btn btn-sm btn-outline-light" onClick={() => setCategoryFilter('all')}>Todos 🌎</button>
+          <button className="btn btn-sm btn-outline-light" onClick={() => setCategoryFilter('perros')}>Perros 🐶</button>
+          <button className="btn btn-sm btn-outline-light" onClick={() => setCategoryFilter('gatos')}>Gatos 🐱</button>
+          <button className="btn btn-sm btn-outline-light" onClick={() => setCategoryFilter('plantas')}>Plantas 🌿</button>
+          <button className="btn btn-sm btn-outline-light" onClick={() => setCategoryFilter('paisajes')}>Paisajes 🌄</button>
         </div>
 
-        {/* GRID / LIST TOGGLE */}
+        {/* TOGGLE VISTA */}
         <div className="d-flex justify-content-center mb-4">
-          <button
-            className="btn btn-sm btn-outline-light"
-            onClick={() =>
-              setViewMode(prev => (prev === 'grid' ? 'list' : 'grid'))
-            }
-          >
+          <button className="btn btn-sm btn-outline-light" onClick={() => setViewMode(prev => prev === 'grid' ? 'list' : 'grid')}>
             {viewMode === 'grid' ? 'Ver lista ' : 'Ver galería '}
           </button>
         </div>
@@ -115,8 +73,7 @@ function Comunidad() {
         <div className={`album-grid ${viewMode === 'list' ? 'view-list' : 'view-grid'}`}> 
           {filteredPosts.length > 0 ? (
             filteredPosts.map(post => (
-              <div key={post.id} className="card-thumb">
-
+              <div key={post.id} className="card-thumb" onClick={() => setSelectedCard(post)}>
                 <div className={`trading-card-wrapper ${viewMode === 'grid' ? 'compact' : ''}`}>
                   <TradingCard 
                     data={post} 
@@ -124,15 +81,26 @@ function Comunidad() {
                     showUser={true} 
                   />
                 </div>
-
               </div>
             ))
           ) : (
-            <p className="text-center text-white">
-              No hay publicaciones en esta categoría.
-            </p>
+            <p className="text-center text-white">No hay publicaciones en esta categoría.</p>
           )}
         </div>
+
+        {/* MODAL DE PREVISUALIZACIÓN */}
+        {selectedCard && (
+          <div className="modal-overlay" onClick={() => setSelectedCard(null)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <TradingCard 
+                data={selectedCard} 
+                userId={user?.id} 
+                showUser={true} 
+              />
+              <button className="close-btn" onClick={() => setSelectedCard(null)}>Cerrar</button>
+            </div>
+          </div>
+        )}
 
       </section>
     </div>
