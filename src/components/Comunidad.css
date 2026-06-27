@@ -1,181 +1,95 @@
 /* =========================================
    FONDO PRINCIPAL
 ========================================= */
-
 .comunidad-bg {
   background: linear-gradient(160deg, #1e3a8a 0%, #064e3b 100%);
   min-height: 100vh;
   width: 100%;
   padding: 3rem 0;
   background-attachment: fixed;
+  overflow-x: hidden; /* Evita scroll lateral */
 }
 
 /* =========================================
-   TÍTULO
+   SECCIONES DE CATEGORÍA
 ========================================= */
-
-.comunidad-title {
-  color: #ffffff;
-  font-weight: 800;
-  letter-spacing: -1px;
-  text-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-/* =========================================
-   FILTROS (CHIPS)
-========================================= */
-
-.filter-bar {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 30px;
-  padding: 0 10px;
-}
-
-.filter-btn {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.25);
-  color: #fff;
-  padding: 8px 14px;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-family: 'Michroma', sans-serif;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  backdrop-filter: blur(10px);
-}
-
-.filter-btn:hover {
-  background: rgba(255,255,255,0.18);
-  transform: translateY(-2px);
-}
-
-.filter-btn.active {
-  background: #27ae60;
-  border-color: #27ae60;
-  color: #fff;
-  box-shadow: 0 6px 15px rgba(39,174,96,0.35);
-}
-
-/* =========================================
-   CARRUSEL (SWIPER) - MODO "VER TODO"
-========================================= */
-
-.swiper-cards-container {
-  max-width: 100%;
-  padding: 20px 0;
+.category-section {
   margin-bottom: 40px;
+  padding-left: 20px;
 }
 
-.mySwiper {
-  width: 260px; /* Ancho base */
-  height: 420px; /* Altura suficiente para que no se corte verticalmente */
-  padding-bottom: 30px;
-}
-
-/* Esta clase es la que mantiene la carta completa dentro del slide */
-.mySwiper .swiper-slide {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: transparent;
-}
-
-.mySwiper .trading-card-wrapper {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* Transformamos para que la carta se "encoja" y quepa entera */
-  transform: scale(0.85); 
-}
-
-/* Asegurar que la imagen sea "contain" y no se recorte */
-.card-image-box img {
-  object-fit: contain !important;
-  max-height: 100%;
-}
-
-/* =========================================
-   BOTÓN GRID / LIST
-========================================= */
-
-.view-toggle {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.view-toggle button {
-  background: #27ae60;
-  border: none;
-  color: white;
-  padding: 10px 18px;
-  border-radius: 999px;
+.category-title {
+  color: #ffffff;
   font-family: 'Michroma', sans-serif;
-  font-size: 0.75rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.view-toggle button:hover {
-  background: #2ecc71;
-  transform: scale(1.05);
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 /* =========================================
-   GRID GENERAL
+   CARRUSEL HORIZONTAL (SWIPER)
 ========================================= */
-
-.album-grid {
-  display: grid;
-  gap: 25px;
+.horizontal-category-swiper {
   width: 100%;
-  margin-top: 20px;
-  padding: 0 20px;
-  transition: all 0.4s ease;
+  padding-bottom: 20px;
 }
 
-.view-grid {
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  justify-items: center;
-}
-
-.view-list {
-  grid-template-columns: 1fr;
-  justify-items: center;
-}
-
-.card-thumb {
+.horizontal-category-swiper .slide-card {
+  width: 280px; /* Tamaño consistente de la card */
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
 }
 
-.view-grid .card-thumb:hover > * {
-  transform: translateY(-5px) scale(1.02);
+/* Asegurar que las cards no tengan transformaciones raras */
+.horizontal-category-swiper .trading-card-wrapper {
+  width: 100%;
+  transform: none !important; /* Quitamos el scale del carrusel antiguo */
+}
+
+/* =========================================
+   MODAL (MANTENIDO)
+========================================= */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: transparent;
+  max-width: 350px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.close-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: 'Michroma', sans-serif;
 }
 
 /* =========================================
    RESPONSIVE
 ========================================= */
-
 @media (max-width: 600px) {
-  .album-grid {
-    gap: 15px;
-    padding: 0 10px;
-  }
-  .view-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-  .filter-btn {
-    font-size: 0.65rem;
-    padding: 6px 10px;
+  .category-title {
+    font-size: 1.1rem;
+    padding-left: 10px;
   }
 }

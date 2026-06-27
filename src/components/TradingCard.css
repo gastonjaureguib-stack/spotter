@@ -1,97 +1,113 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap');
 
 /* ===========================================
-   WRAPPER Y HOVER GLOBAL (FLUIDO)
+   WRAPPER: Ancho y con perspectiva 3D
 =========================================== */
 .trading-card-wrapper {
     display: inline-flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 320px;
-    transition: transform 0.25s ease;
+    max-width: 400px; 
+    perspective: 1000px;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .trading-card-wrapper:hover {
-    transform: translateY(-5px);
+    transform: translateY(-10px) rotateY(2deg);
 }
 
 /* ===========================================
-   CONTENEDOR DE LA TARJETA (REPARADO)
+   CONTENEDOR FIGURITA: Diseño tipo carta
 =========================================== */
 .card-container {
     width: 100%;
-    max-width: 320px;
-    height: auto; 
-    min-height: 500px;
-    position: relative;
-    background: linear-gradient(180deg, #fefcf7 0%, #f5fff4 50%, #e8f6ff 100%);
-    border: 3px solid var(--accent);
+    background: #ffffff;
+    border: 3px solid transparent;
     border-radius: 24px;
-    padding: 18px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    box-sizing: border-box;
-    color: #2c3e2f;
+    gap: 15px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
     font-family: 'Plus Jakarta Sans', sans-serif;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.07);
+    color: #1e293b;
+    position: relative;
     overflow: hidden;
 }
 
-/* ===========================================
-   ÍCONO SUPERIOR FLOTANTE
-=========================================== */
-.card-top-icon {
-    position: absolute;
-    top: -14px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 46px;
-    height: 46px;
-    background: #ffffff;
-    border: 3px solid var(--accent);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    z-index: 4;
-}
-
-.card-top-icon i { font-size: 1.3rem; }
+/* Bordes y fondos según categoría */
+.card-container.perros { border-color: #3b82f6; background: linear-gradient(180deg, #eff6ff 0%, #ffffff 100%); }
+.card-container.gatos { border-color: #8b5cf6; background: linear-gradient(180deg, #f5f3ff 0%, #ffffff 100%); }
+.card-container.plantas { border-color: #10b981; background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 100%); }
+.card-container.paisajes { border-color: #f97316; background: linear-gradient(180deg, #fff7ed 0%, #ffffff 100%); }
 
 /* ===========================================
-   IMAGEN (REPARADA: SIN CORTES)
+   IMAGEN: Altura fija para no estirar la card
 =========================================== */
 .card-image-box {
     width: 100%;
-    height: 235px;
+    height: 260px; /* Tamaño fijo, no se alarga */
+    background: #f1f5f9;
+    border-radius: 18px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #fff;
     overflow: hidden;
-    border-radius: 18px;
-    border: 1px solid rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0,0,0,0.05);
 }
 
 .card-image-box img {
     width: 100%;
     height: 100%;
-    object-fit: contain; /* Muestra toda la foto sin recortar */
-    background: #f9f9f9;
+    object-fit: contain; /* Foto completa, sin cortes */
 }
 
 /* ===========================================
-   COMPONENTES INTERNOS (MANTENIDOS)
+   META Y FICHA TÉCNICA
 =========================================== */
-.card-id-header { text-align: right; font-size: 1rem; font-weight: 800; color: #2c3e2f; opacity: 0.8; margin-top: 4px; }
-.card-meta-row { display: flex; justify-content: space-between; align-items: center; width: 100%; z-index: 2; }
-.spotter-badge { display: flex; align-items: center; gap: 6px; background: #ffffff; padding: 6px 14px; border-radius: 20px; font-size: 0.7rem; border: 1px solid rgba(0, 0, 0, 0.05); }
-.btn-like { display: flex; align-items: center; gap: 6px; background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.05); color: #95a5a6; cursor: pointer; font-family: inherit; font-size: 0.8rem; font-weight: 700; padding: 6px 14px; border-radius: 20px; transition: all 0.2s ease; }
-.btn-like.liked { color: #e74c3c; background: #fdedec; border-color: #f5b7b1; }
+.card-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
 
-/* ===========================================
-   BOTTOM SECTION (REPARADO PARA FLUIDEZ)
-=========================================== */
+.spotter-badge {
+    background: rgba(0,0,0,0.05);
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.btn-like {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    padding: 4px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: 0.2s;
+}
+
+.btn-like.liked { background: #fff1f2; color: #e11d48; border-color: #fda4af; }
+
+/* Ficha técnica tipo celda */
+.info-section { display: flex; flex-direction: column; gap: 6px; margin-top: 5px; }
+
+.info-cell {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px dashed #cbd5e1;
+}
+
+.info-label { font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; font-weight: 600; }
+.info-value { font-size: 0.9rem; font-weight: 700; color: #1e293b; }
