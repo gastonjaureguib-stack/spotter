@@ -1,40 +1,35 @@
- /* --- FONDOS DINÁMICOS --- */
+/* --- SEGURIDAD GLOBAL --- */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
 
-.bg-mascotas {
-  background: linear-gradient(135deg, rgba(43,108,176,.9), rgba(47,133,90,.9)), url('/fondopatitas.png');
-  background-blend-mode: overlay;
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+/* --- FONDOS DINÁMICOS --- */
+.bg-mascotas, .bg-plantas, .bg-paisajes {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
   min-height: 100vh;
+  width: 100%;
 }
 
-.bg-plantas {
-  background: linear-gradient(135deg, rgba(47,133,90,.9), rgba(56,161,105,.9)), url('/fondoplantas.png');
-  background-blend-mode: multiply;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  min-height: 100vh;
-}
-
-.bg-paisajes {
-  background: linear-gradient(135deg, rgba(43,108,176,.8), rgba(47,133,90,.8)), url('/fondopaisajes.png');
-  background-blend-mode: overlay;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  min-height: 100vh;
-}
+.bg-mascotas { background-image: linear-gradient(135deg, rgba(43,108,176,.9), rgba(47,133,90,.9)), url('/fondopatitas.png'); background-blend-mode: overlay; }
+.bg-plantas { background-image: linear-gradient(135deg, rgba(47,133,90,.9), rgba(56,161,105,.9)), url('/fondoplantas.png'); background-blend-mode: multiply; }
+.bg-paisajes { background-image: linear-gradient(135deg, rgba(43,108,176,.8), rgba(47,133,90,.8)), url('/fondopaisajes.png'); background-blend-mode: overlay; }
 
 /* --- CONTENEDOR --- */
 .container {
   max-width: 1200px;
   margin: auto;
   padding: 20px;
+  width: 100%;
 }
 
 /* --- BOTONES --- */
@@ -45,8 +40,7 @@
   margin-bottom: 30px;
 }
 
-.btn-gallery-small,
-.btn-view-toggle {
+.btn-gallery-small, .btn-view-toggle {
   background: rgba(255,255,255,.12);
   border: 1px solid rgba(255,255,255,.3);
   color: #fff;
@@ -57,15 +51,10 @@
   cursor: pointer;
 }
 
-.btn-gallery-small:hover,
-.btn-view-toggle:hover {
-  background: rgba(255,255,255,.22);
-}
-
 /* --- GRID --- */
 .album-grid {
   display: grid;
-  gap: 24px;
+  gap: 15px;
   margin-top: 20px;
   width: 100%;
 }
@@ -75,23 +64,17 @@
   justify-items: center;
 }
 
-.view-list .card-thumb {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
 .view-grid {
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  /* Cambio clave: repeat(auto-fill...) permite que se adapten solas */
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   justify-items: center;
   align-items: start;
 }
 
 .view-grid .card-thumb {
-  width: 190px;
+  width: 100%; /* Ahora es fluido y no empuja el layout */
   display: flex;
   justify-content: center;
-  align-items: flex-start;
 }
 
 .card-thumb {
@@ -115,35 +98,30 @@
   backdrop-filter: blur(5px);
 }
 
-/* 🔥 MODAL FIX REAL */
 .modal-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 6px;
+  width: 100%;
+  padding: 10px;
 }
 
-/* CARD */
 .modal-content .trading-card-wrapper {
-  width: 280px;   /* antes era scale (mal) */
-  max-width: 90vw;
+  width: 100%;
+  max-width: 280px;
 }
 
-/* BOTONES */
 .card-actions {
   display: flex;
   flex-direction: column;
   gap: 8px;
   width: 100%;
   max-width: 280px;
-  margin-top: 0;
 }
 
 /* BOTONES ESTILO */
-.btn-edit,
-.btn-delete,
-.btn-share,
-.btn-secondary {
+.btn-edit, .btn-delete, .btn-share, .btn-secondary {
   padding: 12px;
   border-radius: 5px;
   border: 1px solid rgba(255,255,255,.15);
@@ -156,87 +134,12 @@
 .btn-edit { background: #2980b9; color: #fff; }
 .btn-delete { background: #c0392b; color: #fff; }
 .btn-share { background: #27ae60; color: #fff; }
-.btn-secondary { background: #f39c12; color: #fff; transition: 0.3s; }
-.btn-secondary:hover { background: #d68910; }
-
-.close-btn {
-  background: transparent;
-  border: 1px solid #7f8c8d;
-  color: #7f8c8d;
-  padding: 5px 15px;
-  margin-top: 10px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-/* --- SWEET ALERT --- */
-.swal2-container { z-index: 9999 !important; }
-
-.swal2-popup {
-  font-family: 'Michroma', sans-serif !important;
-  border: 2px solid #27ae60 !important;
-  background: #1b2631 !important;
-  color: #fff !important;
-}
-
-.swal2-select {
-  background: linear-gradient(135deg, #2b6cb0, #2f855a) !important;
-  color: #ffffff !important;
-  border: none !important;
-  padding: 10px !important;
-  border-radius: 8px !important;
-  font-family: 'Michroma', sans-serif !important;
-}
+.btn-secondary { background: #f39c12; color: #fff; }
 
 /* --- RESPONSIVE --- */
 @media(max-width: 768px){
-
   .view-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
-  }
-
-  .view-grid .card-thumb {
-    width: 100%;
-  }
-
-  .modal-overlay {
-    align-items: flex-start;
-    padding: 15px;
-    overflow-y: auto;
-  }
-
-  .modal-content {
-    width: 100%;
-    max-width: 100%;
-    margin-top: 10px;
-    gap: 6px;
-  }
-
-  .modal-content .trading-card-wrapper {
-    width: 240px;
-  }
-
-  .card-actions {
-    width: 100%;
-    max-width: 320px;
-  }
-
-  .btn-edit,
-  .btn-delete,
-  .btn-secondary {
-    font-size: 0.65rem;
-    padding: 10px;
-  }
-
-  .close-btn {
-    font-size: 0.7rem;
-    padding: 6px 12px;
-  }
-}
-
-@media(max-width: 500px){
-  .view-grid {
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
   }
 }
