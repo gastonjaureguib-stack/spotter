@@ -1,5 +1,5 @@
 /* ==========================================================================
-   COMUNIDAD CSS - REPARACIÓN EMULACIÓN SWIPER DEFECTS (290x480)
+   COMUNIDAD CSS - ANTIDESTELLO Y FIJACIÓN TOTAL (290x480)
    ========================================================================== */
 
 .comunidad-bg {
@@ -38,7 +38,7 @@
 }
 
 /* ==========================================================================
-   🔥 MAZO APILADO DE RECIENTES (EL SWIPER EFECTO CARDS / 3D)
+   🔥 MAZO APILADO DE RECIENTES (CON ANTIDESTELLO NATIVO)
    ========================================================================== */
 .recientes-wrapper {
   display: flex;
@@ -49,8 +49,6 @@
   position: relative;
 }
 
-/* 🚨 CLAVE 1: El contenedor del mazo TIENE que ser ligeramente más grande 
-   que la carta para darle aire físico a las sombras y rotaciones tridimensionales */
 .cards-stack-container {
   width: 310px; 
   height: 510px;
@@ -61,25 +59,36 @@
   align-items: center;
 }
 
-/* 🚨 CLAVE 2: Forzamos a que la directiva de Swiper ocupe todo el espacio 
-   y no recorte las cartas de atrás (las que hacen el efecto mazo) */
+/* 🚨 REPARACIÓN MAESTRA: Seteamos el estado inicial de Swiper antes del JS 
+   para que no intente recalcular el tamaño ni tire destellos al cargar */
 .swiper-recientes {
   width: 100% !important;
   height: 100% !important;
   position: relative;
-  overflow: visible !important; /* Evita el hachazo horizontal en las cartas de atrás */
+  overflow: visible !important; 
+  visibility: visible !important;
 }
 
-/* Asegura que el slide interno centre perfecto tu carta rígida de 290x480 */
+/* Forzamos a que Swiper no rompa el bloque inicial */
+.swiper-recientes:not(.swiper-initialized) .slide-stack-card {
+  display: none !important; 
+}
+.swiper-recientes:not(.swiper-initialized) .slide-stack-card:first-child {
+  display: flex !important; /* Muestra solo la primera carta limpia antes de que Swiper despierte */
+  opacity: 1;
+}
+
 .slide-stack-card {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   background: transparent !important;
   overflow: visible !important;
+  /* Evita saltos bruscos de escala */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
-/* Evitamos que Swiper le meta una escala inline rara que rompa tu tc-card */
 .slide-stack-card > div {
   transform-style: preserve-3d;
   backface-visibility: hidden;
@@ -95,6 +104,13 @@
   display: block;
 }
 
+/* Mantiene el carrusel horizontal alineado en bloque rígido al cargar */
+.horizontal-category-swiper:not(.swiper-initialized) {
+  display: flex;
+  gap: 20px;
+  overflow-x: hidden;
+}
+
 .horizontal-category-swiper .slide-card-horizontal {
   width: 290px !important; 
   height: 480px !important;
@@ -102,10 +118,11 @@
   justify-content: center;
   align-items: center;
   overflow: visible !important;
+  flex-shrink: 0;
 }
 
 /* ==========================================================================
-   📱 MOBILE RESPONSIVE CONTROLADO
+   📱 MOBILE RESPONSIVE
    ========================================================================== */
 @media (max-width: 600px) {
   .category-title {
@@ -118,7 +135,6 @@
     margin-bottom: 240px; 
   }
 
-  /* En móviles mantenemos el margen controlado para que no se pegue a los bordes */
   .cards-stack-container {
     width: 310px; 
     height: 510px;
