@@ -1,286 +1,137 @@
-/* ==========================================================================
-   1. CONTENEDOR PRINCIPAL (HERO)
-   ========================================================================== */
+/* --- Estructura Principal (Banner) --- */
 .hero-camera-container {
-  background: radial-gradient(circle at 50% 30%, #1e3a8a 0%, #0f172a 100%) !important;
-  min-height: 480px;
-  border-bottom: 5px solid #2f855a !important;
+  min-height: auto; /* Cambiado de 100vh a auto */
+  padding: 40px 20px; /* Reducido para que sea más compacto */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 20%, #1e3a8a 0%, #0b1020 45%, #050814 100%);
+  color: white;
+  font-family: 'Poppins', system-ui, sans-serif;
   position: relative;
-  overflow: hidden;
-  color: #ffffff !important;
-  font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
 }
 
-/* Efecto de luces sutiles de fondo */
-.hero-camera-container::before {
-  content: '';
-  position: absolute;
-  width: 350px;
-  height: 350px;
-  background: rgba(74, 222, 128, 0.12);
+/* --- Título dentro del Banner --- */
+.hero-camera-container h1 {
+  font-size: 1.5rem; /* Título más pequeño */
+  margin-bottom: 20px;
+}
+
+/* --- Botón Cámara (Minimalista) --- */
+.camera-lens-button {
+  width: 80px; 
+  height: 80px;
   border-radius: 50%;
-  top: -100px;
-  right: -50px;
-  filter: blur(80px);
-  pointer-events: none;
-}
-
-/* ==========================================================================
-   2. TEXTOS Y TIPOGRAFÍAS
-   ========================================================================== */
-.fw-extrabold {
-  font-weight: 850 !important;
-}
-
-.text-light-muted {
-  color: #cbd5e1 !important;
-  font-size: 1.05rem;
-  line-height: 1.6;
-}
-
-.text-gradient-green {
-  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 850;
-}
-
-.tracking-tight { letter-spacing: -0.025em; }
-.tracking-wider { letter-spacing: 0.12em; }
-.fs-7 { font-size: 0.825rem !important; }
-
-/* Animación de entrada suave para los cambios de estado */
-.animate-fade-in {
-  animation: fadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ==========================================================================
-   3. ELEMENTOS INTERACTIVOS (MODO CÁMARA)
-   ========================================================================== */
-.camera-icon-badge {
-  width: 60px;
-  height: 60px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 18px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1); /* Fondo sutil */
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.6rem;
-  color: #4ade80;
-  backdrop-filter: blur(4px);
+  margin: 10px auto; /* Menos margen */
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  padding: 15px; 
 }
 
-.pulse-icon {
-  animation: pulse 2.5s infinite ease-in-out;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.12); color: #22c55e; opacity: 1; }
-  100% { transform: scale(1); opacity: 0.8; }
-}
-
-/* BOTÓN DISPARADOR GIGANTE */
-.btn-disparador-spooter {
-  background: linear-gradient(135deg, #2563eb 0%, #16a34a 100%) !important;
-  padding: 14px;
-  border-radius: 50% !important;
-  border: 5px solid rgba(255, 255, 255, 0.9) !important;
-  width: 130px;
-  height: 130px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-}
-
-.btn-disparador-spooter .inner-circle {
-  border: 2px dashed rgba(255, 255, 255, 0.5);
-  width: 100%;
+.camera-lens-button img {
+  width: 150%;
   height: 100%;
-  border-radius: 50%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+
+.camera-lens-button:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* --- Contenedor del Cropper (Más compacto) --- */
+.cropper-box {
+  height: 250px; /* Reducido de 350px */
+  width: 100%;
+  max-width: 400px; /* Limitamos el ancho */
+  margin: 0 auto 20px auto;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* --- Capa de Botones --- */
+.button-group-overlay {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
-.btn-disparador-spooter:hover {
-  transform: scale(1.08) rotate(5deg);
-  border-color: #4ade80 !important;
-  box-shadow: 0 0 30px rgba(74, 222, 128, 0.5) !important;
-}
-
-.btn-disparador-spooter:active {
-  transform: scale(0.95);
-}
-
-/* ==========================================================================
-   4. FORMULARIO ESTILO CYBERPUNK/NEÓN
-   ========================================================================== */
+/* --- Estilos de Formulario --- */
 .bg-dark-card {
-  background-color: #111827 !important;
-  border: 2px solid rgba(74, 222, 128, 0.3) !important;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 25px rgba(74, 222, 128, 0.15) !important;
-  backdrop-filter: blur(10px);
+  background: rgba(17, 24, 39, 0.95);
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
-.form-spooter {
-  background-color: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  color: #ffffff !important;
-  border-radius: 10px !important;
-  padding: 0.6rem 0.8rem !important;
-  transition: all 0.3s ease !important;
-}
-
-.form-spooter:focus {
-  background-color: rgba(255, 255, 255, 0.08) !important;
-  border-color: #4ade80 !important;
-  box-shadow: 0 0 0 0.25rem rgba(74, 222, 128, 0.25) !important;
-  color: #ffffff !important;
-}
-
-.form-spooter::placeholder {
-  color: #64748b !important;
+.form-control {
+  padding: 8px 12px !important; /* Más delgado */
   font-size: 0.9rem;
 }
 
-/* ==========================================================================
-   5. LA CARTA POKÉMON (TCG PREMIUM)
-   ========================================================================== */
-.pokemon-card {
-  width: 310px;
-  background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%) !important;
-  border: 12px solid #d97706 !important; /* Dorado/ámbar bien definido */
-  border-radius: 22px !important;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7) !important;
-  overflow: hidden;
-  color: #0f172a !important;
-  border-style: ridge !important; /* Textura clásica de borde de carta */
+/* --- Animaciones --- */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
 }
 
-.card-pokemon-header {
-  background: rgba(255, 255, 255, 0.45);
-  border-bottom: 2px solid #94a3b8;
-  font-family: 'Impact', 'Arial Black', sans-serif;
-  letter-spacing: 0.5px;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.card-pokemon-img-container {
-  height: 190px;
-  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
-  border: 3px solid #64748b !important;
-  border-radius: 6px;
-  overflow: hidden;
+/* Ajustes Responsivos */
+@media (max-width: 480px) {
+  .hero-camera-container { padding: 20px 15px; }
+  .cropper-box { height: 200px; }
 }
 
-.card-pokemon-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+/* ===== SELECT DE CATEGORÍAS ===== */
+
+select.form-control {
+  background-color: rgba(17, 24, 39, 0.95) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255,255,255,.15) !important;
 }
 
-.card-pokemon-body {
-  background-color: #f8fafc !important;
-  border-top: 3px double #d97706 !important; /* Separador pro de vieja escuela */
+select.form-control:focus {
+  background-color: rgba(17, 24, 39, 0.95) !important;
+  color: #ffffff !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 .15rem rgba(59,130,246,.25);
 }
 
-.pokemon-ability {
-  background-color: rgba(34, 197, 94, 0.12) !important;
-  border: 1px dashed rgba(34, 197, 94, 0.4) !important;
-  border-left: 4px solid #16a34a !important;
+select.form-control option {
+  background: #111827;
+  color: #ffffff;
+}
+/* ===== Selector de categorías ===== */
+
+.category-select {
+  background: #111827 !important;
+  color: #fff !important;
+  border: 1px solid rgba(255,255,255,.2) !important;
   border-radius: 8px;
 }
 
-.italic-text {
-  font-style: italic;
-  color: #475569;
+.category-select option {
+  background: #111827 !important;
+  color: #fff !important;
 }
 
-/* ==========================================================================
-   6. BOTONES DE CONTROL GENERAL
-   ========================================================================== */
-.btn-analyze-spooter {
-  background: linear-gradient(135deg, #22c55e 0%, #15803d 100%) !important;
-  border: none !important;
-  color: white !important;
-  transition: all 0.3s ease;
+.category-select:focus {
+  background: #111827 !important;
+  color: #fff !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 .2rem rgba(59,130,246,.25);
 }
-
-.btn-analyze-spooter:hover {
-  filter: brightness(1.1);
-  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4) !important;
-}
-
-.max-w-card-buttons {
-  max-width: 340px;
-}
-
-.max-w-card-buttons .btn {
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
-}
-
-/* Botón de dados aleatorios */
-.btn-random-dice {
-  background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%) !important;
-  color: #0f172a !important;
-  border: none !important;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-}
-
-.btn-random-dice:hover {
-  transform: translateY(-2px) rotate(-3deg);
-  box-shadow: 0 4px 12px rgba(234, 179, 8, 0.4) !important;
-  filter: brightness(1.1);
-}
-
-.btn-random-dice:active {
-  transform: scale(0.95);
-}
-
-/* ==========================================================================
-   NUEVO: PANEL DE TRIPLE DISPARADOR DIRECTO
-   ========================================================================== */
-.btn-disparador-multi {
-  padding: 0 !important;
-  border-radius: 50% !important;
-  width: 95px;
-  height: 95px;
-  border: 4px solid rgba(255, 255, 255, 0.85) !important;
-  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-}
-
-/* Colores temáticos por botón */
-.disp-perros {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important; /* Azul */
-}
-.disp-gatos {
-  background: linear-gradient(135deg, #a78bfa 0%, #6d28d9 100%) !important;  /* Violeta */
-}
-.disp-plantas {
-  background: linear-gradient(135deg, #34d399 0%, #047857 100%) !important; /* Esmeralda */
-}
-.disp-paisajes {
-  background: linear-gradient(135deg, #38bdf8 0%, #f59e0b 100%) !important;
-}
-
-/* Hover interactivo individual */
-.btn-disparador-multi:hover {
-  transform: scale(1.1) translateY(-5px);
-}
-.disp-perros:hover { box-shadow: 0 0 25px rgba(59, 130, 246, 0.6) !important; border-color: #3b82f6 !important; }
-.disp-gatos:hover { box-shadow: 0 0 25px rgba(139, 92, 246, 0.6) !important; border-color: #a78bfa !important; }
-.disp-plantas:hover { box-shadow: 0 0 25px rgba(16, 185, 129, 0.6) !important; border-color: #34d399 !important; }
-
-.btn-disparador-multi:active {
-  transform: scale(0.95);
-}
-
-/* Textos de las etiquetas */
-.label-perros { color: #60a5fa; }
-.label-gatos { color: #c084fc; }
-.label-plantas { color: #34d399; }

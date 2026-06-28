@@ -1,147 +1,110 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
+import React, { useRef, useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from './supabaseClient';
-import "./HeroCamera.css";
 import Swal from 'sweetalert2';
+import "./HeroCamera.css";
 import TradingCard from './TradingCard';
 import TEMPLATES from '../data/templates.json';
+import ImageCropper from './ImageCropper';
+
+const favicon = '/favicon.png';
 
 function HeroCamera() {
   const fileInputRef = useRef(null);
-  const [searchParams] = useSearchParams();
+  const cropperRef = useRef(null);
   const navigate = useNavigate();
-  const location = useLocation();
+  const [searchParams] = useSearchParams();
   
-  const editId = searchParams.get('edit'); 
+  const editId = searchParams.get('edit');
+  const catParam = searchParams.get('category');
 
-  const [categoriaActiva, setCategoriaActiva] = useState('perros');
-  const [imagePreview, setImagePreview] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState('camera');
+  const [view, setView] = useState('camera');
+  const [categoriaActiva, setCategoriaActiva] = useState(catParam || 'perros');
+  const [rawImage, setRawImage] = useState(null);
+  const [croppedFile, setCroppedFile] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [formData, setFormData] = useState({ nombre: '', raza: '', personalidad: '', funFact: '' });
+  const [loading, setLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
-  const getFormLabels = (cat) => {
-    const isNature = ['plantas', 'paisajes'].includes(cat);
-    return {
-      nombre: isNature ? 'Nombre del lugar o especie' : 'Nombre',
-      raza: isNature ? 'Tipo / Especie' : 'Raza',
-      personalidad: isNature ? 'Características' : 'Personalidad',
-      funFact: isNature ? 'Encontrado en' : 'Dato curioso'
-    };
-  };
-
-  const labels = getFormLabels(categoriaActiva);
-
-  // --- NUEVA LÓGICA DE EDICIÓN ---
   useEffect(() => {
-    if (editId) {
-      const fetchCardForEdit = async () => {
+    const fetchCardToEdit = async () => {
+      if (editId) {
         setLoading(true);
-        const { data, error } = await supabase
-          .from('captures')
-          .select('*')
-          .eq('id', editId)
-          .single();
-
+        const { data, error } = await supabase.from('captures').select('*').eq('id', editId).single();
         if (data) {
-          setFormData(data.metadata || { 
-            nombre: data.nombre, 
-            raza: data.raza, 
-            personalidad: data.personalidad, 
-            funFact: data.funFact 
+          setFormData({
+            nombre: data.nombre || '',
+            raza: data.raza || '',
+            personalidad: data.metadata?.personalidad || '',
+            funFact: data.metadata?.funFact || ''
           });
-          setImagePreview(data.image_url);
-          setCategoriaActiva(data.categoria);
-          setStep('form'); // Forzamos el paso al formulario
-        } else {
-          Swal.fire('Error', 'No se pudo cargar la carta para editar.', 'error');
-          navigate('/album');
+          setCategoriaActiva(data.categoria || 'perros');
+          setPreview(data.image_url);
+          setIsEditing(true);
+          setView('form');
         }
         setLoading(false);
-      };
-      fetchCardForEdit();
+      }
+    };
+    fetchCardToEdit();
+  }, [editId]);
+
+  const handleImageCapture = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setRawImage(URL.createObjectURL(file));
+    setView('crop');
+    e.target.value = null;
+  };
+
+  const handleEditImage = () => {
+    if (preview) {
+      setRawImage(preview);
+      setView('crop');
     }
-  }, [editId, navigate]);
-  // --- FIN DE LÓGICA DE EDICIÓN ---
-
-  const handleRandomize = () => {
-    const lista = TEMPLATES[categoriaActiva] || [];
-    if (lista.length > 0) {
-      const random = lista[Math.floor(Math.random() * lista.length)];
-      setFormData({
-        nombre: random.nombre || '',
-        raza: random.raza || '',
-        personalidad: random.personalidad || '',
-        funFact: random.funFact || ''
-      });
-    } else {
-      Swal.fire('Info', 'No hay datos disponibles para esta categoría.', 'info');
-    }
   };
 
-  useEffect(() => {
-    if (location.state?.imageFile) {
-      const file = location.state.imageFile;
-      setSelectedFile(file);
-      setImagePreview(URL.createObjectURL(file));
-      setCategoriaActiva(location.state.category || 'perros');
-      setStep('form');
-      window.history.replaceState({}, document.title);
-    }
-  }, [location.state]);
-
-  const handleStartSpot = (categoria) => {
-    setCategoriaActiva(categoria);
-    fileInputRef.current.click();
+  const handleRandom = () => {
+    const list = TEMPLATES[categoriaActiva] || [];
+    if (!list.length) return;
+    const r = list[Math.floor(Math.random() * list.length)];
+    setFormData({ nombre: r.nombre || '', raza: r.raza || '', personalidad: r.personalidad || '', funFact: r.funFact || '' });
   };
 
-  const handleImageCapture = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(file);
-      setImagePreview(URL.createObjectURL(file));
-      setStep('form');
-    }
-    event.target.value = null; 
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleReset = () => {
-    setImagePreview(null);
-    setSelectedFile(null);
-    setStep('camera');
-    if (editId) navigate(`/album/${categoriaActiva}`);
-    else navigate('/album');
-  };
-
-  const handleSaveToAlbum = async () => {
+  const handleSave = async () => {
     setLoading(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Debes iniciar sesión.");
+      if (!user) throw new Error("Debes iniciar sesión");
 
-      let publicUrl = imagePreview;
-      if (selectedFile) {
-        const fileName = `${user.id}/${Date.now()}.png`;
-        const { error: uploadError } = await supabase.storage.from('Captures').upload(fileName, selectedFile);
+      let finalImageUrl = preview;
+
+      if (croppedFile instanceof File) {
+        const filePath = `${user.id}/${Date.now()}.jpg`;
+        const { error: uploadError } = await supabase.storage.from('Captures').upload(filePath, croppedFile);
         if (uploadError) throw uploadError;
-        const { data: { publicUrl: newUrl } } = supabase.storage.from('Captures').getPublicUrl(fileName);
-        publicUrl = newUrl;
+        const { data } = supabase.storage.from('Captures').getPublicUrl(filePath);
+        finalImageUrl = data.publicUrl;
       }
 
-      if (editId) {
-        await supabase.from('captures').update({ nombre: formData.nombre, categoria: categoriaActiva, image_url: publicUrl, metadata: formData }).eq('id', editId);
+      const payload = {
+        user_id: user.id,
+        nombre: formData.nombre,
+        categoria: categoriaActiva,
+        image_url: finalImageUrl,
+        metadata: formData
+      };
+
+      if (isEditing && editId) {
+        await supabase.from('captures').update(payload).eq('id', editId);
       } else {
-        const { data: existing } = await supabase.from('captures').select('numero_figurita').eq('user_id', user.id).eq('categoria', categoriaActiva);
-        const newNumber = (existing?.length || 0) + 1;
-        await supabase.from('captures').insert({ user_id: user.id, nombre: formData.nombre, categoria: categoriaActiva, numero_figurita: newNumber, image_url: publicUrl, metadata: formData });
+        const { error: insertError } = await supabase.from('captures').insert([payload]);
+        if (insertError) throw insertError;
       }
-      Swal.fire('¡Éxito!', 'Carta guardada correctamente', 'success').then(() => navigate(`/album/${categoriaActiva}`));
+
+      Swal.fire('¡Éxito!', isEditing ? 'Carta actualizada' : 'Carta guardada', 'success')
+        .then(() => navigate(`/album/${categoriaActiva}`));
     } catch (err) {
       Swal.fire('Error', err.message, 'error');
     } finally {
@@ -150,73 +113,82 @@ function HeroCamera() {
   };
 
   return (
-    <div className="hero-camera-container text-white py-5 px-3 text-center d-flex align-items-center justify-content-center">
-      <div className="container" style={{ maxWidth: '650px' }}>
+    <div className="hero-camera-container">
+      <div className="container text-center" style={{ maxWidth: 650, paddingBottom: "50px" }}>
         
-        {step === 'camera' && (
+        {view === 'camera' && (
           <div className="animate-fade-in">
-            <h1 className="display-5 fw-extrabold mb-5">¡Capturá tu Entorno!</h1>
-            <div className="d-flex justify-content-center gap-4 flex-wrap my-4">
-              {['perros', 'gatos', 'plantas', 'paisajes'].map((cat) => (
-                <div key={cat}>
-                  <button onClick={() => handleStartSpot(cat)} className={`btn btn-disparador-multi disp-${cat}`}>
-                    <i className="bi bi-camera-fill fs-2"></i>
-                  </button>
-                  <span className="d-block mt-2 text-uppercase fw-bold">{cat}</span>
-                </div>
-              ))}
+            <h1>Capturá momentos</h1>
+            <button onClick={() => fileInputRef.current.click()} className="camera-lens-button">
+              <img src={favicon} alt="camera" />
+            </button>
+          </div>
+        )}
+
+        {view === 'crop' && (
+          <div className="animate-fade-in">
+            <div className="cropper-box" style={{ height: '350px' }}>
+              <ImageCropper 
+                ref={cropperRef} 
+                image={rawImage} 
+                onCancel={() => setView('form')}
+                onComplete={(file) => { 
+                  setCroppedFile(file); 
+                  setPreview(URL.createObjectURL(file)); 
+                  setView('form'); 
+                }} 
+              />
             </div>
-          </div>
-        )}
-
-        {step === 'form' && (
-          <div className="animate-fade-in bg-dark-card p-4 rounded-4 shadow-lg">
-            {!imagePreview ? (
-              <div className="text-center">
-                <p className="mb-3">Se perdió la sesión. Por favor, vuelve a capturar.</p>
-                <button onClick={handleReset} className="btn btn-warning">Volver a la cámara</button>
-              </div>
-            ) : (
-              <>
-                <div className="d-flex justify-content-between mb-3">
-                  <h4 className="m-0">Ficha: {categoriaActiva.toUpperCase()}</h4>
-                  <button onClick={handleRandomize} className="btn btn-warning btn-sm">🎲 Random</button>
-                </div>
-                <form onSubmit={(e) => { e.preventDefault(); setStep('card'); }}>
-                  <input name="nombre" value={formData.nombre} onChange={handleInputChange} className="form-control mb-3" placeholder={labels.nombre} required />
-                  <input name="raza" value={formData.raza} onChange={handleInputChange} className="form-control mb-3" placeholder={labels.raza} />
-                  <input name="personalidad" value={formData.personalidad} onChange={handleInputChange} className="form-control mb-3" placeholder={labels.personalidad} />
-                  <textarea name="funFact" value={formData.funFact} onChange={handleInputChange} className="form-control mb-4" placeholder={labels.funFact}></textarea>
-                  <div className="d-flex gap-2">
-                    <button type="button" onClick={handleReset} className="btn btn-outline-light w-50">Cancelar</button>
-                    <button type="submit" className="btn btn-success w-50">Generar Carta ✨</button>
-                  </div>
-                </form>
-              </>
-            )}
-          </div>
-        )}
-
-        {step === 'card' && (
-          <div className="animate-fade-in">
-            <TradingCard data={{ ...formData, categoria: categoriaActiva, image_url: imagePreview }} />
-            <div className="d-flex gap-2 mt-4">
-              <button onClick={() => setStep('form')} className="btn btn-warning w-50">Editar</button>
-              <button onClick={handleSaveToAlbum} className="btn btn-success w-50" disabled={loading}>
-                {loading ? 'Guardando...' : 'Guardar en Álbum'}
+            <div className="d-flex gap-3 justify-content-center mt-4">
+              <button className="btn btn-outline-light" onClick={() => setView('form')}>Cancelar</button>
+              <button 
+                className="btn btn-success" 
+                onClick={() => cropperRef.current?.handleConfirm()}
+              >
+                Confirmar Recorte
               </button>
             </div>
           </div>
         )}
 
-        <input 
-          type="file" 
-          accept="image/*" 
-          capture="environment" 
-          ref={fileInputRef} 
-          onChange={handleImageCapture} 
-          style={{ display: 'none' }} 
-        />
+        {view === 'form' && (
+          <div className="bg-dark-card p-4 rounded-4 animate-fade-in">
+            <h4 className="text-white mb-3">{isEditing ? 'Editando tu carta' : 'Nueva Carta'}</h4>
+            
+            <button className="btn btn-outline-info btn-sm mb-3 w-100" onClick={handleEditImage}>
+              ✂️ Re-ajustar imagen
+            </button>
+
+            <select className="form-control mb-2" value={categoriaActiva} onChange={(e) => setCategoriaActiva(e.target.value)}>
+  <option value="perros">Perros</option>
+  <option value="gatos">Gatos</option>
+  <option value="plantas">Plantas</option>
+  <option value="paisajes">Paisajes</option>
+</select>
+
+            <button className="btn btn-warning mb-3 w-100" onClick={handleRandom}>🎲 Random</button>
+            <input className="form-control mb-2" placeholder="Nombre" value={formData.nombre} onChange={(e) => setFormData({...formData, nombre: e.target.value})} />
+            <input className="form-control mb-2" placeholder="Raza" value={formData.raza} onChange={(e) => setFormData({...formData, raza: e.target.value})} />
+            <textarea className="form-control mb-3" placeholder="Dato" value={formData.funFact} onChange={(e) => setFormData({...formData, funFact: e.target.value})} />
+            
+            <div className="d-flex gap-2">
+              <button className="btn btn-outline-light w-50" onClick={() => navigate(-1)}>Volver</button>
+              <button className="btn btn-success w-50" onClick={() => setView('card')}>Generar carta</button>
+            </div>
+          </div>
+        )}
+
+        {view === 'card' && (
+          <div className="animate-fade-in">
+            <TradingCard data={{ ...formData, categoria: categoriaActiva, image_url: preview }} />
+            <div className="d-flex gap-2 mt-3">
+              <button className="btn btn-warning w-50" onClick={() => setView('form')}>Editar</button>
+              <button className="btn btn-success w-50" onClick={handleSave} disabled={loading}>{loading ? 'Guardando...' : 'Guardar'}</button>
+            </div>
+          </div>
+        )}
+
+        <input type="file" ref={fileInputRef} accept="image/*" capture="environment" onChange={handleImageCapture} hidden />
       </div>
     </div>
   );
