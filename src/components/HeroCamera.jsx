@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { supabase } from './supabaseClient';
 import Swal from 'sweetalert2';
 import "./HeroCamera.css";
@@ -10,22 +10,31 @@ import ImageCropper from './ImageCropper';
 const favicon = '/favicon.png';
 
 function HeroCamera() {
-  const fileInputRef = useRef(null);
+  const cameraInputRef = useRef(null); // Ref exclusiva para cámara activa
   const cropperRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation(); // Sigue capturando el estado que viene del Álbum
   const [searchParams] = useSearchParams();
   
   const editId = searchParams.get('edit');
   const catParam = searchParams.get('category');
 
   const [view, setView] = useState('camera');
-  const [categoriaActiva, setCategoriaActiva] = useState(catParam || 'perros');
+  const [categoriaActiva, setCategoriaActiva] = useState(location.state?.category || catParam || 'perros');
   const [rawImage, setRawImage] = useState(null);
   const [croppedFile, setCroppedFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [formData, setFormData] = useState({ nombre: '', raza: '', personalidad: '', funFact: '' });
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  // 🚀 DETECTOR DE IMAGEN EXTERNA (Mantiene el bypass desde el Álbum)
+  useEffect(() => {
+    if (location.state?.externalImage) {
+      setRawImage(location.state.externalImage);
+      setView('crop'); // Va directo al editor
+    }
+  }, [location.state]);
 
   useEffect(() => {
     const fetchCardToEdit = async () => {
@@ -54,7 +63,7 @@ function HeroCamera() {
     const file = e.target.files?.[0];
     if (!file) return;
     setRawImage(URL.createObjectURL(file));
-    setView('crop');
+    setView('crop'); 
     e.target.value = null;
   };
 
@@ -119,7 +128,9 @@ function HeroCamera() {
         {view === 'camera' && (
           <div className="animate-fade-in">
             <h1>Capturá momentos</h1>
-            <button onClick={() => fileInputRef.current.click()} className="camera-lens-button">
+            
+            {/* 📸 Botón Único Ultra Gigante de Cámara */}
+            <button onClick={() => cameraInputRef.current.click()} className="camera-lens-button">
               <img src={favicon} alt="camera" />
             </button>
           </div>
@@ -160,11 +171,11 @@ function HeroCamera() {
             </button>
 
             <select className="form-control mb-2" value={categoriaActiva} onChange={(e) => setCategoriaActiva(e.target.value)}>
-  <option value="perros">Perros</option>
-  <option value="gatos">Gatos</option>
-  <option value="plantas">Plantas</option>
-  <option value="paisajes">Paisajes</option>
-</select>
+              <option value="perros">Perros</option>
+              <option value="gatos">Gatos</option>
+              <option value="plantas">Plantas</option>
+              <option value="paisajes">Paisajes</option>
+            </select>
 
             <button className="btn btn-warning mb-3 w-100" onClick={handleRandom}>🎲 Random</button>
             <input className="form-control mb-2" placeholder="Nombre" value={formData.nombre} onChange={(e) => setFormData({...formData, nombre: e.target.value})} />
@@ -188,7 +199,8 @@ function HeroCamera() {
           </div>
         )}
 
-        <input type="file" ref={fileInputRef} accept="image/*" capture="environment" onChange={handleImageCapture} hidden />
+        {/* Único input de captura nativa de cámara */}
+        <input type="file" ref={cameraInputRef} accept="image/*" capture="environment" onChange={handleImageCapture} hidden />
       </div>
     </div>
   );

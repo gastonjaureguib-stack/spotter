@@ -1,42 +1,44 @@
 /* ==========================================================================
-   COMUNIDAD CSS - SPOTTER 2026 (MOBILE-FIRST OPTIMIZED)
+   COMUNIDAD CSS - SPOTTER 2026 (VERTICAL FLOW REPAIRED)
    ========================================================================== */
 
-/* FONDO PRINCIPAL ORIGINARIO */
 .comunidad-bg {
   background: linear-gradient(160deg, #1e3a8a 0%, #064e3b 100%);
   min-height: 100vh;
   width: 100%;
   padding: 2rem 0;
   background-attachment: fixed;
-  overflow-x: hidden; /* Vital para que Swiper no rompa el viewport en celulares */
+  overflow-x: hidden;
 }
 
 .comunidad-divider {
   border: 0;
   border-top: 1px dashed rgba(255, 255, 255, 0.2);
-  margin: 35px auto;
+  margin: 40px auto;
   width: 90%;
 }
 
-/* SECCIONES DE CATEGORÍA */
+/* 📏 SECCIONES DE CATEGORÍA (MÁXIMA DISTANCIA VERTICAL - ULTRA AMINORADO) */
 .category-section {
-  margin-bottom: 35px;
+  margin-bottom: 320px; /* 🚀 Distancia masiva abajo para que cada bloque sea un mundo aparte */
   padding-left: 15px;
   width: 100%;
+  display: block;
+  clear: both;
 }
 
 .category-title {
   color: #ffffff;
   font-family: 'Michroma', sans-serif;
   font-size: 1.3rem;
-  margin-bottom: 15px;
+  margin-top: 120px;   /* 🚀 Distancia masiva arriba respecto al carrusel anterior */
+  margin-bottom: 35px; /* Separación con sus propias cartas abajo */
   letter-spacing: 1px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 /* ==========================================================================
-   🔥 SECCIÓN: RECIENTES (EL MAZO DE FIGURITAS APILADAS 3D)
+   🔥 MAZO APILADO DE RECIENTES
    ========================================================================== */
 .recientes-wrapper {
   display: flex;
@@ -44,24 +46,19 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 10px 0;
 }
 
-/* Medidas rígidas para mobile por defecto (Espejo de tu TradingCard) */
 .cards-stack-container {
-  width: 320px;
-  height: 520px;
-  margin: 15px auto;
+  width: 340px; 
+  height: 540px;
+  margin: 20px auto;
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .swiper-recientes {
   width: 100%;
   height: 100%;
-  /* Permite que las cartas de abajo que rotan y sobresalen se vean sin cortarse en el borde */
+  padding: 25px 35px !important; 
   overflow: visible !important; 
 }
 
@@ -70,32 +67,59 @@
   align-items: center;
   justify-content: center;
   background: transparent !important;
-  border-radius: 22px;
+}
+
+.slide-stack-card > div {
+  width: 100%;
+  height: 100%;
 }
 
 /* ==========================================================================
-   📋 CARRUSEL HORIZONTAL POR CATEGORÍAS (SWIPER)
+   📋 CARRUSELES DE CATEGORÍAS
    ========================================================================== */
 .horizontal-category-swiper {
   width: 100%;
-  /* Padding vertical para que las sombras y el leve hover up en mobile no se mutile */
-  padding: 10px 5px 25px 5px !important;
+  padding: 25px 5px 35px 5px !important; 
   overflow: visible !important;
+  display: block;
 }
 
-/* El slide adopta exactamente las medidas bloqueadas de tu carta */
 .horizontal-category-swiper .slide-card-horizontal {
-  width: 320px !important;
-  height: 520px !important;
+  width: 340px;
+  height: 540px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* Asegura limpieza visual sin herencias extrañas */
 .horizontal-category-swiper .slide-card-horizontal > div {
   width: 100%;
   height: 100%;
+}
+
+/* ==========================================================================
+   📱 MOBILE RESPONSIVE SIN COLLAPSE VISUAL
+   ========================================================================== */
+@media (max-width: 600px) {
+  .category-title {
+    font-size: 1.1rem;
+    margin-top: 100px;   /* 🚀 Espaciado gigante arriba para el celular */
+    margin-bottom: 30px;
+  }
+
+  .category-section {
+    margin-bottom: 240px; /* 🚀 Súper aire vertical abajo en móviles */
+  }
+
+  .cards-stack-container {
+    width: 280px; 
+    height: 480px;
+  }
+
+  .horizontal-category-swiper .slide-card-horizontal {
+    width: 280px !important;
+    height: 480px !important;
+  }
 }
 
 /* ==========================================================================
@@ -103,10 +127,7 @@
    ========================================================================== */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: 0; left: 0; right: 0; bottom: 0;
   background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(6px);
   display: flex;
@@ -118,7 +139,7 @@
 
 .modal-content {
   background: transparent;
-  max-width: 320px;
+  max-width: 340px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -135,40 +156,9 @@
   cursor: pointer;
   font-family: 'Michroma', sans-serif;
   font-size: 0.85rem;
-  font-weight: bold;
   box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
-  transition: transform 0.2s ease;
 }
 
-.close-btn:hover {
-  transform: scale(1.03);
-}
-
-/* ==========================================================================
-   📱 RESPONSIVE ULTRA-STRICT (Para pantallas muy chicas o iPhones antiguos)
-   ========================================================================== */
-@media (max-width: 600px) {
-  .category-title {
-    font-size: 1.1rem;
-    padding-left: 5px;
-  }
-}
-
-/* Si el celular es muy angosto (ej: iPhone SE o pantallas menores a 360px) */
-@media (max-width: 360px) {
-  /* Escalamos sutilmente el mazo 3D para que quepa perfecto en el viewport sin romper el layout */
-  .cards-stack-container {
-    transform: scale(0.9);
-    margin: 5px auto;
-  }
-  
-  .horizontal-category-swiper .slide-card-horizontal {
-    transform: scale(0.9);
-    width: 290px !important; /* Margen de maniobra extra */
-  }
-}
-
-/* ANIMACIÓN ENTRADA MODAL */
 @keyframes modalFx {
   from { transform: scale(0.8); opacity: 0; }
   to { transform: scale(1); opacity: 1; }

@@ -1,138 +1,55 @@
-/* ==========================================================================
-   TRADING CARD SYSTEM - SPOTTER 2026 (FUSIONADO Y MEJORADO)
-   ========================================================================== */
-
-/* Contenedor principal: Bloquea el tamaño rígido para evitar deformaciones */
+/* ================================
+   WRAPPER GENERAL
+================================ */
 .tc-wrapper {
-  --card-width: 320px;
-  --card-height: 520px; /* Altura ideal fija para contener toda la info sin estirarse */
   display: flex;
   justify-content: center;
-  align-items: center;
-  width: var(--card-width);
-  height: var(--card-height);
-  margin: 15px auto;
+  width: 100%;
 }
 
-/* MODO COMPACTO (ÁLBUM): Miniaturas perfectas e idénticas */
-.tc-wrapper.compact {
-  --card-width: 165px;
-  --card-height: 250px;
-  margin: 8px;
-  display: inline-flex;
-}
-
-/* LA CARTA BASE */
 .tc-card {
   width: 100%;
-  height: 100%;
+  max-width: 340px;
   border-radius: 22px;
   background: #ffffff;
-  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
   overflow: hidden;
-  transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: all 0.35s ease;
   position: relative;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  border: 4px solid transparent; /* Reservado para los rebordes de categoría */
 }
 
 /* HOVER PREMIUM */
 .tc-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.22);
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
 }
 
-/* ==========================================================================
-   THEMES (CATEGORÍAS PREMIUM CON DEGRADADOS Y EMOTICONES OCULTOS)
-   ========================================================================== */
+/* ================================
+   THEMES (CATEGORÍAS)
+================================ */
+.tc-card.perros { border-top: 6px solid #3b82f6; }
+.tc-card.gatos { border-top: 6px solid #a855f7; }
+.tc-card.plantas { border-top: 6px solid #22c55e; }
+.tc-card.paisajes { border-top: 6px solid #f59e0b; }
 
-/* 🐶 Perros */
-.tc-card.perros {
-  border-color: #3b82f6;
-  background: linear-gradient(180deg, #ffffff 70%, #eff6ff 100%);
-}
-.tc-card.perros::before {
-  content: '🐾';
-  position: absolute;
-  bottom: 60px;
-  right: -10px;
-  opacity: 0.05;
-  font-size: 7rem;
-  pointer-events: none;
-  transform: rotate(-15deg);
-}
-
-/* 🐱 Gatos */
-.tc-card.gatos {
-  border-color: #a855f7;
-  background: linear-gradient(180deg, #ffffff 70%, #faf5ff 100%);
-}
-.tc-card.gatos::before {
-  content: '🐱';
-  position: absolute;
-  bottom: 60px;
-  right: -10px;
-  opacity: 0.04;
-  font-size: 7rem;
-  pointer-events: none;
-  transform: rotate(10deg);
-}
-
-/* 🌿 Plantas */
-.tc-card.plantas {
-  border-color: #22c55e;
-  background: linear-gradient(180deg, #ffffff 70%, #f0fdf4 100%);
-}
-.tc-card.plantas::before {
-  content: '🌿';
-  position: absolute;
-  bottom: 60px;
-  right: -10px;
-  opacity: 0.05;
-  font-size: 7rem;
-  pointer-events: none;
-  transform: rotate(25deg);
-}
-
-/* 🏞 Paisajes */
-.tc-card.paisajes {
-  border-color: #f59e0b;
-  background: linear-gradient(180deg, #ffffff 70%, #fef8e7 100%);
-}
-.tc-card.paisajes::before {
-  content: '🏔';
-  position: absolute;
-  bottom: 60px;
-  right: -10px;
-  opacity: 0.05;
-  font-size: 7rem;
-  pointer-events: none;
-}
-
-/* ==========================================================================
+/* ================================
    HEADER
-   ========================================================================== */
+================================ */
 .tc-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 14px 0 14px;
+  padding: 14px 16px 0 16px;
   font-size: 0.75rem;
   font-weight: 800;
   color: #64748b;
-  letter-spacing: 0.5px;
-  z-index: 2;
+  letter-spacing: 1px;
 }
 
 .tc-id {
   font-weight: 900;
   color: #0f172a;
-  background: rgba(0, 0, 0, 0.05);
-  padding: 2px 8px;
-  border-radius: 6px;
 }
 
 .tc-type {
@@ -141,24 +58,21 @@
   gap: 6px;
   font-size: 0.7rem;
   text-transform: uppercase;
+  opacity: 0.8;
 }
 
-/* ==========================================================================
-   IMAGEN (PROTAGONISTA - RELACIÓN DE ASPECTO FIJA)
-   ========================================================================== */
+/* ================================
+   IMAGEN (PROTAGONISTA)
+================================ */
 .tc-image {
-  width: calc(100% - 24px);
-  aspect-ratio: 4 / 3; /* Proporción ideal de cromo fotográfico */
-  margin: 10px auto 0 auto;
+  width: 100%;
+  height: 240px;
+  margin-top: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   background: linear-gradient(180deg, #f8fafc, #e2e8f0);
   overflow: hidden;
-  border-radius: 14px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
-  z-index: 2;
 }
 
 .tc-image img {
@@ -169,38 +83,31 @@
 }
 
 .tc-card:hover .tc-image img {
-  transform: scale(1.04);
+  transform: scale(1.05);
 }
 
-/* ==========================================================================
-   CUERPO (LIMITADO PARA EVITAR QUE SE ESTIRE)
-   ========================================================================== */
+/* ================================
+   CUERPO
+================================ */
 .tc-body {
-  padding: 12px 14px;
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  flex-grow: 1;
-  max-height: 200px; /* Candado definitivo para contener textos largos */
-  overflow: hidden;
-  z-index: 2;
+  gap: 10px;
 }
 
 .tc-title {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 900;
   color: #0f172a;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 /* FILAS INFO */
 .tc-row {
   display: flex;
   justify-content: space-between;
-  font-size: 0.78rem;
-  padding: 4px 0;
+  font-size: 0.8rem;
+  padding: 6px 0;
   border-bottom: 1px dashed #e2e8f0;
 }
 
@@ -212,40 +119,28 @@
 .tc-row .value {
   font-weight: 600;
   color: #0f172a;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 70%;
 }
 
-/* FUN FACT (Cortado elegantemente si excede el espacio) */
+/* FUN FACT */
 .tc-fact {
-  margin-top: 4px;
-  padding: 8px 10px;
-  background: rgba(248, 250, 252, 0.8);
-  backdrop-filter: blur(4px);
+  margin-top: 6px;
+  padding: 10px;
+  background: #f8fafc;
   border-radius: 12px;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: #334155;
   font-style: italic;
   border: 1px solid #e2e8f0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2; /* Máximo dos líneas en el feed normal */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-/* ==========================================================================
+/* ================================
    FOOTER
-   ========================================================================== */
+================================ */
 .tc-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 14px 14px 14px;
-  margin-top: auto;
-  z-index: 2;
+  padding: 12px 16px 16px 16px;
 }
 
 .tc-user {
@@ -254,16 +149,16 @@
   gap: 6px;
   font-size: 0.75rem;
   color: #64748b;
-  font-weight: 600;
 }
 
+/* LIKE BUTTON */
 .tc-like {
   display: flex;
   align-items: center;
   gap: 6px;
   border: 1px solid #e2e8f0;
   background: #ffffff;
-  padding: 5px 12px;
+  padding: 6px 12px;
   border-radius: 999px;
   cursor: pointer;
   font-weight: 700;
@@ -271,98 +166,57 @@
   transition: all 0.2s ease;
 }
 
-.tc-like:hover {
-  background: #f1f5f9;
-}
-
+.tc-like:hover { background: #f1f5f9; }
 .tc-like.active {
   background: #ffe4e6;
   border-color: #fda4af;
   color: #e11d48;
-  animation: pulse 0.3s ease-in-out;
 }
 
-/* ==========================================================================
-   BOTÓN COMPARTIR
-   ========================================================================== */
+/* ================================
+   SHARE BUTTON
+================================ */
 .tc-share {
-  width: calc(100% - 28px);
-  margin: 0 14px 14px 14px;
+  width: calc(100% - 32px);
+  margin: 0 16px 16px 16px;
   padding: 10px;
   border-radius: 12px;
   border: none;
   background: linear-gradient(135deg, #22c55e, #16a34a);
   color: white;
   font-weight: 800;
-  font-size: 0.8rem;
   cursor: pointer;
   transition: 0.3s ease;
-  z-index: 2;
 }
 
 .tc-share:hover {
-  filter: brightness(1.05);
-  transform: translateY(-1px);
+  filter: brightness(1.1);
+  transform: translateY(-2px);
 }
 
-/* ==========================================================================
-   AJUSTES ESTRICTOS PARA EL MODO COMPACTO (.compact)
-   ========================================================================== */
-.tc-wrapper.compact .tc-card {
-  border-width: 2.5px;
-  border-radius: 14px;
-}
-
-.tc-wrapper.compact .tc-header {
-  padding: 6px 8px 0 8px;
-}
-.tc-wrapper.compact .tc-id {
-  font-size: 0.6rem;
-  padding: 1px 4px;
-}
-.tc-wrapper.compact .tc-type span {
-  display: none; /* Esconde el texto en el álbum para dejar solo el icono */
-}
-
-.tc-wrapper.compact .tc-image {
-  width: calc(100% - 12px);
-  margin-top: 4px;
-  border-radius: 8px;
-  flex-grow: 1; /* Hace que la imagen tome el control del espacio en el álbum */
-  aspect-ratio: auto;
-}
-
-.tc-wrapper.compact .tc-body {
-  display: none; /* Oculta cuerpo por completo como tenías configurado */
-}
-
+/* ================================
+   MODO COMPACTO (ÁLBUM)
+================================ */
+.tc-wrapper.compact .tc-card { max-width: 180px; }
+.tc-wrapper.compact .tc-image { height: 120px; }
+.tc-wrapper.compact .tc-body { display: none; }
 .tc-wrapper.compact .tc-footer {
-  padding: 6px 8px 8px 8px;
+  padding: 10px;
+  flex-direction: column;
+  gap: 8px;
 }
+.tc-wrapper.compact .tc-like { width: 100%; justify-content: center; }
 
-.tc-wrapper.compact .tc-user {
-  font-size: 0.6rem;
-}
-
-.tc-wrapper.compact .tc-like {
-  padding: 2px 6px;
-  font-size: 0.65rem;
-  gap: 4px;
-}
-
-.tc-wrapper.compact .tc-share {
-  display: none; /* No tiene sentido compartir desde la miniatura minificada */
-}
-
-.tc-wrapper.compact .tc-card::before {
-  font-size: 3.5rem;
-  bottom: 30px;
-  right: -5px;
-}
-
-/* ANIMACIONES */
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.15); }
-  100% { transform: scale(1); }
+/* 📱 ADAPTACIÓN DE LA FIGURITA PARA SWIPER EN MOBILE */
+@media (max-width: 600px) {
+  /* Evita que los textos largos empujen el ancho de la carta blanca */
+  .tc-card {
+    max-width: 100% !important;
+  }
+  .tc-row .value {
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }

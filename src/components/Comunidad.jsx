@@ -3,7 +3,7 @@ import { supabase } from './supabaseClient';
 import './Comunidad.css'; 
 import TradingCard from './TradingCard';
 
-// 🚀 NUEVAS IMPORTACIONES DE SWIPER (Para que funcione el mazo 3D)
+// 🚀 IMPORTACIONES DE SWIPER
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCards } from 'swiper/modules';
 
@@ -13,7 +13,7 @@ import 'swiper/css/effect-cards';
 
 function Comunidad() {
   const [posts, setPosts] = useState([]);
-  const [recentPosts, setRecentPosts] = useState([]); // <- Guardará las cartas del mazo superior
+  const [recentPosts, setRecentPosts] = useState([]); // Guardará las cartas del mazo superior
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [selectedCard, setSelectedCard] = useState(null);
@@ -60,7 +60,7 @@ function Comunidad() {
       <section className="container-fluid mt-4 pb-5">
         <h2 className="text-center mb-5 text-white">Comunidad</h2>
 
-        {/* 🔥 SECCIÓN MÁGICA: MAZO APILADO DE RECIENTES */}
+        {/* 🔥 SECCIÓN MÁGICA: MAZO APILADO DE RECIENTES OPTIMIZADO */}
         {recentPosts.length > 0 && (
           <div className="recientes-wrapper mb-5">
             <h3 className="category-title text-center text-white">✨ Últimos Spotteds ✨</h3>
@@ -70,6 +70,14 @@ function Comunidad() {
                 grabCursor={true}
                 modules={[EffectCards]}
                 className="swiper-recientes"
+                speed={400}
+                touchReleaseOnEdges={true}
+                resistanceRatio={0.5}
+                cardsEffect={{
+                  slideShadows: false, // 👈 Quita sombras pesadas que rompen el rendimiento móvil
+                  perSlideOffset: 12,  // 👈 Más separación física atrás para que no se corte
+                  perSlideRotate: 3,   // Grados sutiles
+                }}
               >
                 {recentPosts.map(post => (
                   <SwiperSlide key={`recent-${post.id}`} className="slide-stack-card">
@@ -85,7 +93,7 @@ function Comunidad() {
 
         <hr className="comunidad-divider" />
 
-        {/* 📋 TUS CARRETERAS POR CATEGORÍA ORIGINALES */}
+        {/* 📋 CARRETERAS HORIZONTALES POR CATEGORÍA OPTIMIZADAS */}
         {categorias.map(cat => {
           const filtered = posts.filter(p => p.categoria?.toLowerCase() === cat.id);
           if (filtered.length === 0) return null;
@@ -94,10 +102,26 @@ function Comunidad() {
             <div key={cat.id} className="category-section mb-4">
               <h3 className="category-title text-white">{cat.label}</h3>
               <Swiper
-                spaceBetween={20}
-                slidesPerView={'auto'}
                 grabCursor={true}
                 className="horizontal-category-swiper"
+                speed={350}
+                touchReleaseOnEdges={true}
+                resistanceRatio={0.6}
+                // 🛠️ CONTROL RIGUROSO DE ESPACIADOS SEGÚN EL DISPOSITIVO
+                breakpoints={{
+                  0: {
+                    slidesPerView: 1.15, // 👈 Se ve una carta entera y asoma un 15% de la siguiente
+                    spaceBetween: 15     // 👈 Separación fija en pixeles para móvil
+                  },
+                  550: {
+                    slidesPerView: 1.5,
+                    spaceBetween: 20
+                  },
+                  768: {
+                    slidesPerView: 'auto', // 👈 Vuelve al comportamiento original en computadoras
+                    spaceBetween: 25
+                  }
+                }}
               >
                 {filtered.map(post => (
                   <SwiperSlide key={post.id} className="slide-card-horizontal">

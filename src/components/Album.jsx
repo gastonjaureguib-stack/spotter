@@ -63,7 +63,6 @@ function Album() {
   const handleChangeCategory = async (card) => {
     const { value: nuevaCategoria } = await Swal.fire({
       title: 'Cambiar categoría',
-
       html: `
         <div style="text-align:left">
           <select id="categoria" style="
@@ -84,25 +83,19 @@ function Album() {
           </select>
         </div>
       `,
-
       background: '#1b2631',
       color: '#ffffff',
-
       showCancelButton: true,
       confirmButtonText: 'Mover',
       cancelButtonText: 'Cancelar',
       confirmButtonColor: '#27ae60',
-
       focusConfirm: false,
-
       preConfirm: () => {
         const value = document.getElementById('categoria').value;
-
         if (!value) {
           Swal.showValidationMessage('Selecciona una categoría');
           return false;
         }
-
         return value;
       }
     });
@@ -118,20 +111,23 @@ function Album() {
       if (error) throw error;
 
       Swal.fire('¡Éxito!', 'La carta se ha movido correctamente.', 'success');
-
       setSelectedCard(null);
       fetchCapturas(userId);
-
     } catch (err) {
       Swal.fire('Error', 'No se pudo actualizar la categoría.', 'error');
     }
   };
 
+  // 🚀 INTERCEPCIÓN DE GALERÍA CORREGIDA
   const handleGalleryUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
+      // Convertimos el file binario de la galería en una URL de objeto temporal que entienda la etiqueta img / Cropper
+      const imageUrl = URL.createObjectURL(file);
+      
+      // Enviamos bajo la propiedad clave 'externalImage' para que HeroCamera haga el bypass
       navigate(`/camera`, {
-        state: { imageFile: file, category: category }
+        state: { externalImage: imageUrl, category: category }
       });
     }
   };
