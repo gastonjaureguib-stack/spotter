@@ -1,8 +1,13 @@
+/* ==========================================================================
+   HERO CAMERA & CAPTURE SYSTEM - SPOTTER 2026 (ULTRA GIGANTE EDITION)
+   ========================================================================== */
+
 /* --- Estructura Principal (Banner) --- */
 .hero-camera-container {
-  min-height: auto; /* Cambiado de 100vh a auto */
-  padding: 40px 20px; /* Reducido para que sea más compacto */
+  min-height: auto; 
+  padding: 40px 20px; 
   display: flex;
+  flex-direction: column; /* Asegura el correcto flujo vertical de los elementos */
   align-items: center;
   justify-content: center;
   background: radial-gradient(circle at 50% 20%, #1e3a8a 0%, #0b1020 45%, #050814 100%);
@@ -14,43 +19,59 @@
 
 /* --- Título dentro del Banner --- */
 .hero-camera-container h1 {
-  font-size: 1.5rem; /* Título más pequeño */
+  font-size: 1.5rem; 
   margin-bottom: 20px;
+  text-align: center;
 }
 
-/* --- Botón Cámara (Minimalista) --- */
+/* --- Botón Cámara (Versión Ultra Gigante para Mobile) --- */
 .camera-lens-button {
-  width: 80px; 
-  height: 80px;
+  width: 125px;       /* Tamaño masivo e imponente */
+  height: 125px;      
   border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.1); /* Fondo sutil */
+  border: 4px solid rgba(255, 255, 255, 0.9); /* Anillo más grueso estilo lente premium */
+  background: linear-gradient(135deg, #22c55e 0%, #10b981 100%); /* Tu verde vibrante */
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 10px auto; /* Menos margen */
+  margin: 20px auto;  /* Aire vertical balanceado */
   cursor: pointer;
-  transition: transform 0.2s ease;
-  padding: 15px; 
+  padding: 24px;      /* Espacio interno optimizado para el icono */
+  box-shadow: 0 12px 30px rgba(34, 197, 94, 0.5), 
+              inset 0 3px 6px rgba(255, 255, 255, 0.3);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efecto elástico */
+  position: relative;
+  animation: pulseNeonGigante 2.5s infinite; /* Ondas expansivas calibradas */
 }
 
+/* Imagen del lente centrada perfectamente */
 .camera-lens-button img {
-  width: 150%;
+  width: 100%;
   height: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4)) brightness(1.2);
+  transition: transform 0.3s ease;
 }
 
+/* Efecto Hover en PC */
 .camera-lens-button:hover {
-  transform: scale(1.1);
-  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.06) rotate(5deg);
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); /* Cambia a azul eléctrico */
+  border-color: #ffffff;
+  box-shadow: 0 14px 35px rgba(37, 99, 235, 0.6);
+}
+
+/* Efecto Feedback Táctil en Celulares (El click físico) */
+.camera-lens-button:active {
+  transform: scale(0.92);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
 }
 
 /* --- Contenedor del Cropper (Más compacto) --- */
 .cropper-box {
-  height: 250px; /* Reducido de 350px */
+  height: 250px; 
   width: 100%;
-  max-width: 400px; /* Limitamos el ancho */
+  max-width: 400px; 
   margin: 0 auto 20px auto;
   border-radius: 12px;
   overflow: hidden;
@@ -76,51 +97,33 @@
 }
 
 .form-control {
-  padding: 8px 12px !important; /* Más delgado */
+  padding: 8px 12px !important; 
   font-size: 0.9rem;
 }
 
-/* --- Animaciones --- */
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Ajustes Responsivos */
-@media (max-width: 480px) {
-  .hero-camera-container { padding: 20px 15px; }
-  .cropper-box { height: 200px; }
-}
-
 /* ===== SELECT DE CATEGORÍAS ===== */
-
 select.form-control {
   background-color: rgba(17, 24, 39, 0.95) !important;
   color: #ffffff !important;
-  border: 1px solid rgba(255,255,255,.15) !important;
+  border: 1px solid rgba(255, 255, 255, .15) !important;
 }
 
 select.form-control:focus {
   background-color: rgba(17, 24, 39, 0.95) !important;
   color: #ffffff !important;
   border-color: #3b82f6 !important;
-  box-shadow: 0 0 0 .15rem rgba(59,130,246,.25);
+  box-shadow: 0 0 0 .15rem rgba(59, 130, 246, .25);
 }
 
 select.form-control option {
   background: #111827;
   color: #ffffff;
 }
-/* ===== Selector de categorías ===== */
 
 .category-select {
   background: #111827 !important;
   color: #fff !important;
-  border: 1px solid rgba(255,255,255,.2) !important;
+  border: 1px solid rgba(255, 255, 255, .2) !important;
   border-radius: 8px;
 }
 
@@ -133,5 +136,47 @@ select.form-control option {
   background: #111827 !important;
   color: #fff !important;
   border-color: #3b82f6 !important;
-  box-shadow: 0 0 0 .2rem rgba(59,130,246,.25);
+  box-shadow: 0 0 0 .2rem rgba(59, 130, 246, .25);
+}
+
+/* --- Animaciones --- */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Animación de pulso expansivo para el tamaño gigante */
+@keyframes pulseNeonGigante {
+  0% {
+    box-shadow: 0 12px 30px rgba(34, 197, 94, 0.5), 0 0 0 0 rgba(34, 197, 94, 0.6);
+  }
+  70% {
+    box-shadow: 0 12px 30px rgba(34, 197, 94, 0.5), 0 0 0 25px rgba(34, 197, 94, 0); /* Onda expansiva mayor */
+  }
+  100% {
+    box-shadow: 0 12px 30px rgba(34, 197, 94, 0.5), 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+}
+
+/* --- Ajustes Responsivos Móviles --- */
+@media (max-width: 480px) {
+  .hero-camera-container { 
+    padding: 20px 15px; 
+  }
+  .cropper-box { 
+    height: 200px; 
+  }
+}
+
+/* Si el celular es muy angosto (ej: pantallas menores a 360px), adaptamos el botón gigante para que no rompa el formulario */
+@media (max-width: 360px) {
+  .camera-lens-button {
+    width: 100px; 
+    height: 100px;
+    padding: 18px;
+  }
 }
