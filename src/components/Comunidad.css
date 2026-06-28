@@ -1,5 +1,5 @@
 /* ==========================================================================
-   COMUNIDAD CSS - SPOTTER 2026 (VERTICAL FLOW REPAIRED)
+   COMUNIDAD CSS - REPARACIÓN EMULACIÓN SWIPER DEFECTS (290x480)
    ========================================================================== */
 
 .comunidad-bg {
@@ -18,9 +18,9 @@
   width: 90%;
 }
 
-/* 📏 SECCIONES DE CATEGORÍA (MÁXIMA DISTANCIA VERTICAL - ULTRA AMINORADO) */
+/* 📏 SECCIONES DE CATEGORÍA */
 .category-section {
-  margin-bottom: 320px; /* 🚀 Distancia masiva abajo para que cada bloque sea un mundo aparte */
+  margin-bottom: 320px; 
   padding-left: 15px;
   width: 100%;
   display: block;
@@ -31,14 +31,14 @@
   color: #ffffff;
   font-family: 'Michroma', sans-serif;
   font-size: 1.3rem;
-  margin-top: 120px;   /* 🚀 Distancia masiva arriba respecto al carrusel anterior */
-  margin-bottom: 35px; /* Separación con sus propias cartas abajo */
+  margin-top: 120px;   
+  margin-bottom: 35px; 
   letter-spacing: 1px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 /* ==========================================================================
-   🔥 MAZO APILADO DE RECIENTES
+   🔥 MAZO APILADO DE RECIENTES (EL SWIPER EFECTO CARDS / 3D)
    ========================================================================== */
 .recientes-wrapper {
   display: flex;
@@ -46,78 +46,86 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-}
-
-.cards-stack-container {
-  width: 340px; 
-  height: 540px;
-  margin: 20px auto;
   position: relative;
 }
 
-.swiper-recientes {
-  width: 100%;
-  height: 100%;
-  padding: 25px 35px !important; 
-  overflow: visible !important; 
-}
-
-.slide-stack-card {
+/* 🚨 CLAVE 1: El contenedor del mazo TIENE que ser ligeramente más grande 
+   que la carta para darle aire físico a las sombras y rotaciones tridimensionales */
+.cards-stack-container {
+  width: 310px; 
+  height: 510px;
+  margin: 0 auto;
+  position: relative;
   display: flex;
-  align-items: center;
   justify-content: center;
-  background: transparent !important;
+  align-items: center;
 }
 
+/* 🚨 CLAVE 2: Forzamos a que la directiva de Swiper ocupe todo el espacio 
+   y no recorte las cartas de atrás (las que hacen el efecto mazo) */
+.swiper-recientes {
+  width: 100% !important;
+  height: 100% !important;
+  position: relative;
+  overflow: visible !important; /* Evita el hachazo horizontal en las cartas de atrás */
+}
+
+/* Asegura que el slide interno centre perfecto tu carta rígida de 290x480 */
+.slide-stack-card {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+  overflow: visible !important;
+}
+
+/* Evitamos que Swiper le meta una escala inline rara que rompa tu tc-card */
 .slide-stack-card > div {
-  width: 100%;
-  height: 100%;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
 }
 
 /* ==========================================================================
-   📋 CARRUSELES DE CATEGORÍAS
+   📋 CARRUSELES DE CATEGORÍAS (CARRUITES HORIZONTALES)
    ========================================================================== */
 .horizontal-category-swiper {
   width: 100%;
-  padding: 25px 5px 35px 5px !important; 
+  padding: 25px 0 35px 0 !important; 
   overflow: visible !important;
   display: block;
 }
 
 .horizontal-category-swiper .slide-card-horizontal {
-  width: 340px;
-  height: 540px;
+  width: 290px !important; 
+  height: 480px !important;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.horizontal-category-swiper .slide-card-horizontal > div {
-  width: 100%;
-  height: 100%;
+  overflow: visible !important;
 }
 
 /* ==========================================================================
-   📱 MOBILE RESPONSIVE SIN COLLAPSE VISUAL
+   📱 MOBILE RESPONSIVE CONTROLADO
    ========================================================================== */
 @media (max-width: 600px) {
   .category-title {
     font-size: 1.1rem;
-    margin-top: 100px;   /* 🚀 Espaciado gigante arriba para el celular */
+    margin-top: 100px;   
     margin-bottom: 30px;
   }
 
   .category-section {
-    margin-bottom: 240px; /* 🚀 Súper aire vertical abajo en móviles */
+    margin-bottom: 240px; 
   }
 
+  /* En móviles mantenemos el margen controlado para que no se pegue a los bordes */
   .cards-stack-container {
-    width: 280px; 
-    height: 480px;
+    width: 310px; 
+    height: 510px;
   }
 
   .horizontal-category-swiper .slide-card-horizontal {
-    width: 280px !important;
+    width: 290px !important;
     height: 480px !important;
   }
 }
@@ -139,7 +147,7 @@
 
 .modal-content {
   background: transparent;
-  max-width: 340px;
+  max-width: 290px; 
   width: 100%;
   display: flex;
   flex-direction: column;
