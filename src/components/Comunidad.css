@@ -38,7 +38,7 @@
 }
 
 /* ==========================================================================
-   🔥 MAZO APILADO DE RECIENTES (CON ANTIDESTELLO NATIVO)
+   🔥 MAZO APILADO DE RECIENTES (CON ANTIDESTELLO NATIVO Y RE-RENDER FIJO)
    ========================================================================== */
 .recientes-wrapper {
   display: flex;
@@ -57,25 +57,40 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  /* Evita destellos extraños aislando capas de pintura */
+  contain: paint;
 }
 
-/* 🚨 REPARACIÓN MAESTRA: Seteamos el estado inicial de Swiper antes del JS 
-   para que no intente recalcular el tamaño ni tire destellos al cargar */
+/* 🚨 REPARACIÓN MAESTRA COMBINADA: Forzamos visibilidad constante y opacidad
+   para que React no apague y prenda la caja en los micro-segundos de carga */
 .swiper-recientes {
   width: 100% !important;
   height: 100% !important;
   position: relative;
   overflow: visible !important; 
   visibility: visible !important;
+  opacity: 1 !important;
 }
 
-/* Forzamos a que Swiper no rompa el bloque inicial */
+/* Forzamos a que Swiper no rompa el bloque inicial apilando hacia abajo */
+.swiper-recientes:not(.swiper-initialized) {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+
 .swiper-recientes:not(.swiper-initialized) .slide-stack-card {
+  position: absolute !important;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) !important;
   display: none !important; 
 }
+
 .swiper-recientes:not(.swiper-initialized) .slide-stack-card:first-child {
   display: flex !important; /* Muestra solo la primera carta limpia antes de que Swiper despierte */
-  opacity: 1;
+  opacity: 1 !important;
+  z-index: 10;
 }
 
 .slide-stack-card {
@@ -84,14 +99,21 @@
   justify-content: center !important;
   background: transparent !important;
   overflow: visible !important;
-  /* Evita saltos bruscos de escala */
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  
+  /* ⚡ TRUCO ULTRA RENDIMIENTO: Forzamos aceleración por hardware total en 3D 
+     para que las transformaciones se congelen fijas en la GPU del celular y no parpadeen */
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  transform-style: preserve-3d !important;
+  -webkit-transform-style: preserve-3d !important;
+  will-change: transform, opacity;
 }
 
 .slide-stack-card > div {
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
+  transform-style: preserve-3d !important;
+  -webkit-transform-style: preserve-3d !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
 }
 
 /* ==========================================================================
