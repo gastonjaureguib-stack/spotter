@@ -1,5 +1,5 @@
 /* ==========================================================================
-   COMUNIDAD CSS - ANTIDESTELLO Y FIJACIÓN TOTAL (290x480)
+   COMUNIDAD CSS - OPTIMIZADO
    ========================================================================== */
 
 .comunidad-bg {
@@ -7,205 +7,190 @@
   min-height: 100vh;
   width: 100%;
   padding: 2rem 0;
-  background-attachment: fixed;
   overflow-x: hidden;
 }
 
 .comunidad-divider {
   border: 0;
-  border-top: 1px dashed rgba(255, 255, 255, 0.2);
-  margin: 40px auto;
+  border-top: 1px dashed rgba(255,255,255,.2);
+  margin: 35px auto;
   width: 90%;
 }
 
-/* 📏 SECCIONES DE CATEGORÍA */
+/* ==========================================================================
+   CATEGORÍAS
+   ========================================================================== */
+
 .category-section {
-  margin-bottom: 320px; 
+  margin-bottom: 70px;
   padding-left: 15px;
   width: 100%;
-  display: block;
-  clear: both;
 }
 
 .category-title {
-  color: #ffffff;
+  color: #fff;
   font-family: 'Michroma', sans-serif;
   font-size: 1.3rem;
-  margin-top: 120px;   
-  margin-bottom: 35px; 
+  margin-top: 35px;
+  margin-bottom: 15px;
   letter-spacing: 1px;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  text-shadow: 0 2px 4px rgba(0,0,0,.3);
 }
 
 /* ==========================================================================
-   🔥 MAZO APILADO DE RECIENTES (CON ANTIDESTELLO NATIVO Y RE-RENDER FIJO)
+   MAZO SUPERIOR
    ========================================================================== */
+
 .recientes-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   width: 100%;
-  position: relative;
 }
 
 .cards-stack-container {
-  width: 310px; 
+  width: 310px;
   height: 510px;
   margin: 0 auto;
-  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  /* Evita destellos extraños aislando capas de pintura */
-  contain: paint;
 }
 
-/* 🚨 REPARACIÓN MAESTRA COMBINADA: Forzamos visibilidad constante y opacidad
-   para que React no apague y prenda la caja en los micro-segundos de carga */
 .swiper-recientes {
-  width: 100% !important;
-  height: 100% !important;
-  position: relative;
-  overflow: visible !important; 
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-/* Forzamos a que Swiper no rompa el bloque inicial apilando hacia abajo */
-.swiper-recientes:not(.swiper-initialized) {
-  display: flex !important;
-  justify-content: center;
-  align-items: center;
-}
-
-.swiper-recientes:not(.swiper-initialized) .slide-stack-card {
-  position: absolute !important;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) !important;
-  display: none !important; 
-}
-
-.swiper-recientes:not(.swiper-initialized) .slide-stack-card:first-child {
-  display: flex !important; /* Muestra solo la primera carta limpia antes de que Swiper despierte */
-  opacity: 1 !important;
-  z-index: 10;
+  width: 100%;
+  height: 100%;
+  overflow: visible !important;
 }
 
 .slide-stack-card {
   display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  justify-content: center;
+  align-items: center;
   background: transparent !important;
   overflow: visible !important;
-  
-  /* ⚡ TRUCO ULTRA RENDIMIENTO: Forzamos aceleración por hardware total en 3D 
-     para que las transformaciones se congelen fijas en la GPU del celular y no parpadeen */
-  backface-visibility: hidden !important;
-  -webkit-backface-visibility: hidden !important;
-  transform-style: preserve-3d !important;
-  -webkit-transform-style: preserve-3d !important;
-  will-change: transform, opacity;
+
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+
+  transform: translateZ(0);
 }
 
 .slide-stack-card > div {
-  transform-style: preserve-3d !important;
-  -webkit-transform-style: preserve-3d !important;
-  backface-visibility: hidden !important;
-  -webkit-backface-visibility: hidden !important;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+
+  transform: translateZ(0);
 }
 
 /* ==========================================================================
-   📋 CARRUSELES DE CATEGORÍAS (CARRUITES HORIZONTALES)
+   SWIPER HORIZONTAL
    ========================================================================== */
+
 .horizontal-category-swiper {
   width: 100%;
-  padding: 25px 0 35px 0 !important; 
+  padding: 10px 0 15px;
   overflow: visible !important;
-  display: block;
-}
-
-/* Mantiene el carrusel horizontal alineado en bloque rígido al cargar */
-.horizontal-category-swiper:not(.swiper-initialized) {
-  display: flex;
-  gap: 20px;
-  overflow-x: hidden;
 }
 
 .horizontal-category-swiper .slide-card-horizontal {
-  width: 290px !important; 
+  width: 290px !important;
   height: 480px !important;
+
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: visible !important;
+
+  overflow: visible;
   flex-shrink: 0;
 }
 
 /* ==========================================================================
-   📱 MOBILE RESPONSIVE
+   MOBILE
    ========================================================================== */
-@media (max-width: 600px) {
-  .category-title {
-    font-size: 1.1rem;
-    margin-top: 100px;   
-    margin-bottom: 30px;
+
+@media (max-width:600px){
+
+  .category-title{
+      font-size:1.1rem;
+      margin-top:25px;
+      margin-bottom:12px;
   }
 
-  .category-section {
-    margin-bottom: 240px; 
+  .category-section{
+      margin-bottom:55px;
   }
 
-  .cards-stack-container {
-    width: 310px; 
-    height: 510px;
+  .cards-stack-container{
+      width:310px;
+      height:510px;
   }
 
-  .horizontal-category-swiper .slide-card-horizontal {
-    width: 290px !important;
-    height: 480px !important;
+  .horizontal-category-swiper .slide-card-horizontal{
+      width:290px !important;
+      height:480px !important;
   }
+
 }
 
 /* ==========================================================================
-   MODAL ORIGINAL ADAPTADO
+   MODAL
    ========================================================================== */
-.modal-overlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(6px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  padding: 15px;
+
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  backdrop-filter:blur(6px);
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  padding:15px;
+
+  z-index:9999;
 }
 
-.modal-content {
-  background: transparent;
-  max-width: 290px; 
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  animation: modalFx 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+.modal-content{
+  background:transparent;
+  width:100%;
+  max-width:290px;
+
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+
+  animation:modalFx .25s ease;
 }
 
-.close-btn {
-  background: #e74c3c;
-  color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 25px;
-  cursor: pointer;
-  font-family: 'Michroma', sans-serif;
-  font-size: 0.85rem;
-  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+.close-btn{
+  background:#e74c3c;
+  color:#fff;
+
+  border:none;
+  border-radius:25px;
+
+  padding:12px;
+
+  cursor:pointer;
+
+  font-family:'Michroma',sans-serif;
+  font-size:.85rem;
+
+  box-shadow:0 4px 15px rgba(231,76,60,.35);
 }
 
-@keyframes modalFx {
-  from { transform: scale(0.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+@keyframes modalFx{
+
+  from{
+      transform:scale(.9);
+      opacity:0;
+  }
+
+  to{
+      transform:scale(1);
+      opacity:1;
+  }
+
 }
