@@ -5,8 +5,8 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 10px 8px;
+  gap: 12px; /* Un poco más de aire entre filas */
+  padding: 12px 8px; /* Un poco más de espacio interno */
   background: linear-gradient(90deg, #0f172a, #0b3d2e);
   border-top: 2px solid rgba(39, 174, 96, 0.4);
   z-index: 999;
@@ -14,78 +14,53 @@
   box-sizing: border-box;
 }
 
-/* =========================
-   FILA 1 (BOTONES SUPERIORES)
-========================= */
+/* FILA 1: Botones principales */
 .footer-main {
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
-  gap: 2px; /* Reducimos el espacio entre botones para ganar sitio */
+  gap: 4px; 
   width: 100%;
 }
 
 .footer-main .footer-btn {
   flex: 1;
-  min-width: 0; /* Vital para que el texto elipsado funcione */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; /* Pone "Comun..." si el texto es demasiado largo */
-  padding: 8px 2px;
-  font-size: 0.7rem;
-}
-
-/* =========================
-   FILA 2 (LOGO + BOTÓN MODAL)
-========================= */
-.footer-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 0 4px;
-  box-sizing: border-box;
-  height: 45px;
-}
-
-.footer-logo {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  height: 100%;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.footer-logo img {
-  height: 150px; 
-  width: auto; 
-  max-width: 100px;
-  object-fit: contain;
-  display: block;
-}
-
-/* =========================
-   BOTONES BASE
-========================= */
-.footer-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 14px 2px; /* AGRANDADOS: Aumenté el padding vertical */
+  font-size: 0.65rem; /* Un pelín más grande */
   text-decoration: none;
   font-family: 'Michroma', sans-serif;
   color: white;
   border-radius: 8px;
   transition: all 0.25s ease;
   border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.footer-btn:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.2);
+/* FILA 2: Logo + Botón Info (Separados) */
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 4px;
+  margin-top: 4px; /* SEPARACIÓN: Aleja el logo de los botones de arriba */
 }
 
-/* COLORES */
+.footer-logo {
+  display: flex;
+  align-items: center;
+  height: 40px; /* Limitamos la altura para que no sea un bloque invisible gigante */
+  cursor: pointer;
+}
+
+.footer-logo img {
+  height: 40px; 
+  width: auto;
+  object-fit: contain;
+}
+
+/* Mantenemos tus colores intactos */
 .footer-btn.dogs { background: rgba(59, 130, 246, 0.35); }
 .footer-btn.cats { background: rgba(245, 158, 11, 0.35); }
 .footer-btn.plants { background: rgba(34, 197, 94, 0.35); }
@@ -93,32 +68,6 @@
 .footer-btn.community { background: rgba(168, 85, 247, 0.35); }
 .footer-btn.info {
   background: linear-gradient(135deg, #27ae60, #2ecc71);
-  padding: 8px 16px;
+  padding: 10px 16px; /* AGRANDADO */
   font-size: 0.65rem;
-  text-align: center;
-}
-
-/* =========================
-   RESPONSIVE (MOBILE)
-========================= */
-@media (max-width: 600px) {
-  body {
-    padding-bottom: 110px; 
-  }
-
-  .footer-main .footer-btn {
-    font-size: 0.45rem; /* Reducido drásticamente para asegurar que 'Comunidad' entre */
-    padding: 4px 1px;
-    letter-spacing: -0.2px; /* Comprime el texto levemente */
-  }
-  
-  .footer-logo img {
-    height: 90px;
-    max-width: 80px;
-  }
-
-  .footer-btn.info {
-    font-size: 0.5rem;
-    padding: 4px 6px;
-  }
 }

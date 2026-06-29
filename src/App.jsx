@@ -14,7 +14,7 @@ function App() {
       <div className="d-flex flex-column min-vh-100 bg-white">
         <Navbar />
         
-        <main className="flex-shrink-0">
+        <main className="flex-shrink-0" style={{ paddingBottom: '140px' }}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} /> 
