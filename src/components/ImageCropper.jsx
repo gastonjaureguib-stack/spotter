@@ -19,7 +19,6 @@ const ImageCropper = forwardRef(({ image, onComplete }, ref) => {
       }
 
       try {
-        
         const blob = await getCroppedImg(image, area);
         if (blob) {
           const file = new File([blob], "card.jpg", { type: "image/jpeg" });
@@ -32,23 +31,40 @@ const ImageCropper = forwardRef(({ image, onComplete }, ref) => {
   }));
 
   return (
-    <div className="cropper-wrapper" style={{ width: '100%', height: '100%' }}>
-      <div className="cropper-container" style={{ height: '300px', position: 'relative', width: '100%' }}>
+    <div className="cropper-wrapper" style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      
+      {/* 🔥 FIX CRÍTICO DE ESTILOS: 
+        react-easy-crop requiere obligatoriamente que su contenedor tenga "position: relative" 
+        y un alto fijo real o un viewport definido para calcular los gestos táctiles en celulares.
+      */}
+      <div 
+        className="cropper-container" 
+        style={{ 
+          position: 'relative', 
+          width: '100%', 
+          height: '320px', // Un poquito más de aire para el aspecto 4/6
+          background: '#000',
+          borderRadius: '12px',
+          overflow: 'hidden'
+        }}
+      >
         <Cropper
           image={image}
           crop={crop}
           zoom={zoom}
-          aspect={4 /6}
+          aspect={4 / 6}
           onCropChange={setCrop}
           onZoomChange={(z) => setZoom(Number(z))}
           onCropComplete={(_, pixels) => {
             croppedAreaRef.current = pixels;
           }}
+          // 🔥 Evita comportamientos raros de scroll al arrastrar en móviles
+          disableAutomaticWindowResize={false} 
         />
       </div>
 
       <div className="cropper-controls p-3">
-        <label className="text-white mb-2">Zoom</label>
+        <label className="text-white mb-2" style={{ fontSize: '0.85rem' }}>Zoom</label>
         <input
           type="range"
           className="form-range"
