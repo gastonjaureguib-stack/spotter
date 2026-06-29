@@ -162,57 +162,38 @@ function Album() {
   };
 
   // ==========================================
-  // COMPARTIR NATIVO (MÓVILES)
+  // COMPARTIR NATIVO UNIVERSAL (MÓVILES)
   // ==========================================
-  const handleShareFromModal = async (platform) => {
+  const handleShareFromModal = async () => {
     const modalCardNode = document.querySelector('.modal-content .tc-card');
     if (!modalCardNode) return;
 
     try {
       const dataUrl = await toPng(modalCardNode, { cacheBust: true });
 
-      if (platform === 'whatsapp') {
-        // En celulares, genera el archivo binario y abre el gestor nativo de compartición
-        if (navigator.share && navigator.canShare) {
-          const res = await fetch(dataUrl);
-          const blob = await res.blob();
-          const file = new File([blob], 'mi-carta.png', { type: 'image/png' });
+      // En celulares, levanta la sábana nativa del sistema con la imagen adjunta
+      if (navigator.share && navigator.canShare) {
+        const res = await fetch(dataUrl);
+        const blob = await res.blob();
+        const file = new File([blob], 'mi-carta.png', { type: 'image/png' });
 
-          if (navigator.canShare({ files: [file] })) {
-            await navigator.share({
-              files: [file],
-              title: '¡Mirá mi carta!',
-              text: 'Te comparto mi figurita de la colección'
-            });
-            return;
-          }
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: '¡Mirá mi carta!',
+            text: 'Te comparto mi figurita de la colección'
+          });
+          return;
         }
-        
-        // Mensaje preventivo si el entorno es de escritorio/PC
-        Swal.fire({
-          title: 'Función para Celulares',
-          text: 'Para compartir la imagen de la carta directamente a WhatsApp, utiliza tu dispositivo móvil.',
-          icon: 'info',
-          target: document.body
-        });
       }
-
-      if (platform === 'instagram') {
-        // Descarga directa e inmediata a la galería
-        const link = document.createElement('a');
-        link.download = 'mi-carta.png';
-        link.href = dataUrl;
-        link.click();
-
-        // Lanzamiento directo de la aplicación nativa hacia la cámara/creador
-        setTimeout(() => {
-          window.open('instagram://camera', '_blank');
-          
-          setTimeout(() => {
-            window.open('https://instagram.com', '_blank');
-          }, 500);
-        }, 800);
-      }
+      
+      // Alerta informativa si lo prueban en PC/Escritorio
+      Swal.fire({
+        title: 'Función para Celulares',
+        text: 'Para compartir esta carta directamente a tus aplicaciones nativas, utiliza tu dispositivo móvil.',
+        icon: 'info',
+        target: document.body
+      });
     } catch (error) {
       console.error("Error al compartir:", error);
     }
@@ -285,14 +266,10 @@ function Album() {
                   </button>
                 )}
 
-                <div className="d-flex gap-2 justify-content-center">
-                  <button className="whatsapp" onClick={() => handleShareFromModal('whatsapp')}>
-                    WhatsApp
-                  </button>
-                  <button className="instagram" onClick={() => handleShareFromModal('instagram')}>
-                    Insta
-                  </button>
-                </div>
+                {/* Un solo botón estilizado que llama al menú nativo */}
+                <button className="whatsapp" onClick={handleShareFromModal}>
+                  Compartir
+                </button>
 
               </div>
 
