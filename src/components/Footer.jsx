@@ -36,24 +36,24 @@ function Footer() {
       <div className="footer-main">
 
         <Link to="/album/perros" className="footer-btn dogs">
-          🐶 Perros
+          Perros
         </Link>
 
         <Link to="/album/gatos" className="footer-btn cats">
-          🐱 Gatos
+          Gatos
         </Link>
 
         <Link to="/album/plantas" className="footer-btn plants">
-          🌿 Plantas
+          Plantas
         </Link>
 
         {/* NUEVO BOTÓN DE PAISAJES */}
         <Link to="/album/paisajes" className="footer-btn landscapes">
-          ⛰️ Paisajes
+          Paisajes
         </Link>
 
         <Link to="/comunidad" className="footer-btn community">
-          🌎 Comunidad
+          Comunidad
         </Link>
 
       </div>
