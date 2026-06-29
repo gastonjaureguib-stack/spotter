@@ -6,6 +6,12 @@ import { toPng } from 'html-to-image';
 import './Album.css';
 import TradingCard from './TradingCard';
 
+// ==========================================
+// NUEVAS IMPORTACIONES DE COMPONENTES
+// ==========================================
+import MedalsModal from './MedalsModal';
+import ChallengeButton from './ChallengeButton';
+
 function Album() {
   const { category } = useParams();
   const [capturas, setCapturas] = useState([]);
@@ -13,6 +19,10 @@ function Album() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [viewMode, setViewMode] = useState('grid');
   const [userId, setUserId] = useState(null);
+  
+  // Estado para refrescar la vitrina al instante si se completa un reto
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
   const navigate = useNavigate();
 
   const getBackgroundClass = () => {
@@ -171,7 +181,6 @@ function Album() {
     try {
       const dataUrl = await toPng(modalCardNode, { cacheBust: true });
 
-      // En celulares, levanta la sábana nativa del sistema con la imagen adjunta
       if (navigator.share && navigator.canShare) {
         const res = await fetch(dataUrl);
         const blob = await res.blob();
@@ -187,7 +196,6 @@ function Album() {
         }
       }
       
-      // Alerta informativa si lo prueban en PC/Escritorio
       Swal.fire({
         title: 'Función para Celulares',
         text: 'Para compartir esta carta directamente a tus aplicaciones nativas, utiliza tu dispositivo móvil.',
@@ -207,6 +215,17 @@ function Album() {
           <h2 className="album-title text-white m-0">Mi Colección</h2>
 
           <div className="d-flex gap-2">
+
+            {/* ==========================================
+                NUEVOS BOTONES INYECTADOS AQUÍ
+               ========================================== */}
+            <MedalsModal userId={userId} triggerRefresh={refreshTrigger} />
+            
+            <ChallengeButton 
+              category={category} 
+              userId={userId} 
+              onChallengeCompleted={() => setRefreshTrigger(prev => prev + 1)} 
+            />
 
             <button
               className="btn-view-toggle"
@@ -266,7 +285,6 @@ function Album() {
                   </button>
                 )}
 
-                {/* Un solo botón estilizado que llama al menú nativo */}
                 <button className="whatsapp" onClick={handleShareFromModal}>
                   Compartir
                 </button>
