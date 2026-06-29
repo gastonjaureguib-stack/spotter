@@ -16,6 +16,7 @@ function Comunidad() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [selectedCard, setSelectedCard] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const categorias = [
     { id: 'perros', label: 'Perros 🐶' },
@@ -88,11 +89,14 @@ function Comunidad() {
           Comunidad
         </h2>
 
+        {/* ===================== */}
+        {/* RECIENTES STACK */}
+        {/* ===================== */}
         {recentPosts.length > 0 && (
           <div className="recientes-wrapper mb-5">
 
             <h3 className="category-title text-center text-white">
-              ✨ Últimos Spotteds ✨
+              ✨ Spots Recientes ✨
             </h3>
 
             <div className="cards-stack-container">
@@ -115,12 +119,10 @@ function Comunidad() {
               >
 
                 {recentPosts.map(post => (
-
                   <SwiperSlide
                     key={`recent-${post.id}`}
                     className="slide-stack-card"
                   >
-
                     <div onClick={() => setSelectedCard(post)}>
                       <TradingCard
                         data={post}
@@ -128,9 +130,7 @@ function Comunidad() {
                         showUser={true}
                       />
                     </div>
-
                   </SwiperSlide>
-
                 ))}
 
               </Swiper>
@@ -142,14 +142,15 @@ function Comunidad() {
 
         <hr className="comunidad-divider" />
 
+        {/* ===================== */}
+        {/* CATEGORÍAS */}
+        {/* ===================== */}
         {categorias.map(cat => {
 
           const filtered = groupedPosts[cat.id] || [];
-
           if (!filtered.length) return null;
 
           return (
-
             <div
               key={cat.id}
               className="category-section mb-4"
@@ -184,12 +185,10 @@ function Comunidad() {
               >
 
                 {filtered.map(post => (
-
                   <SwiperSlide
                     key={post.id}
                     className="slide-card-horizontal"
                   >
-
                     <div onClick={() => setSelectedCard(post)}>
                       <TradingCard
                         data={post}
@@ -197,19 +196,18 @@ function Comunidad() {
                         showUser={true}
                       />
                     </div>
-
                   </SwiperSlide>
-
                 ))}
 
               </Swiper>
 
             </div>
-
           );
-
         })}
 
+        {/* ===================== */}
+        {/* MODAL CARD */}
+        {/* ===================== */}
         {selectedCard && (
           <div
             className="modal-overlay"
@@ -225,6 +223,8 @@ function Comunidad() {
                 data={selectedCard}
                 userId={user?.id}
                 showUser={true}
+                enableImageZoom={true}
+                onImageClick={(img) => setSelectedImage(img)}
               />
 
               <button
@@ -233,6 +233,38 @@ function Comunidad() {
               >
                 Cerrar
               </button>
+
+            </div>
+
+          </div>
+        )}
+
+        {/* ===================== */}
+        {/* IMAGE VIEWER FULLSCREEN */}
+        {/* ===================== */}
+        {selectedImage && (
+          <div
+            className="image-viewer-overlay"
+            onClick={() => setSelectedImage(null)}
+          >
+
+            <div
+              className="image-viewer-content"
+              onClick={(e) => e.stopPropagation()}
+            >
+
+              <button
+                className="image-viewer-close"
+                onClick={() => setSelectedImage(null)}
+              >
+                ✕
+              </button>
+
+              <img
+                src={selectedImage.url}
+                alt={selectedImage.title}
+                className="image-viewer-img"
+              />
 
             </div>
 

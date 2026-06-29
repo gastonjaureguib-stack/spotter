@@ -65,7 +65,7 @@ function Login() {
       <div className="card shadow-lg p-4 rounded-4 border-0" style={{ maxWidth: '420px', width: '100%' }}>
         <div className="text-center mb-4">
           <h2 className="fw-bold" style={{ color: '#1a365d' }}>
-            {isRegistering ? 'Crear Cuenta' : 'Ingresar a Spooter'}
+            {isRegistering ? 'Crear Cuenta' : 'Ingresar a Spotter'}
           </h2>
         </div>
 

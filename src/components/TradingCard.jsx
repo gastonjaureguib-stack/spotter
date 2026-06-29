@@ -2,7 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from './supabaseClient';
 import './TradingCard.css';
 
-const TradingCard = ({ data, userId, showUser = false, onShare }) => {
+const TradingCard = ({
+  data,
+  userId,
+  showUser = false,
+  onShare,
+  enableImageZoom = false,
+  onImageClick
+}) => {
   const [likeCount, setLikeCount] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
 
@@ -55,7 +62,10 @@ const TradingCard = ({ data, userId, showUser = false, onShare }) => {
   const toggleLike = async (e) => {
     e.stopPropagation();
 
-    if (!userId) return alert('Iniciá sesión ❤️');
+    if (!userId) {
+      alert('Iniciá sesión ❤️');
+      return;
+    }
 
     const prev = isLiked;
 
@@ -72,19 +82,38 @@ const TradingCard = ({ data, userId, showUser = false, onShare }) => {
       } else {
         await supabase
           .from('likes')
-          .insert({ capture_id: data.id, user_id: userId });
+          .insert({
+            capture_id: data.id,
+            user_id: userId
+          });
       }
-    } catch (err) {
+    } catch {
       setIsLiked(prev);
       setLikeCount(likeCount);
     }
   };
-    if (!data) return null;
 
-  const nombre = getText(data.nombre || data.metadata?.nombre || 'SIN NOMBRE', 22);
-  const raza = getText(data.raza || data.metadata?.raza || 'DESCONOCIDO', 22);
-  const personalidad = getText(data.personalidad || data.metadata?.personalidad || '---', 45);
-  const funFact = getText(data.funFact || data.metadata?.funFact || 'Sin información', 120);
+  if (!data) return null;
+
+  const nombre = getText(
+    data.nombre || data.metadata?.nombre || 'SIN NOMBRE',
+    22
+  );
+
+  const raza = getText(
+    data.raza || data.metadata?.raza || 'DESCONOCIDO',
+    22
+  );
+
+  const personalidad = getText(
+    data.personalidad || data.metadata?.personalidad || '---',
+    45
+  );
+
+  const funFact = getText(
+    data.funFact || data.metadata?.funFact || 'Sin información',
+    120
+  );
 
   return (
     <div className={`tc-wrapper ${data?.compact ? 'compact' : ''}`}>
@@ -92,21 +121,54 @@ const TradingCard = ({ data, userId, showUser = false, onShare }) => {
 
         {/* HEADER */}
         <div className="tc-header">
-          <div className="tc-id">{displayId}</div>
+
+          <div className="tc-id">
+            {displayId}
+          </div>
+
           <div className="tc-type">
             <i className={`bi ${theme.icon}`}></i>
             <span>{theme.label}</span>
           </div>
+
         </div>
 
         {/* IMAGEN */}
-        <div className="tc-image">
+        <div
+          className={`tc-image ${enableImageZoom ? 'zoomable' : ''}`}
+          onClick={(e) => {
+
+            if (!enableImageZoom) return;
+
+            e.stopPropagation();
+
+            if (onImageClick) {
+              onImageClick({
+                url: data.image_url,
+                title: nombre
+              });
+            }
+
+          }}
+        >
+
           {data.image_url && (
-            <img src={data.image_url} alt={nombre} />
+            <img
+              src={data.image_url}
+              alt={nombre}
+              draggable={false}
+            />
           )}
+
+          {enableImageZoom && (
+            <div className="tc-image-overlay">
+              <i className="bi bi-arrows-fullscreen"></i>
+            </div>
+          )}
+
         </div>
 
-        {/* INFO PRINCIPAL */}
+        {/* INFO */}
         <div className="tc-body">
 
           <div className="tc-title">
@@ -114,36 +176,60 @@ const TradingCard = ({ data, userId, showUser = false, onShare }) => {
           </div>
 
           <div className="tc-row">
-            <span className="label">RAZA</span>
-            <span className="value">{raza}</span>
+            <span className="label">
+              RAZA
+            </span>
+
+            <span className="value">
+              {raza}
+            </span>
           </div>
 
           <div className="tc-row">
-            <span className="label">INFO</span>
-            <span className="value">{personalidad}</span>
+
+            <span className="label">
+              INFO
+            </span>
+
+            <span className="value">
+              {personalidad}
+            </span>
+
           </div>
 
           <div className="tc-fact">
             {funFact}
           </div>
+
         </div>
 
         {/* FOOTER */}
         <div className="tc-footer">
 
-          {/* USER */}
           {showUser ? (
             <div className="tc-user">
               <i className="bi bi-person-circle"></i>
-              <span>@{data.profiles?.username || 'anon'}</span>
+              <span>
+                @{data.profiles?.username || 'anon'}
+              </span>
             </div>
-          ) : <div />}
+          ) : (
+            <div />
+          )}
 
-          {/* LIKES */}
-          <button className={`tc-like ${isLiked ? 'active' : ''}`} onClick={toggleLike}>
+          <button
+            className={`tc-like ${isLiked ? 'active' : ''}`}
+            onClick={toggleLike}
+          >
+
             <i className={`bi ${isLiked ? 'bi-heart-fill' : 'bi-heart'}`}></i>
-            <span>{likeCount}</span>
+
+            <span>
+              {likeCount}
+            </span>
+
           </button>
+
         </div>
 
         {/* SHARE */}
