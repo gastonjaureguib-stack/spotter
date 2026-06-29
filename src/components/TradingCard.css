@@ -83,13 +83,11 @@
    🖼️ SECCIÓN DE IMAGEN: CALIBRADA CON EL CROP
    ========================================================================== */
 .tc-image {
-  width: calc(100% - 28px); /* Deja un marco limpio a los lados */
+  width: calc(100% - 28px); 
   margin: 6px auto 0 auto;
   
-  /* 🎯 COINCIDENCIA DEL CROP: 
-     Usa '4 / 3' si tu recortador es rectangular. 
-     Cambiá a '1 / 1' si usás un recorte cuadrado perfecto. */
-  aspect-ratio: 4 / 3; 
+ 
+  aspect-ratio: 4 / 6; 
   
   border-radius: 12px;
   overflow: hidden;
@@ -98,7 +96,7 @@
   justify-content: center;
   align-items: center;
   
-  /* ⚡ Previene renderizados raros de imágenes dentro de Swiper */
+  
   transform: translateZ(0);
 }
 

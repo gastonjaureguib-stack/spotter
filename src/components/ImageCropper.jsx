@@ -19,7 +19,7 @@ const ImageCropper = forwardRef(({ image, onComplete }, ref) => {
       }
 
       try {
-        // La lógica interna de getCroppedImg ya debería manejar el image.crossOrigin = 'anonymous'
+        
         const blob = await getCroppedImg(image, area);
         if (blob) {
           const file = new File([blob], "card.jpg", { type: "image/jpeg" });
@@ -38,7 +38,7 @@ const ImageCropper = forwardRef(({ image, onComplete }, ref) => {
           image={image}
           crop={crop}
           zoom={zoom}
-          aspect={4 / 5}
+          aspect={4 /6}
           onCropChange={setCrop}
           onZoomChange={(z) => setZoom(Number(z))}
           onCropComplete={(_, pixels) => {

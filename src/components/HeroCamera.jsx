@@ -10,10 +10,10 @@ import ImageCropper from './ImageCropper';
 const favicon = '/favicon.png';
 
 function HeroCamera() {
-  const cameraInputRef = useRef(null); // Ref exclusiva para cámara activa
+  const cameraInputRef = useRef(null);
   const cropperRef = useRef(null);
   const navigate = useNavigate();
-  const location = useLocation(); // Sigue capturando el estado que viene del Álbum
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   
   const editId = searchParams.get('edit');
@@ -28,11 +28,10 @@ function HeroCamera() {
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  // 🚀 DETECTOR DE IMAGEN EXTERNA (Mantiene el bypass desde el Álbum)
   useEffect(() => {
     if (location.state?.externalImage) {
       setRawImage(location.state.externalImage);
-      setView('crop'); // Va directo al editor
+      setView('crop');
     }
   }, [location.state]);
 
@@ -128,8 +127,6 @@ function HeroCamera() {
         {view === 'camera' && (
           <div className="animate-fade-in">
             <h1>Capturá momentos</h1>
-            
-            {/* 📸 Botón Único Ultra Gigante de Cámara */}
             <button onClick={() => cameraInputRef.current.click()} className="camera-lens-button">
               <img src={favicon} alt="camera" />
             </button>
@@ -152,12 +149,7 @@ function HeroCamera() {
             </div>
             <div className="d-flex gap-3 justify-content-center mt-4">
               <button className="btn btn-outline-light" onClick={() => setView('form')}>Cancelar</button>
-              <button 
-                className="btn btn-success" 
-                onClick={() => cropperRef.current?.handleConfirm()}
-              >
-                Confirmar Recorte
-              </button>
+              <button className="btn btn-success" onClick={() => cropperRef.current?.handleConfirm()}>Confirmar Recorte</button>
             </div>
           </div>
         )}
@@ -166,9 +158,7 @@ function HeroCamera() {
           <div className="bg-dark-card p-4 rounded-4 animate-fade-in">
             <h4 className="text-white mb-3">{isEditing ? 'Editando tu carta' : 'Nueva Carta'}</h4>
             
-            <button className="btn btn-outline-info btn-sm mb-3 w-100" onClick={handleEditImage}>
-              ✂️ Re-ajustar imagen
-            </button>
+            <button className="btn btn-outline-info btn-sm mb-3 w-100" onClick={handleEditImage}>✂️ Re-ajustar imagen</button>
 
             <select className="form-control mb-2" value={categoriaActiva} onChange={(e) => setCategoriaActiva(e.target.value)}>
               <option value="perros">Perros</option>
@@ -179,8 +169,24 @@ function HeroCamera() {
 
             <button className="btn btn-warning mb-3 w-100" onClick={handleRandom}>🎲 Random</button>
             <input className="form-control mb-2" placeholder="Nombre" value={formData.nombre} onChange={(e) => setFormData({...formData, nombre: e.target.value})} />
-            <input className="form-control mb-2" placeholder="Raza" value={formData.raza} onChange={(e) => setFormData({...formData, raza: e.target.value})} />
-            <textarea className="form-control mb-3" placeholder="Dato" value={formData.funFact} onChange={(e) => setFormData({...formData, funFact: e.target.value})} />
+            
+            <input 
+              className="form-control mb-2" 
+              placeholder={categoriaActiva === 'plantas' ? "Especie" : categoriaActiva === 'paisajes' ? "Ubicación" : "Raza"} 
+              value={formData.raza} 
+              onChange={(e) => setFormData({...formData, raza: e.target.value})} 
+            />
+
+            {(categoriaActiva === 'perros' || categoriaActiva === 'gatos') && (
+              <input 
+                className="form-control mb-2" 
+                placeholder="Carácter" 
+                value={formData.personalidad} 
+                onChange={(e) => setFormData({...formData, personalidad: e.target.value})} 
+              />
+            )}
+
+            <textarea className="form-control mb-3" placeholder="Dato curioso" value={formData.funFact} onChange={(e) => setFormData({...formData, funFact: e.target.value})} />
             
             <div className="d-flex gap-2">
               <button className="btn btn-outline-light w-50" onClick={() => navigate(-1)}>Volver</button>
@@ -199,7 +205,6 @@ function HeroCamera() {
           </div>
         )}
 
-        {/* Único input de captura nativa de cámara */}
         <input type="file" ref={cameraInputRef} accept="image/*" capture="environment" onChange={handleImageCapture} hidden />
       </div>
     </div>

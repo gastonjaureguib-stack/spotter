@@ -44,7 +44,7 @@
   align-items: center;
   width: 100%;
   padding: 0 4px;
-  margin-top: 4px; /* SEPARACIÓN: Aleja el logo de los botones de arriba */
+  margin-top: 4px; 
 }
 
 .footer-logo {
@@ -67,7 +67,7 @@
 .footer-btn.landscapes { background: rgba(52, 211, 153, 0.35); }
 .footer-btn.community { background: rgba(168, 85, 247, 0.35); }
 .footer-btn.info {
-  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  background: yellow;
   padding: 10px 16px; /* AGRANDADO */
   font-size: 0.65rem;
 }
