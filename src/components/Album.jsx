@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from './supabaseClient';
 import Swal from 'sweetalert2';
+import { toPng } from 'html-to-image';
 import './Album.css';
 import TradingCard from './TradingCard';
 
@@ -53,182 +54,162 @@ function Album() {
 
       setCapturas(data || []);
     } catch (error) {
-      Swal.fire('Error', 'No pudimos cargar el álbum.', 'error');
+      Swal.fire({
+        title: 'Error',
+        text: 'No pudimos cargar el álbum.',
+        icon: 'error',
+        target: document.body,
+        zIndex: 10001
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ FIX DEFINITIVO SWEETALERT
-  const handleChangeCategory = async (card) => {
-    const { value: nuevaCategoria } = await Swal.fire({
-      title: 'Cambiar categoría',
-      html: `
-        <div style="text-align:left">
-          <select id="categoria" style="
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            background: #ffffff;
-            color: #111827;
-            font-size: 14px;
-            outline: none;
-          ">
-            <option value="">Selecciona una categoría</option>
-            <option value="perros">🐶 Perros</option>
-            <option value="gatos">🐱 Gatos</option>
-            <option value="plantas">🌿 Plantas</option>
-            <option value="paisajes">🏞 Paisajes</option>
-          </select>
-        </div>
-      `,
-      background: '#1b2631',
-      color: '#ffffff',
+  const closeModal = () => setSelectedCard(null);
+
+  // ==============================
+  // FIX APLICADO SOLO AQUÍ
+  // ==============================
+  const handleShareToCommunity = async (card) => {
+    setSelectedCard(null);
+
+    await new Promise(requestAnimationFrame);
+    await new Promise(requestAnimationFrame);
+
+    const result = await Swal.fire({
+      title: '¿Compartir en la comunidad?',
+      text: 'Tu carta será visible para todos.',
+      icon: 'question',
       showCancelButton: true,
-      confirmButtonText: 'Mover',
+      confirmButtonText: 'Compartir',
       cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#27ae60',
-      focusConfirm: false,
-      preConfirm: () => {
-        const value = document.getElementById('categoria').value;
-        if (!value) {
-          Swal.showValidationMessage('Selecciona una categoría');
-          return false;
-        }
-        return value;
-      }
+      target: document.body
     });
 
-    if (!nuevaCategoria) return;
+    if (!result.isConfirmed) return;
 
     try {
-      const { error } = await supabase
+      await supabase
         .from('captures')
-        .update({ categoria: nuevaCategoria })
+        .update({ is_public: true })
         .eq('id', card.id);
 
-      if (error) throw error;
+      await Swal.fire({
+        title: 'Publicado',
+        icon: 'success',
+        target: document.body
+      });
 
-      Swal.fire('¡Éxito!', 'La carta se ha movido correctamente.', 'success');
-      setSelectedCard(null);
       fetchCapturas(userId);
     } catch (err) {
-      Swal.fire('Error', 'No se pudo actualizar la categoría.', 'error');
-    }
-  };
-
-  // 🚀 INTERCEPCIÓN DE GALERÍA CORREGIDA
-  const handleGalleryUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      // Convertimos el file binario de la galería en una URL de objeto temporal que entienda la etiqueta img / Cropper
-      const imageUrl = URL.createObjectURL(file);
-      
-      // Enviamos bajo la propiedad clave 'externalImage' para que HeroCamera haga el bypass
-      navigate(`/camera`, {
-        state: { externalImage: imageUrl, category: category }
+      Swal.fire({
+        title: 'Error',
+        text: 'No se pudo compartir.',
+        icon: 'error',
+        target: document.body
       });
     }
   };
 
+  const handleEdit = (card) => {
+    closeModal();
+    navigate(`/camera?edit=${card.id}`);
+  };
+
   const handleDelete = async (id) => {
-    setSelectedCard(null);
+    closeModal();
 
     const result = await Swal.fire({
-      title: '¿Borrar carta?',
-      text: "¡Esta acción eliminará la carta permanentemente!",
+      title: '¿Borrar?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Sí, borrar',
-      cancelButtonText: 'Cancelar'
+      confirmButtonText: 'Sí',
+      target: document.body
     });
 
-    if (result.isConfirmed) {
-      try {
-        const { error } = await supabase.from('captures').delete().eq('id', id);
-        if (error) throw error;
+    if (!result.isConfirmed) return;
 
-        setCapturas((prev) => prev.filter((c) => c.id !== id));
-        Swal.fire('Borrado', 'La carta ha sido eliminada.', 'success');
-      } catch (err) {
-        Swal.fire('Error', 'No se pudo eliminar.', 'error');
-      }
-    }
+    await supabase.from('captures').delete().eq('id', id);
+    setCapturas(prev => prev.filter(c => c.id !== id));
   };
 
-  const handleShareToCommunity = async (card) => {
-    const result = await Swal.fire({
-      title: '¿Compartir en la comunidad?',
-      text: "Tu carta será visible para todos en el muro.",
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#28a745',
-      confirmButtonText: '¡Compartir!',
-      cancelButtonText: 'Cancelar'
+  const handleChangeCategory = async (card) => {
+    closeModal();
+
+    const { value: nuevaCategoria } = await Swal.fire({
+      title: 'Cambiar categoría',
+      html: `
+        <select id="categoria" class="form-control">
+          <option value="perros">Perros</option>
+          <option value="gatos">Gatos</option>
+          <option value="plantas">Plantas</option>
+          <option value="paisajes">Paisajes</option>
+        </select>
+      `,
+      preConfirm: () => document.getElementById('categoria').value,
+      target: document.body
     });
 
-    if (result.isConfirmed) {
-      try {
-        const { error } = await supabase
-          .from('captures')
-          .update({ is_public: true })
-          .eq('id', card.id);
+    if (!nuevaCategoria) return;
 
-        if (error) throw error;
+    await supabase
+      .from('captures')
+      .update({ categoria: nuevaCategoria })
+      .eq('id', card.id);
 
-        Swal.fire('¡Éxito!', 'Tu carta ya está en la comunidad.', 'success');
-        fetchCapturas(userId);
-      } catch (err) {
-        Swal.fire('Error', 'No se pudo compartir: ' + err.message, 'error');
-      }
-    }
+    fetchCapturas(userId);
   };
 
-  const handleEdit = (card) => {
-    setSelectedCard(null);
-    navigate(`/camera?edit=${card.id}`);
+  const handleShareFromModal = async (platform) => {
+    const modalCardNode = document.querySelector('.modal-content .tc-card');
+    if (!modalCardNode) return;
+
+    const dataUrl = await toPng(modalCardNode, { cacheBust: true });
+
+    if (platform === 'whatsapp') {
+      const text = encodeURIComponent('Mirá mi carta!');
+      window.open(`https://wa.me/?text=${text}`, '_blank');
+    }
+
+    if (platform === 'instagram') {
+      const link = document.createElement('a');
+      link.download = 'card.png';
+      link.href = dataUrl;
+      link.click();
+    }
   };
 
   return (
     <div className={getBackgroundClass()}>
       <div className="container py-5">
-        <h2 className="album-title text-center mb-4 text-white">
-          {category ? `Álbum de ${category.charAt(0).toUpperCase() + category.slice(1)}` : 'Mi Colección'}
-        </h2>
 
-        <div className="d-flex justify-content-between align-items-center mb-4 px-3">
-          <label htmlFor="gallery-input" className="btn btn-outline-light btn-sm">
-            + Subir de galería
-          </label>
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h2 className="album-title text-white m-0">Mi Colección</h2>
 
-          <input
-            type="file"
-            id="gallery-input"
-            accept="image/*"
-            onChange={handleGalleryUpload}
-            style={{ display: 'none' }}
-          />
+          <div className="d-flex gap-2">
 
-          <button
-            className="btn btn-sm btn-outline-light"
-            onClick={() => setViewMode(prev => prev === 'grid' ? 'list' : 'grid')}
-          >
-            {viewMode === 'grid' ? 'Ver lista' : 'Ver galería'}
-          </button>
+            <button
+              className="btn-view-toggle"
+              onClick={() => navigate('/camera?mode=gallery')}
+            >
+              + Subir
+            </button>
+
+            <button
+              className="btn-view-toggle"
+              onClick={() =>
+                setViewMode(viewMode === 'grid' ? 'list' : 'grid')
+              }
+            >
+              {viewMode === 'grid' ? 'Lista' : 'Grid'}
+            </button>
+
+          </div>
         </div>
 
         {loading ? (
-          <div className="text-center text-white">Cargando colección...</div>
-        ) : capturas.length === 0 ? (
-          <div className="text-center text-white">
-            <p>Aún no hay cartas aquí.</p>
-            <button className="btn btn-success" onClick={() => navigate('/')}>
-              Ir a capturar
-            </button>
-          </div>
+          <div className="text-white text-center">Cargando...</div>
         ) : (
           <div className={`album-grid ${viewMode === 'list' ? 'view-list' : 'view-grid'}`}>
             {capturas.map((carta) => (
@@ -238,12 +219,8 @@ function Album() {
                 onClick={() => setSelectedCard(carta)}
               >
                 <TradingCard
-                  data={{
-                    ...carta,
-                    compact: viewMode === 'grid'
-                  }}
+                  data={{ ...carta, compact: viewMode === 'grid' }}
                   userId={userId}
-                  onShare={() => handleShareToCommunity(carta)}
                 />
               </div>
             ))}
@@ -251,30 +228,44 @@ function Album() {
         )}
 
         {selectedCard && (
-          <div className="modal-overlay" onClick={() => setSelectedCard(null)}>
+          <div className="modal-overlay" onClick={closeModal}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <TradingCard data={selectedCard} />
+
+              <TradingCard data={selectedCard} userId={userId} />
 
               <div className="card-actions">
-                <button className="btn-edit" onClick={() => handleEdit(selectedCard)}>
-                  Editar
-                </button>
-
-                <button className="btn-secondary" onClick={() => handleChangeCategory(selectedCard)}>
-                  Mover de categoría
-                </button>
-
-                <button className="btn-delete" onClick={() => handleDelete(selectedCard.id)}>
-                  Eliminar
-                </button>
+                <button className="btn-edit" onClick={() => handleEdit(selectedCard)}>Editar</button>
+                <button className="btn-secondary" onClick={() => handleChangeCategory(selectedCard)}>Mover</button>
+                <button className="btn-delete" onClick={() => handleDelete(selectedCard.id)}>Eliminar</button>
               </div>
 
-              <button className="close-btn" onClick={() => setSelectedCard(null)}>
+              <div className="d-flex flex-column gap-2 mt-3 w-100" style={{ maxWidth: '280px' }}>
+
+                {!selectedCard.is_public && (
+                  <button className="btn-edit" onClick={() => handleShareToCommunity(selectedCard)}>
+                    Compartir en Comunidad
+                  </button>
+                )}
+
+                <div className="d-flex gap-2 justify-content-center">
+                  <button className="whatsapp" onClick={() => handleShareFromModal('whatsapp')}>
+                    WhatsApp
+                  </button>
+                  <button className="instagram" onClick={() => handleShareFromModal('instagram')}>
+                    Insta
+                  </button>
+                </div>
+
+              </div>
+
+              <button className="close-btn mt-3" onClick={closeModal}>
                 Cerrar
               </button>
+
             </div>
           </div>
         )}
+
       </div>
     </div>
   );

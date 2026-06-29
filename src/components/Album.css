@@ -32,7 +32,7 @@ html, body {
   width: 100%;
 }
 
-/* --- BOTONES --- */
+/* --- BOTONES HEADER --- */
 .actions-bar {
   display: flex;
   justify-content: center;
@@ -65,16 +65,9 @@ html, body {
 }
 
 .view-grid {
-  /* Cambio clave: repeat(auto-fill...) permite que se adapten solas */
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   justify-items: center;
   align-items: start;
-}
-
-.view-grid .card-thumb {
-  width: 100%; /* Ahora es fluido y no empuja el layout */
-  display: flex;
-  justify-content: center;
 }
 
 .card-thumb {
@@ -94,7 +87,7 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2000;
+  z-index: 1000;
   backdrop-filter: blur(5px);
 }
 
@@ -107,10 +100,9 @@ html, body {
   padding: 10px;
 }
 
-.modal-content .trading-card-wrapper {
-  width: 100%;
-  max-width: 280px;
-}
+/* =========================
+   BOTONES MODAL (ARREGLADO DEFINITIVO)
+========================= */
 
 .card-actions {
   display: flex;
@@ -120,26 +112,64 @@ html, body {
   max-width: 280px;
 }
 
-/* BOTONES ESTILO */
-.btn-edit, .btn-delete, .btn-share, .btn-secondary {
-  padding: 12px;
-  border-radius: 5px;
-  border: 1px solid rgba(255,255,255,.15);
-  cursor: pointer;
-  font-family: 'Michroma', sans-serif;
-  font-size: .7rem;
-  text-transform: uppercase;
+/* =========================
+   BOTONES MODAL (FIX DEFINITIVO)
+========================= */
+
+.card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 280px;
 }
 
-.btn-edit { background: #2980b9; color: #fff; }
-.btn-delete { background: #c0392b; color: #fff; }
-.btn-share { background: #27ae60; color: #fff; }
-.btn-secondary { background: #f39c12; color: #fff; }
+/* BASE SOLO BOTONES */
+.modal-content button {
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: 0.2s ease;
+  color: white;
+}
 
-/* --- RESPONSIVE --- */
-@media(max-width: 768px){
-  .view-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
+/* EDITAR */
+.btn-edit {
+  background: linear-gradient(135deg, #2980b9, #3498db);
+}
+
+/* MOVER */
+.btn-secondary {
+  background: linear-gradient(135deg, #f39c12, #f1c40f);
+  color: #1a1a1a;
+}
+
+/* ELIMINAR */
+.btn-delete {
+  background: linear-gradient(135deg, #c0392b, #e74c3c);
+}
+
+/* WHATSAPP */
+button.whatsapp {
+  background: #25D366;
+}
+
+/* INSTAGRAM */
+button.instagram {
+  background: #E1306C;
+}
+
+/* CERRAR */
+.close-btn {
+  background: #2c3e50;
+  color: white;
+}
+
+/* HOVER */
+.modal-content button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { supabase } from './supabaseClient';
 import './TradingCard.css';
 
@@ -6,12 +6,14 @@ const TradingCard = ({
   data,
   userId,
   showUser = false,
-  onShare,
   enableImageZoom = false,
   onImageClick
 }) => {
   const [likeCount, setLikeCount] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
+  // Nota: Dejamos el ref por si lo necesitas en el componente padre (el Modal) 
+  // para la función toPng, pero ya no maneja los botones aquí.
+  const cardRef = useRef(null); 
 
   const categoria = (data?.categoria || 'perros').toLowerCase();
 
@@ -24,16 +26,6 @@ const TradingCard = ({
 
   const theme = config[categoria] || config.perros;
 
-  const displayId = data?.numero_figurita
-    ? `#${String(data.numero_figurita).padStart(3, '0')}`
-    : '#NEW';
-
-  const getText = (text, max = 80) => {
-    if (!text) return '---';
-    return text.length > max ? text.slice(0, max) + '...' : text;
-  };
-
-  // ... (tu lógica de useEffect y toggleLike se mantiene igual)
   useEffect(() => {
     if (!data?.id) return;
     const fetchLikes = async () => {
@@ -61,18 +53,18 @@ const TradingCard = ({
 
   if (!data) return null;
 
-  const nombre = getText(data.nombre || data.metadata?.nombre || 'SIN NOMBRE', 22);
-  const raza = getText(data.raza || data.metadata?.raza || 'DESCONOCIDO', 22);
-  const personalidad = getText(data.personalidad || data.metadata?.personalidad || '', 45);
-  const funFact = getText(data.funFact || data.metadata?.funFact || 'Sin información', 120);
+  const nombre = data.nombre || data.metadata?.nombre || 'SIN NOMBRE';
+  const raza = data.raza || data.metadata?.raza || 'DESCONOCIDO';
+  const personalidad = data.personalidad || data.metadata?.personalidad || '';
+  const funFact = data.funFact || data.metadata?.funFact || 'Sin información';
 
   return (
     <div className={`tc-wrapper ${data?.compact ? 'compact' : ''}`}>
-      <div className={`tc-card ${categoria}`}>
+      <div ref={cardRef} className={`tc-card ${categoria}`}>
         
         {/* HEADER */}
         <div className="tc-header">
-          <div className="tc-id">{displayId}</div>
+          <div className="tc-id">{data?.numero_figurita ? `#${String(data.numero_figurita).padStart(3, '0')}` : '#NEW'}</div>
           <div className="tc-type">
             <i className={`bi ${theme.icon}`}></i>
             <span>{theme.label}</span>
@@ -80,27 +72,23 @@ const TradingCard = ({
         </div>
 
         {/* IMAGEN */}
-        <div className={`tc-image`} onClick={(e) => { if (!enableImageZoom) return; e.stopPropagation(); if (onImageClick) onImageClick({ url: data.image_url, title: nombre }); }}>
+        <div className="tc-image" onClick={(e) => { if (enableImageZoom && onImageClick) onImageClick({ url: data.image_url, title: nombre }); }}>
           {data.image_url && <img src={data.image_url} alt={nombre} draggable={false} />}
         </div>
 
-        {/* INFO DINÁMICA */}
+        {/* INFO */}
         <div className="tc-body">
           <div className="tc-title">{nombre}</div>
-
           <div className="tc-row">
             <span className="label">{theme.attr}</span>
             <span className="value">{raza}</span>
           </div>
-
-          {/* Mostrar Personalidad solo si es Perro o Gato y existe el dato */}
           {(categoria === 'perros' || categoria === 'gatos') && personalidad && (
             <div className="tc-row">
               <span className="label">CARÁCTER</span>
               <span className="value">{personalidad}</span>
             </div>
           )}
-
           <div className="tc-fact">{funFact}</div>
         </div>
 
