@@ -11,6 +11,7 @@ const favicon = '/favicon.png';
 
 function HeroCamera() {
   const cameraInputRef = useRef(null);
+  const galleryInputRef = useRef(null); // 🔥 Input exclusivo para galería
   const cropperRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,8 +29,8 @@ function HeroCamera() {
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  // 🔥 FIX GALERÍA MODE
-  const [openMode, setOpenMode] = useState('camera');
+  // Guardamos si venimos directo desde la galería
+  const [isGalleryMode, setIsGalleryMode] = useState(false);
 
   useEffect(() => {
     if (location.state?.externalImage) {
@@ -68,16 +69,16 @@ function HeroCamera() {
     fetchCardToEdit();
   }, [editId]);
 
-  // 🔥 FIX GALERÍA AUTO OPEN
+  // 🔥 FIX AUTO OPEN SEPARADO
   useEffect(() => {
     const mode = searchParams.get('mode');
 
     if (mode === 'gallery') {
-      setOpenMode('gallery');
-
+      setIsGalleryMode(true);
+      // Forzamos de forma segura el clic en el input de galería pura
       setTimeout(() => {
-        cameraInputRef.current?.click();
-      }, 300);
+        galleryInputRef.current?.click();
+      }, 350);
     }
   }, [searchParams]);
 
@@ -85,8 +86,56 @@ function HeroCamera() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setRawImage(URL.createObjectURL(file));
-    setView('crop');
+    // Si la foto es liviana (como el screenshot que te funcionó), pasa directo por tu flujo original
+    if (file.size < 1500000) {
+      setRawImage(URL.createObjectURL(file));
+      setView('crop');
+      e.target.value = null;
+      return;
+    }
+
+    // Si es una foto pesada de la galería, la achicamos en milisegundos para que no dé pantalla negra
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        
+        // Ajustamos a un tamaño estándar Full HD para que el celular la procese fácil
+        const MAX_WIDTH = 1200;
+        const MAX_HEIGHT = 1200;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // 🔥 CORRECCIÓN AQUÍ: Convertimos a BLOB nativo para generar un ObjectURL limpio
+        canvas.toBlob((blob) => {
+          if (blob) {
+            setRawImage(URL.createObjectURL(blob));
+            setView('crop');
+          }
+        }, 'image/jpeg', 0.75);
+      };
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+
     e.target.value = null;
   };
 
@@ -169,7 +218,17 @@ function HeroCamera() {
         {view === 'camera' && (
           <div className="animate-fade-in">
             <h1>Capturá momentos</h1>
-            <button onClick={() => cameraInputRef.current.click()} className="camera-lens-button">
+            {/* Si entramos por flujo normal, el botón del centro abre la cámara nativa */}
+            <button 
+              onClick={() => {
+                if (isGalleryMode) {
+                  galleryInputRef.current.click();
+                } else {
+                  cameraInputRef.current.click();
+                }
+              }} 
+              className="camera-lens-button"
+            >
               <img src={favicon} alt="camera" />
             </button>
           </div>
@@ -300,11 +359,21 @@ function HeroCamera() {
           </div>
         )}
 
+        {/* 🔥 INPUT 1: Exclusivo para tomar fotos con la Cámara */}
         <input
           type="file"
           ref={cameraInputRef}
           accept="image/*"
-          capture={openMode === 'camera' ? 'environment' : undefined}
+          capture="environment"
+          onChange={handleImageCapture}
+          hidden
+        />
+
+        {/* 🔥 INPUT 2: Exclusivo para elegir fotos desde la Galería (Sin interferencias) */}
+        <input
+          type="file"
+          ref={galleryInputRef}
+          accept="image/*"
           onChange={handleImageCapture}
           hidden
         />

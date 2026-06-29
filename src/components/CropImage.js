@@ -1,36 +1,47 @@
 export const getCroppedImg = (imageSrc, croppedAreaPixels) => {
   return new Promise((resolve) => {
     console.log("➡️ getCroppedImg iniciado");
-    console.log("Imagen:", imageSrc);
+    console.log("Imagen (recortada para log):", typeof imageSrc === 'string' ? imageSrc.substring(0, 60) : imageSrc);
     console.log("Área:", croppedAreaPixels);
 
     const image = new Image();
-    image.crossOrigin = "anonymous";
+
+    // 🔥 FIX DEFINITIVO PARA MÓVILES Y BASE64:
+    // Solo aplicamos crossOrigin si es una URL externa (http/https).
+    // Si viene de Base64 (data:) o un blob local (blob:), NO le ponemos crossOrigin 
+    // para evitar que el navegador del celular bloquee los píxeles.
+    if (typeof imageSrc === 'string' && imageSrc.startsWith('http')) {
+      image.crossOrigin = "anonymous";
+    }
 
     image.onload = () => {
-      console.log("✅ Imagen cargada");
+      console.log("✅ Imagen cargada en CropImage");
 
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
 
-      canvas.width = croppedAreaPixels.width;
-      canvas.height = croppedAreaPixels.height;
+      // Validamos que los píxeles existan para que no rompa en 0
+      const width = croppedAreaPixels.width || 100;
+      const height = croppedAreaPixels.height || 100;
+
+      canvas.width = width;
+      canvas.height = height;
 
       ctx.drawImage(
         image,
         croppedAreaPixels.x,
         croppedAreaPixels.y,
-        croppedAreaPixels.width,
-        croppedAreaPixels.height,
+        width,
+        height,
         0,
         0,
-        croppedAreaPixels.width,
-        croppedAreaPixels.height
+        width,
+        height
       );
 
       canvas.toBlob(
         (blob) => {
-          console.log("✅ Blob generado:", blob);
+          console.log("✅ Blob generado con éxito:", blob);
           resolve(blob);
         },
         "image/jpeg",
@@ -39,7 +50,7 @@ export const getCroppedImg = (imageSrc, croppedAreaPixels) => {
     };
 
     image.onerror = (e) => {
-      console.error("❌ Error cargando la imagen", e);
+      console.error("❌ Error cargando la imagen en CropImage", e);
       resolve(null);
     };
 

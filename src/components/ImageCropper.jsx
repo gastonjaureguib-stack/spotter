@@ -7,12 +7,10 @@ const ImageCropper = forwardRef(({ image, onComplete }, ref) => {
   const [zoom, setZoom] = useState(1);
   const croppedAreaRef = useRef(null);
 
-  // Exponemos handleConfirm al componente padre (HeroCamera)
   useImperativeHandle(ref, () => ({
     handleConfirm: async () => {
       const area = croppedAreaRef.current;
       
-      // Validación básica: si no hay área, no podemos recortar
       if (!area) {
         console.error("No se ha definido un área de recorte.");
         return;
@@ -33,34 +31,65 @@ const ImageCropper = forwardRef(({ image, onComplete }, ref) => {
   return (
     <div className="cropper-wrapper" style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
       
-      {/* 🔥 FIX CRÍTICO DE ESTILOS: 
-        react-easy-crop requiere obligatoriamente que su contenedor tenga "position: relative" 
-        y un alto fijo real o un viewport definido para calcular los gestos táctiles en celulares.
-      */}
       <div 
         className="cropper-container" 
         style={{ 
           position: 'relative', 
           width: '100%', 
-          height: '320px', // Un poquito más de aire para el aspecto 4/6
-          background: '#000',
+          height: '320px', 
+          background: '#222', 
           borderRadius: '12px',
           overflow: 'hidden'
         }}
       >
-        <Cropper
-          image={image}
-          crop={crop}
-          zoom={zoom}
-          aspect={4 / 6}
-          onCropChange={setCrop}
-          onZoomChange={(z) => setZoom(Number(z))}
-          onCropComplete={(_, pixels) => {
-            croppedAreaRef.current = pixels;
-          }}
-          // 🔥 Evita comportamientos raros de scroll al arrastrar en móviles
-          disableAutomaticWindowResize={false} 
-        />
+        {image ? (
+          <Cropper
+            image={image}
+            crop={crop}
+            zoom={zoom}
+            aspect={4 / 6}
+            onCropChange={setCrop}
+            onZoomChange={(z) => setZoom(Number(z))}
+            onCropComplete={(_, pixels) => {
+              croppedAreaRef.current = pixels;
+            }}
+            disableAutomaticWindowResize={false}
+            style={{
+              containerStyle: {
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                overflow: 'hidden',
+                userSelect: 'none',
+                touchAction: 'none',
+                cursor: 'move',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              },
+              // 🔥 SOLUCIÓN: Quitamos maxWidth/maxHeight y objectFit que aplastaban las fotos reales de la cámara
+              mediaStyle: {
+                position: 'absolute',
+                willChange: 'transform'
+              },
+              cropAreaStyle: {
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                border: '2px solid rgba(255,255,255,0.8)',
+                boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.6)',
+                boxSizing: 'border-box'
+              }
+            }}
+          />
+        ) : (
+          <div className="text-white d-flex align-items-center justify-content-center h-100">
+            <span style={{ fontSize: '0.85rem' }}>Cargando imagen...</span>
+          </div>
+        )}
       </div>
 
       <div className="cropper-controls p-3">
