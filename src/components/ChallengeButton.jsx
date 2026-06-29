@@ -48,7 +48,7 @@ function ChallengeButton({ category, userId, onChallengeCompleted }) {
     if (cat === 'plantas') return 'Capturar una planta de flores rosadas 🌸';
     if (cat === 'paisajes') return 'Capturar un atardecer justo detrás de un árbol 🌅🌳';
     if (cat === 'gatos') return 'Capturar un gato completamente blanco 🐱❄️';
-    return 'Capturar la foto de un perro en blanco y negro 🐶🖤🤍';
+    return 'Capturar la foto de un perro blanco y negro 🐶🖤🤍';
   };
 
   const handleChallenge = async () => {

@@ -112,18 +112,6 @@ html, body {
   max-width: 280px;
 }
 
-/* =========================
-   BOTONES MODAL (FIX DEFINITIVO)
-========================= */
-
-.card-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-  max-width: 280px;
-}
-
 /* BASE SOLO BOTONES */
 .modal-content button {
   border: none;
@@ -172,4 +160,42 @@ button.instagram {
 .modal-content button:hover {
   transform: translateY(-2px);
   filter: brightness(1.1);
+}
+
+
+/* ========================================================
+   MÁGICA REORDENACIÓN PARA CELULARES (¡AGREGADO AQUÍ!)
+   ======================================================== */
+@media (max-width: 576px) {
+  /* Forzamos a que la barra superior se vuelva columna en celular */
+  .container .d-flex.justify-content-between.align-items-center.mb-4 {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 15px !important;
+  }
+
+  /* El contenedor de los botones pasa a tener orden 1 (Arriba del todo) */
+  .container .d-flex.gap-2 {
+    order: 1 !important;
+    display: grid !important; /* Se vuelve una grilla de 2 columnas exactas */
+    grid-template-columns: 1fr 1fr;
+    gap: 8px !important;
+    width: 100%;
+  }
+
+  /* El título "Mi Colección" pasa a tener orden 2 (Debajo de los botones) */
+  .album-title {
+    order: 2 !important;
+    text-align: left !important;
+    font-size: 1.5rem !important;
+    margin-top: 5px !important;
+  }
+
+  /* Pequeño ajuste fino a tus botones para que ocupen todo el ancho de su celda */
+  .btn-view-toggle {
+    width: 100% !important;
+    text-align: center !important;
+    padding: 10px 4px !important;
+    font-size: 0.65rem !important; /* Mantiene la estética de tu fuente Michroma */
+  }
 }
