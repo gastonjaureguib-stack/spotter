@@ -161,22 +161,60 @@ function Album() {
     fetchCapturas(userId);
   };
 
+  // ==========================================
+  // COMPARTIR NATIVO (MÓVILES)
+  // ==========================================
   const handleShareFromModal = async (platform) => {
     const modalCardNode = document.querySelector('.modal-content .tc-card');
     if (!modalCardNode) return;
 
-    const dataUrl = await toPng(modalCardNode, { cacheBust: true });
+    try {
+      const dataUrl = await toPng(modalCardNode, { cacheBust: true });
 
-    if (platform === 'whatsapp') {
-      const text = encodeURIComponent('Mirá mi carta!');
-      window.open(`https://wa.me/?text=${text}`, '_blank');
-    }
+      if (platform === 'whatsapp') {
+        // En celulares, genera el archivo binario y abre el gestor nativo de compartición
+        if (navigator.share && navigator.canShare) {
+          const res = await fetch(dataUrl);
+          const blob = await res.blob();
+          const file = new File([blob], 'mi-carta.png', { type: 'image/png' });
 
-    if (platform === 'instagram') {
-      const link = document.createElement('a');
-      link.download = 'card.png';
-      link.href = dataUrl;
-      link.click();
+          if (navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              files: [file],
+              title: '¡Mirá mi carta!',
+              text: 'Te comparto mi figurita de la colección'
+            });
+            return;
+          }
+        }
+        
+        // Mensaje preventivo si el entorno es de escritorio/PC
+        Swal.fire({
+          title: 'Función para Celulares',
+          text: 'Para compartir la imagen de la carta directamente a WhatsApp, utiliza tu dispositivo móvil.',
+          icon: 'info',
+          target: document.body
+        });
+      }
+
+      if (platform === 'instagram') {
+        // Descarga directa e inmediata a la galería
+        const link = document.createElement('a');
+        link.download = 'mi-carta.png';
+        link.href = dataUrl;
+        link.click();
+
+        // Lanzamiento directo de la aplicación nativa hacia la cámara/creador
+        setTimeout(() => {
+          window.open('instagram://camera', '_blank');
+          
+          setTimeout(() => {
+            window.open('https://instagram.com', '_blank');
+          }, 500);
+        }, 800);
+      }
+    } catch (error) {
+      console.error("Error al compartir:", error);
     }
   };
 
